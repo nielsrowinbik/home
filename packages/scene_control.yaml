@@ -1,14 +1,14 @@
 input_select:
   presense:
     icon: mdi:home-circle
-    name: Mode
+    name: Presence
     options:
       - Home
       - Away
       - Vacation
   primary_scene:
     icon: mdi:theme-light-dark
-    name: Time of day
+    name: Scene
     options:
       - Morning
       - Day
