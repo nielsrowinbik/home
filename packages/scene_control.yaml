@@ -1,0 +1,213 @@
+input_select:
+  mode_selector:
+    icon: mdi:home-circle
+    name: Mode
+    options:
+      - Home
+      - Away
+      - Vacation
+  daypart_selector:
+    icon: mdi:theme-light-dark
+    name: Time of day
+    options:
+      - Morning
+      - Day
+      - Afternoon
+      - Evening
+      - Night
+      - Away
+      - Vacation
+  activity_selector:
+    name: Activity
+    options:
+      - None
+      - Cooking
+      - Movie
+
+automation:
+  - alias: Mode and Scene selector
+    trigger:
+      - platform: state
+        entity_id: input_select.mode_selector
+      - platform: state
+        entity_id: input_select.daypart_selector
+      - platform: state
+        entity_id: input_select.activity_selector
+    condition:
+      condition: template
+      value_template: "{{ trigger.to_state.state != 'None' }}"
+    action:
+      - service: scene.turn_on
+        data_template:
+          entity_id: "scene.{{ trigger.to_state.state }}"
+
+  - alias: Re-activate scene upon activity end
+    trigger:
+      - platform: state
+        entity_id: input_select.activity_selector
+        to: None
+    action:
+      - service: scene.turn_on
+        data_template:
+          entity_id: "scene.{{ states('input_select.daypart_selector') }}"
+
+scene:
+  - name: Home
+    entities:
+      input_select.mode_selector:
+        option: Home
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: on
+      automation.set_scene_to_day: on
+      automation.set_scene_to_afternoon: on
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      automation.turn_on_receiver_when_audio_starts_playing: on
+      automation.turn_on_tv_when_media_starts_playing: on
+
+  - name: Away
+    entities:
+      input_select.mode_selector:
+        option: Away
+      input_select.daypart_selector:
+        option: Away
+      input_select.activity_selector:
+        option: None
+      automation.set_home_mode_to_home: on
+      automation.set_home_mode_to_away: off
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: on
+      automation.set_scene_to_day: on
+      automation.set_scene_to_afternoon: on
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      automation.turn_on_receiver_when_audio_starts_playing: off
+      automation.turn_on_tv_when_media_starts_playing: off
+      climate.living_room:
+        temperature: 16
+      remote.harmony_hub: off
+
+  - name: Vacation
+    entities:
+      input_select.mode_selector:
+        option: Vacation
+      input_select.daypart_selector:
+        option: Vacation
+      input_select.activity_selector:
+        option: None
+      automation.set_home_mode_to_home: on
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: off
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: off
+      automation.set_scene_to_evening: off
+      automation.set_scene_to_night: off
+      automation.turn_on_receiver_when_audio_starts_playing: off
+      automation.turn_on_tv_when_media_starts_playing: off
+      climate.living_room:
+        temperature: 16
+      remote.harmony_hub: off
+
+  - name: Morning
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.daypart_selector:
+        option: Morning
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: on
+      automation.set_scene_to_afternoon: on
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      climate.living_room:
+        temperature: 20
+
+  - name: Day
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.daypart_selector:
+        option: Day
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: on
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      climate.living_room:
+        temperature: 20
+
+  - name: Afternoon
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.daypart_selector:
+        option: Afternoon
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: off
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      climate.living_room:
+        temperature: 20
+
+  - name: Evening
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.daypart_selector:
+        option: Evening
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: off
+      automation.set_scene_to_evening: off
+      automation.set_scene_to_night: on
+      climate.living_room:
+        temperature: 20
+
+  - name: Night
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.daypart_selector:
+        option: Night
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: on
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: off
+      automation.set_scene_to_evening: off
+      automation.set_scene_to_night: off
+      climate.living_room:
+        temperature: 16
+
+  - name: Cooking
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.activity_selector:
+        option: Cooking
+
+  - name: Movie
+    entities:
+      input_select.mode_selector:
+        option: Home
+      input_select.activity_selector:
+        option: Movie
+      remote.harmony_hub:
+        current_activity: "Watch Chromecast"

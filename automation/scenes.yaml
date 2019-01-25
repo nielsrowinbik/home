@@ -1,0 +1,158 @@
+- alias: Set home mode to Home
+  trigger:
+    - platform: state
+      entity_id: group.everyone
+      to: home
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.home
+
+- alias: Set home mode to Away
+  trigger:
+    - platform: state
+      entity_id: group.everyone
+      to: not_home
+      for:
+        minutes: 15
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.away
+
+- alias: Set home mode to Vacation
+  trigger:
+    - platform: state
+      entity_id: group.everyone
+      to: not_home
+      for:
+        hours: 24
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.vacation
+
+- alias: Set scene to Morning
+  trigger:
+    - platform: state
+      entity_id: input_select.mode_selector
+      to: Home
+    - platform: state
+      entity_id: sensor.google_home_alarm
+      from: "2"
+      to: "1"
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      above: 1
+    - platform: time
+      at: "06:30:00"
+  condition:
+    - condition: state
+      entity_id: input_select.mode_selector
+      state: Home
+    - condition: time
+      before: "12:00:00"
+    - condition: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 3.5
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.morning
+
+- alias: Set scene to Day
+  trigger:
+    - platform: state
+      entity_id: input_select.mode_selector
+      to: Home
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      above: 3.5
+  condition:
+    - condition: state
+      entity_id: input_select.mode_selector
+      state: Home
+    - condition: time
+      before: "15:00:00"
+    - condition: numeric_state
+      entity_id: sensor.sun_elevation
+      above: 3.5
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.day
+
+- alias: Set scene to Afternoon
+  trigger:
+    - platform: state
+      entity_id: input_select.mode_selector
+      to: Home
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 2
+  condition:
+    - condition: state
+      entity_id: input_select.mode_selector
+      state: Home
+    - condition: time
+      after: "12:00:00"
+    - condition: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 2
+      above: 0
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.afternoon
+
+- alias: Set scene to Evening
+  trigger:
+    - platform: state
+      entity_id: input_select.mode_selector
+      to: Home
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 0
+  condition:
+    - condition: state
+      entity_id: input_select.mode_selector
+      state: Home
+    - condition: time
+      after: "12:00:00"
+    - condition: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 0
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.evening
+
+- alias: Set scene to Night
+  trigger:
+    - platform: time
+      at: "22:00:00"
+    - platform: time
+      at: "00:00:00"
+  condition:
+    - condition: state
+      entity_id: input_select.mode_selector
+      state: Home
+    - condition: or
+      conditions:
+        - condition: time
+          after: "22:00:00"
+          weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - sun
+        - condition: time
+          after: "00:00:00"
+          weekday:
+            - fri
+            - sat
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.night

@@ -1,0 +1,32 @@
+- alias: Turn on receiver when audio starts playing
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_speakers
+      to: playing
+    - platform: state
+      entity_id: media_player.upstairs
+      to: playing
+  condition:
+    - condition: state
+      entity_id: remote.harmony_hub
+      state: "off"
+  action:
+    - service: remote.turn_on
+      data:
+        entity_id: remote.harmony_hub
+        activity: Listen to Music
+
+- alias: Turn on TV when media starts playing
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      to: playing
+  condition:
+    - condition: state
+      entity_id: remote.harmony_hub
+      state: "off"
+  action:
+    - service: remote.turn_on
+      data:
+        entity_id: remote.harmony_hub
+        activity: Watch Chromecast

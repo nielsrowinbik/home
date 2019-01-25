@@ -1,0 +1,19 @@
+climate.living_room:
+  friendly_name: Living Room Thermostat
+sensor.living_room_link:
+  hidden: true
+sensor.living_room_overlay:
+  hidden: true
+sensor.living_room_power:
+  hidden: true
+sensor.niels__lauras_home_tado_bridge_status:
+  hidden: true
+sensor.living_room_heating:
+  friendly_name: Living Room heating intensity
+group.laura:
+  entity_picture: /local/laura.jpg
+group.niels:
+  entity_picture: /local/niels.jpg
+  image: /local/www/niels.jpg
+group.george:
+  entity_picture: /local/george.jpg

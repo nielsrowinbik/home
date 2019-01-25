@@ -1,0 +1,107 @@
+homeassistant:
+  name: Niels and Laura's Home
+  latitude: !secret location_lat
+  longitude: !secret location_long
+  elevation: 0
+  unit_system: metric
+  time_zone: Europe/Amsterdam
+  packages: !include_dir_named packages/
+  customize: !include customize.yaml
+
+automation: !include_dir_merge_list automation/
+
+circadian_lighting:
+  transition: 60
+
+cloud:
+  google_actions:
+    filter:
+      include_domains:
+        - light
+        - scene
+
+config:
+
+discovery:
+
+emulated_roku:
+  host_ip: !secret hass_ip
+
+frontend:
+  themes: !include_dir_named themes/
+
+history:
+  exclude:
+    domains:
+      - sun
+    entities:
+      - sensor.google_home_alarm
+      - sensor.living_room_tado_mode
+      - sensor.niels__lauras_home_tado_bridge_status
+
+http:
+  base_url: !secret base_url
+
+logbook:
+  exclude:
+    domains:
+      - climate
+    entities:
+      - group.everyone
+
+lovelace:
+  mode: yaml
+
+recorder:
+  db_url: !secret db_url
+  exclude:
+    entities:
+      - sensor.google_home_alarm
+      - sensor.living_room_tado_mode
+      - sensor.niels__lauras_home_tado_bridge_status
+  include:
+    domains:
+      - climate
+      - sensor
+      - sun
+      - switch
+    entities:
+      - input_select.mode_selector
+      - input_select.daypart_selector
+      - input_select.activity_selector
+      - group.everyone
+      - group.laura
+      - group.niels
+  purge_keep_days: 7
+
+sensor:
+  - platform: template
+    sensors:
+      sun_elevation:
+        friendly_name: Sun elevation
+        unit_of_measurement: °
+        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      sun_azimuth:
+        friendly_name: Sun azimuth
+        unit_of_measurement: °
+        value_template: "{{ state_attr('sun.sun', 'azimuth') }}"
+  - name: Google Home alarm
+    platform: rest
+    resource: !secret living_room_home_alarms_endpoint
+    value_template: >-
+      {% if value_json.alarm[0] %}
+        {{ value_json.alarm[0].status }}
+      {% else %}
+        0
+      {% endif %}
+
+sun:
+
+tado:
+  username: !secret tado_username
+  password: !secret tado_password
+
+tts:
+  - platform: google
+
+updater:

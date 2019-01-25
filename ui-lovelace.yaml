@@ -1,0 +1,21 @@
+title: " "
+views:
+  - cards:
+      - cards:
+          - entities:
+              - input_select.mode_selector
+              - input_select.daypart_selector
+              - input_select.activity_selector
+              - type: divider
+                style:
+                  padding: 12px 0
+            show_header_toggle: false
+            title: Niels & Laura's Home
+            type: entities
+          - entities:
+              - climate.living_room
+            hours_to_show: 12
+            type: history-graph
+        type: vertical-stack
+    path: home
+    title: Home

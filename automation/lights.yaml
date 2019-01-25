@@ -1,0 +1,79 @@
+- alias: Turn on toilet light
+  trigger:
+    - platform: state
+      entity_id: group.toilet_motion
+      to: "on"
+  action:
+    - service: light.turn_on
+      entity_id: group.toilet_lights
+
+- alias: Turn off toilet light
+  trigger:
+    - platform: state
+      entity_id: group.toilet_motion
+      to: "off"
+      for:
+        minutes: 2
+  action:
+    - service: light.turn_off
+      entity_id: group.toilet_lights
+
+- alias: Turn on hallway lights
+  trigger:
+    - platform: state
+      entity_id: group.hallway_motion
+      to: "on"
+  action:
+    - service: light.turn_on
+      entity_id: group.hallway_lights
+
+- alias: Turn off hallway lights
+  trigger:
+    - platform: state
+      entity_id: group.hallway_motion
+      to: "off"
+      for:
+        seconds: 10
+  action:
+    - service: light.turn_off
+      entity_id: group.hallway_lights
+
+- alias: Turn on stairway light
+  trigger:
+    - platform: state
+      entity_id: group.stairway_motion
+      to: "on"
+  action:
+    - service: light.turn_on
+      entity_id: group.stairway_lights
+
+- alias: Turn off stairway light
+  trigger:
+    - platform: state
+      entity_id: group.stairway_motion
+      to: "off"
+      for:
+        seconds: 10
+  action:
+    - service: light.turn_off
+      entity_id: group.stairway_lights
+
+- alias: Turn on downstairs lights
+  trigger:
+    - platform: state
+      entity_id: group.downstairs_motion
+      to: "on"
+  action:
+    - service: light.turn_on
+      entity_id: group.downstairs_lights
+
+- alias: Turn off downstairs lights
+  trigger:
+    - platform: state
+      entity_id: group.downstairs_motion
+      to: "off"
+      for:
+        minutes: 1
+  action:
+    - service: light.turn_off
+      entity_id: group.downstairs_lights

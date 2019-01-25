@@ -1,0 +1,22 @@
+# Ignore everything
+*
+
+# Include all folders or the below inclusions won't work
+!*/
+
+# Include specific files/folders
+!www/custom-lovelace/**
+!custom_components/**
+!packages/*
+!automation/*
+!*.yaml
+!.gitignore
+!*.md
+
+# Ignore folders
+*pycache*
+
+# Ignore specific yaml files
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml

@@ -1,0 +1,66 @@
+switch:
+  - lights_brightness: []
+    lights_ct: []
+    max_colortemp: 4000
+    min_colortemp: 2200
+    platform: circadian_lighting
+    sleep_entity: input_select.daypart_selector
+    sleep_state: Night
+
+group:
+  hallway_motion:
+    entities: []
+    icon: mdi:run
+    name: Hallway motion
+  hallway_lights:
+    entities: []
+    icon: mdi:lightbulb
+    name: Hallway lights
+  toilet_motion:
+    entities: []
+    icon: mdi:run
+    name: Toilet motion
+  toilet_lights:
+    entities: []
+    icon: mdi:lightbulb
+    name: Toilet lights
+  stairway_motion:
+    entities: []
+    icon: mdi:run
+    name: Stairway motion
+  stairway_lights:
+    entities: []
+    icon: mdi:lightbulb
+    name: Stairway lights
+  downstairs_motion:
+    entities: []
+    icon: mdi:run
+    name: Downstairs motion
+  downstairs_lights:
+    entities: []
+    icon: mdi:lightbulb
+    name: Downstairs lights
+  living_room_spots:
+    entities: []
+    icon: mdi:lightbulb
+    name: Living Room spots
+  living_room_mood_lighting:
+    entities: []
+    icon: mdi:lightbulb
+    name: Living Room mood lighting
+  kitchen_spots:
+    entities: []
+    icon: mdi:lightbulb
+    name: Kitchen spots
+  kitchen_mood_lighting:
+    entities: []
+    icon: mdi:lightbulb
+    name: Kitchen mood lighting
+  bedroom_spots:
+    entities: []
+    icon: mdi:lightbulb
+    name: Bedroom spots
+  bathroom_spots:
+    entities: []
+    icon: mdi:lightbulb
+    name: Bathroom spots
