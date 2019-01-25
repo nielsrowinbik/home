@@ -6,9 +6,6 @@ views:
               - input_select.presense
               - input_select.primary_scene
               - input_select.secondary_scene
-              - type: divider
-                style:
-                  padding: 12px 0
             show_header_toggle: false
             title: Niels & Laura's Home
             type: entities
