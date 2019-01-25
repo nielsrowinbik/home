@@ -1,1 +1,39 @@
-primary-color: "#e91b2b"
+# OVERALL
+primary-color: "#17212b"
+light-primary-color: "#232f3d"
+accent-color: "#2b5279"
+
+# TEXT
+primary-text-color: "#dee5ed"
+text-primary-color: "var(--primary-text-color)"
+secondary-text-color: "#68727c"
+
+# BACKGROUND
+primary-background-color: "#0e1621"
+secondary-background-color: "var(--primary-color)"
+
+# SIDEBAR
+sidebar-background-color: "var(--primary-color)"
+sidebar-text-color: "var(--primary-text-color)"
+sidebar-icon-color: "var(--secondary-text-color)"
+sidebar-selected-text-color: "#6093d2"
+sidebar-selected-icon-color: "var(--sidebar-selected-text-color)"
+
+# LISTBOXES, MENUS
+paper-listbox-background-color: "var(--primary-color)"
+paper-listbox-color: "var(--primary-text-color)"
+
+# CARDS
+paper-card-header-color: "var(--primary-text-color)"
+paper-card-background-color: "var(--primary-color)"
+
+# TOAST
+paper-toast-color: "var(--primary-text-color)"
+paper-toast-background-color: "var(--accent-color)"
+
+# LUMO (history datepicker, services entity picker)
+lumo-body-text-color: "var(--primary-text-color)"
+lumo-base-color: "var(--primary-color)"
+lumo-tint-5pct: "var(--primary-color)"
+lumo-primary-text-color: "var(--accent-color)"
+lumo-tertiary-text-color: "var(--secondary-text-color)"
