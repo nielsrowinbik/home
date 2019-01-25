@@ -11,6 +11,8 @@ homeassistant:
 automation: !include_dir_merge_list automation/
 
 circadian_lighting:
+  max_colortemp: 4000
+  min_colortemp: 2200
   transition: 60
 
 cloud:
