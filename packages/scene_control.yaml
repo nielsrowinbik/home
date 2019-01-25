@@ -1,12 +1,12 @@
 input_select:
-  mode_selector:
+  presense:
     icon: mdi:home-circle
     name: Mode
     options:
       - Home
       - Away
       - Vacation
-  daypart_selector:
+  primary_scene:
     icon: mdi:theme-light-dark
     name: Time of day
     options:
@@ -17,7 +17,7 @@ input_select:
       - Night
       - Away
       - Vacation
-  activity_selector:
+  secondary_scene:
     name: Activity
     options:
       - None
@@ -28,11 +28,11 @@ automation:
   - alias: Mode and Scene selector
     trigger:
       - platform: state
-        entity_id: input_select.mode_selector
+        entity_id: input_select.presense
       - platform: state
-        entity_id: input_select.daypart_selector
+        entity_id: input_select.primary_scene
       - platform: state
-        entity_id: input_select.activity_selector
+        entity_id: input_select.secondary_scene
     condition:
       condition: template
       value_template: "{{ trigger.to_state.state != 'None' }}"
@@ -44,17 +44,17 @@ automation:
   - alias: Re-activate scene upon activity end
     trigger:
       - platform: state
-        entity_id: input_select.activity_selector
+        entity_id: input_select.secondary_scene
         to: None
     action:
       - service: scene.turn_on
         data_template:
-          entity_id: "scene.{{ states('input_select.daypart_selector') }}"
+          entity_id: "scene.{{ states('input_select.primary_scene') }}"
 
 scene:
   - name: Home
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -69,11 +69,11 @@ scene:
 
   - name: Away
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Away
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Away
-      input_select.activity_selector:
+      input_select.secondary_scene:
         option: None
       automation.set_home_mode_to_home: on
       automation.set_home_mode_to_away: off
@@ -91,11 +91,11 @@ scene:
 
   - name: Vacation
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Vacation
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Vacation
-      input_select.activity_selector:
+      input_select.secondary_scene:
         option: None
       automation.set_home_mode_to_home: on
       automation.set_home_mode_to_away: on
@@ -113,9 +113,9 @@ scene:
 
   - name: Morning
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Morning
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -130,9 +130,9 @@ scene:
 
   - name: Day
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Day
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -147,9 +147,9 @@ scene:
 
   - name: Afternoon
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Afternoon
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -164,9 +164,9 @@ scene:
 
   - name: Evening
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Evening
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -181,9 +181,9 @@ scene:
 
   - name: Night
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.daypart_selector:
+      input_select.primary_scene:
         option: Night
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -198,16 +198,16 @@ scene:
 
   - name: Cooking
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.activity_selector:
+      input_select.secondary_scene:
         option: Cooking
 
   - name: Movie
     entities:
-      input_select.mode_selector:
+      input_select.presense:
         option: Home
-      input_select.activity_selector:
+      input_select.secondary_scene:
         option: Movie
       remote.harmony_hub:
         current_activity: "Watch Chromecast"

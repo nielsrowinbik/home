@@ -4,7 +4,7 @@ switch:
     max_colortemp: 4000
     min_colortemp: 2200
     platform: circadian_lighting
-    sleep_entity: input_select.daypart_selector
+    sleep_entity: input_select.primary_scene
     sleep_state: Night
 
 group:

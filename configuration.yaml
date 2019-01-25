@@ -66,9 +66,9 @@ recorder:
       - sun
       - switch
     entities:
-      - input_select.mode_selector
-      - input_select.daypart_selector
-      - input_select.activity_selector
+      - input_select.presense
+      - input_select.primary_scene
+      - input_select.secondary_scene
       - group.everyone
       - group.laura
       - group.niels

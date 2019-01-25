@@ -35,7 +35,7 @@
 - alias: Set scene to Morning
   trigger:
     - platform: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       to: Home
     - platform: state
       entity_id: sensor.google_home_alarm
@@ -48,7 +48,7 @@
       at: "06:30:00"
   condition:
     - condition: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       state: Home
     - condition: time
       before: "12:00:00"
@@ -63,14 +63,14 @@
 - alias: Set scene to Day
   trigger:
     - platform: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       to: Home
     - platform: numeric_state
       entity_id: sensor.sun_elevation
       above: 3.5
   condition:
     - condition: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       state: Home
     - condition: time
       before: "15:00:00"
@@ -85,14 +85,14 @@
 - alias: Set scene to Afternoon
   trigger:
     - platform: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       to: Home
     - platform: numeric_state
       entity_id: sensor.sun_elevation
       below: 2
   condition:
     - condition: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       state: Home
     - condition: time
       after: "12:00:00"
@@ -108,14 +108,14 @@
 - alias: Set scene to Evening
   trigger:
     - platform: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       to: Home
     - platform: numeric_state
       entity_id: sensor.sun_elevation
       below: 0
   condition:
     - condition: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       state: Home
     - condition: time
       after: "12:00:00"
@@ -135,7 +135,7 @@
       at: "00:00:00"
   condition:
     - condition: state
-      entity_id: input_select.mode_selector
+      entity_id: input_select.presense
       state: Home
     - condition: or
       conditions:
