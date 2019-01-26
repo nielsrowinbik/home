@@ -37,7 +37,7 @@ history:
     domains:
       - sun
     entities:
-      - sensor.google_home_alarm
+      - group.everyone
       - sensor.living_room_tado_mode
       - sensor.niels_lauras_home_tado_bridge_status
 
@@ -58,7 +58,6 @@ recorder:
   db_url: !secret db_url
   exclude:
     entities:
-      - sensor.google_home_alarm
       - sensor.living_room_tado_mode
       - sensor.niels_lauras_home_tado_bridge_status
   include:
@@ -75,27 +74,6 @@ recorder:
       - group.laura
       - group.niels
   purge_keep_days: 7
-
-sensor:
-  - platform: template
-    sensors:
-      sun_elevation:
-        friendly_name: Sun elevation
-        unit_of_measurement: °
-        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      sun_azimuth:
-        friendly_name: Sun azimuth
-        unit_of_measurement: °
-        value_template: "{{ state_attr('sun.sun', 'azimuth') }}"
-  - name: Google Home alarm
-    platform: rest
-    resource: !secret living_room_home_alarms_endpoint
-    value_template: >-
-      {% if value_json.alarm[0] %}
-        {{ value_json.alarm[0].status }}
-      {% else %}
-        0
-      {% endif %}
 
 sun:
 
