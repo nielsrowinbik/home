@@ -39,7 +39,7 @@ history:
     entities:
       - sensor.google_home_alarm
       - sensor.living_room_tado_mode
-      - sensor.niels__lauras_home_tado_bridge_status
+      - sensor.niels_lauras_home_tado_bridge_status
 
 http:
   base_url: !secret base_url
@@ -60,7 +60,7 @@ recorder:
     entities:
       - sensor.google_home_alarm
       - sensor.living_room_tado_mode
-      - sensor.niels__lauras_home_tado_bridge_status
+      - sensor.niels_lauras_home_tado_bridge_status
   include:
     domains:
       - climate

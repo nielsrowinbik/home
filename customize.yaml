@@ -6,7 +6,7 @@ sensor.living_room_overlay:
   hidden: true
 sensor.living_room_power:
   hidden: true
-sensor.niels__lauras_home_tado_bridge_status:
+sensor.niels_lauras_home_tado_bridge_status:
   hidden: true
 sensor.living_room_heating:
   friendly_name: Living Room heating intensity
