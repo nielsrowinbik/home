@@ -75,8 +75,8 @@
     - condition: state
       entity_id: input_select.presense
       state: Home
-    - condition: time
-      before: "15:00:00"
+    # - condition: time
+    #   before: "15:00:00"
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
