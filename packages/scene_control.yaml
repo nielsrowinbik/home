@@ -21,6 +21,7 @@ input_select:
     name: Activity
     options:
       - None
+      - Cleaning
       - Cooking
       - Movie
 
@@ -195,6 +196,13 @@ scene:
       automation.set_scene_to_night: off
       climate.living_room:
         temperature: 16
+
+  - name: Cleaning
+    entities:
+      input_select.presense:
+        option: Home
+      input_select.secondary_scene:
+        option: Cleaning
 
   - name: Cooking
     entities:
