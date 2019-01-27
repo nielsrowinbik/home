@@ -126,7 +126,7 @@ scene:
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       climate.living_room:
-        temperature: 20
+        temperature: 19
 
   - name: Day
     entities:
@@ -143,7 +143,7 @@ scene:
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       climate.living_room:
-        temperature: 20
+        temperature: 19
 
   - name: Afternoon
     entities:
