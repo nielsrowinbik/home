@@ -88,6 +88,9 @@ scene:
       automation.turn_on_tv_when_media_starts_playing: off
       climate.living_room:
         temperature: 16
+      media_player.kitchen_speakers: off
+      media_player.living_room_tv: off
+      media_player.upstairs: off
       remote.harmony_hub: off
 
   - name: Vacation
@@ -110,6 +113,9 @@ scene:
       automation.turn_on_tv_when_media_starts_playing: off
       climate.living_room:
         temperature: 16
+      media_player.kitchen_speakers: off
+      media_player.living_room_tv: off
+      media_player.upstairs: off
       remote.harmony_hub: off
 
   - name: Morning
@@ -196,6 +202,9 @@ scene:
       automation.set_scene_to_night: off
       climate.living_room:
         temperature: 16
+      media_player.kitchen_speakers: off
+      media_player.living_room_tv: off
+      media_player.upstairs: off
 
   - name: Cleaning
     entities:
