@@ -205,6 +205,7 @@ scene:
       media_player.kitchen_speakers: off
       media_player.living_room_tv: off
       media_player.upstairs: off
+      remote.harmony_hub: off
 
   - name: Cleaning
     entities:
