@@ -102,7 +102,7 @@ scene:
       input_select.secondary_scene:
         option: None
       automation.set_home_mode_to_home: on
-      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_away: off
       automation.set_home_mode_to_vacation: off
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: off
