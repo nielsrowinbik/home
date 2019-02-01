@@ -75,8 +75,6 @@
     - condition: state
       entity_id: input_select.presense
       state: Home
-    # - condition: time
-    #   before: "15:00:00"
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
@@ -94,7 +92,7 @@
     - platform: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 2
+      below: 4
   condition:
     - condition: state
       entity_id: input_select.presense
@@ -104,7 +102,7 @@
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 2
+      below: 4
       above: 0
   action:
     - service: scene.turn_on
@@ -138,9 +136,9 @@
 - alias: Set scene to Night
   trigger:
     - platform: time
-      at: "22:00:00"
+      at: "21:30:00"
     - platform: time
-      at: "00:00:00"
+      at: "23:30:00"
   condition:
     - condition: state
       entity_id: input_select.presense
