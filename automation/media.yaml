@@ -39,6 +39,8 @@
           if is_state_attr('remote.harmony_hub', 'current_activity', 'Watch TV')
           or
           is_state_attr('remote.harmony_hub', 'current_activity', 'Watch Chromecast')
+          or
+          is_state_attr('remote.harmony_hub', 'current_activity', 'Play a Game')
         %}
           true
         {% endif %}
