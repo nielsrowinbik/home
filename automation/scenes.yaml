@@ -109,7 +109,7 @@
       data:
         entity_id: scene.afternoon
 
-- alias: Set scene to Evening
+- alias: Set scene to Dusk
   trigger:
     - platform: state
       entity_id: input_select.presense
@@ -128,6 +128,30 @@
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: 0
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.dusk
+
+- alias: Set scene to Evening
+  trigger:
+    - platform: state
+      entity_id: input_select.presense
+      to: Home
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -3
+  condition:
+    - condition: state
+      entity_id: input_select.presense
+      state: Home
+    - condition: time
+      after: "12:00:00"
+    - condition: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -3
   action:
     - service: scene.turn_on
       data:

@@ -13,6 +13,7 @@ input_select:
       - Morning
       - Day
       - Afternoon
+      - Dusk
       - Evening
       - Night
       - Away
@@ -63,6 +64,7 @@ scene:
       automation.set_scene_to_morning: on
       automation.set_scene_to_day: on
       automation.set_scene_to_afternoon: on
+      automation.set_scene_to_dusk: on
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       automation.turn_on_receiver_when_audio_starts_playing: on
@@ -82,6 +84,7 @@ scene:
       automation.set_scene_to_morning: on
       automation.set_scene_to_day: on
       automation.set_scene_to_afternoon: on
+      automation.set_scene_to_dusk: on
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       automation.turn_on_receiver_when_audio_starts_playing: off
@@ -107,6 +110,7 @@ scene:
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: off
       automation.set_scene_to_afternoon: off
+      automation.set_scene_to_dusk: off
       automation.set_scene_to_evening: off
       automation.set_scene_to_night: off
       automation.turn_on_receiver_when_audio_starts_playing: off
@@ -130,6 +134,7 @@ scene:
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: on
       automation.set_scene_to_afternoon: on
+      automation.set_scene_to_dusk: on
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       climate.living_room:
@@ -147,6 +152,7 @@ scene:
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: off
       automation.set_scene_to_afternoon: on
+      automation.set_scene_to_dusk: on
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       climate.living_room:
@@ -164,6 +170,25 @@ scene:
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: off
       automation.set_scene_to_afternoon: off
+      automation.set_scene_to_dusk: on
+      automation.set_scene_to_evening: on
+      automation.set_scene_to_night: on
+      climate.living_room:
+        temperature: 20
+
+  - name: Dusk
+    entities:
+      input_select.presense:
+        option: Home
+      input_select.primary_scene:
+        option: Dusk
+      automation.set_home_mode_to_home: off
+      automation.set_home_mode_to_away: on
+      automation.set_home_mode_to_vacation: on
+      automation.set_scene_to_morning: off
+      automation.set_scene_to_day: off
+      automation.set_scene_to_afternoon: off
+      automation.set_scene_to_dusk: off
       automation.set_scene_to_evening: on
       automation.set_scene_to_night: on
       climate.living_room:
@@ -181,6 +206,7 @@ scene:
       automation.set_scene_to_morning: off
       automation.set_scene_to_day: off
       automation.set_scene_to_afternoon: off
+      automation.set_scene_to_dusk: off
       automation.set_scene_to_evening: off
       automation.set_scene_to_night: on
       climate.living_room:
@@ -198,6 +224,7 @@ scene:
       automation.set_scene_to_morning: on
       automation.set_scene_to_day: off
       automation.set_scene_to_afternoon: off
+      automation.set_scene_to_dusk: off
       automation.set_scene_to_evening: off
       automation.set_scene_to_night: off
       climate.living_room:
