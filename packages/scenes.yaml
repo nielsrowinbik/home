@@ -254,5 +254,3 @@ scene:
         option: Home
       input_select.secondary_scene:
         option: Movie
-      remote.harmony_hub:
-        current_activity: "Watch Chromecast"
