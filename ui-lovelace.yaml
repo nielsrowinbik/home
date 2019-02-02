@@ -24,7 +24,6 @@ views:
               - automation.handle_scene_selection
               - automation.re_activate_primary_scene_upon_secondary_scene_end
               - style:
-                  background-color: "#dadce0"
                   background-color: var(--divider-color)
                   height: 1px
                   margin: 12px -16px
