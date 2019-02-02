@@ -1,5 +1,6 @@
 climate.living_room:
   friendly_name: Living Room Thermostat
+  target_temp_step: 1
 sensor.living_room_link:
   hidden: true
 sensor.living_room_overlay:
