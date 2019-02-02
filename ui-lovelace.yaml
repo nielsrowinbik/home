@@ -15,10 +15,17 @@ views:
   - cards:
       - cards:
           - entities:
+              - entity: climate.living_room
+                name: Living Room
+            show_header_toggle: false
+            title: Climate
+            type: entities
+          - entities:
               - automation.handle_scene_selection
               - automation.re_activate_primary_scene_upon_secondary_scene_end
               - style:
                   background-color: "#dadce0"
+                  background-color: var(--divider-color)
                   height: 1px
                   margin: 12px -16px
                 type: divider
