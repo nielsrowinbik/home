@@ -27,7 +27,7 @@ input_select:
       - Movie
 
 automation:
-  - alias: Mode and Scene selector
+  - alias: Handle scene selection
     trigger:
       - platform: state
         entity_id: input_select.presense
