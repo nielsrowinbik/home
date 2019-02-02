@@ -1,55 +1,80 @@
+resources:
+  - url: /local/custom-lovelace/card-tools.js?v=0.3.0
+    type: js
+  - url: /local/custom-lovelace/card-modder.js?v=0.1.0
+    type: js
 title: " "
 views:
   - cards:
       - cards:
-          - entities:
-              - input_select.presense
-              - input_select.primary_scene
-              - input_select.secondary_scene
-            show_header_toggle: false
-            title: Niels & Laura's Home
-            type: entities
+          - card:
+              entities:
+                - input_select.presense
+                - input_select.primary_scene
+                - input_select.secondary_scene
+              show_header_toggle: false
+              title: Niels & Laura's Home
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
         type: vertical-stack
     path: home
     title: Home
   - cards:
       - cards:
-          - entities:
-              - group.niels
-              - group.laura
-              - group.george
-            show_header_toggle: false
-            title: People
-            type: entities
-          - entities:
-              - entity: climate.living_room
-                name: Living Room
-            show_header_toggle: false
-            title: Climate
-            type: entities
-          - entities:
-              - automation.handle_scene_selection
-              - automation.re_activate_primary_scene_upon_secondary_scene_end
-              - style:
-                  background-color: var(--divider-color)
-                  height: 1px
-                  margin: 12px -16px
-                type: divider
-              - automation.set_scene_to_morning
-              - automation.set_scene_to_day
-              - automation.set_scene_to_afternoon
-              - automation.set_scene_to_dusk
-              - automation.set_scene_to_evening
-              - automation.set_scene_to_night
-            show_header_toggle: false
-            title: Scene automations
-            type: entities
-          - entities:
-              - automation.turn_on_receiver_when_audio_starts_playing
-              - automation.turn_on_tv_when_media_starts_playing
-            show_header_toggle: false
-            title: Media automations
-            type: entities
+          - card:
+              entities:
+                - group.niels
+                - group.laura
+                - group.george
+              show_header_toggle: false
+              title: People
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
+          - card:
+              entities:
+                - entity: climate.living_room
+                  name: Living Room
+              show_header_toggle: false
+              title: Climate
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
+          - card:
+              entities:
+                - automation.handle_scene_selection
+                - automation.re_activate_primary_scene_upon_secondary_scene_end
+                - style:
+                    background-color: var(--divider-color)
+                    height: 1px
+                    margin: 12px -16px
+                  type: divider
+                - automation.set_scene_to_morning
+                - automation.set_scene_to_day
+                - automation.set_scene_to_afternoon
+                - automation.set_scene_to_dusk
+                - automation.set_scene_to_evening
+                - automation.set_scene_to_night
+              show_header_toggle: false
+              title: Scene automations
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
+          - card:
+              entities:
+                - automation.turn_on_receiver_when_audio_starts_playing
+                - automation.turn_on_tv_when_media_starts_playing
+              show_header_toggle: false
+              title: Media automations
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
         type: vertical-stack
     icon: mdi:settings
     path: settings
