@@ -15,6 +15,13 @@ views:
   - cards:
       - cards:
           - entities:
+              - group.niels
+              - group.laura
+              - group.george
+            show_header_toggle: false
+            title: People
+            type: entities
+          - entities:
               - entity: climate.living_room
                 name: Living Room
             show_header_toggle: false
