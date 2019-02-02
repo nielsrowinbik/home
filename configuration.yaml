@@ -40,6 +40,10 @@ history:
       - group.everyone
       - sensor.living_room_tado_mode
       - sensor.niels_lauras_home_tado_bridge_status
+      - switch.harmony_activity_listen_music
+      - switch.harmony_activity_play_game
+      - switch.harmony_activity_watch_cc
+      - switch.harmony_activity_watch_tv
 
 http:
   base_url: !secret base_url
@@ -60,6 +64,10 @@ recorder:
     entities:
       - sensor.living_room_tado_mode
       - sensor.niels_lauras_home_tado_bridge_status
+      - switch.harmony_activity_listen_music
+      - switch.harmony_activity_play_game
+      - switch.harmony_activity_watch_cc
+      - switch.harmony_activity_watch_tv
   include:
     domains:
       - climate
