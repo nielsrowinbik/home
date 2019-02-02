@@ -171,7 +171,7 @@
     - condition: or
       conditions:
         - condition: time
-          after: "22:00:00"
+          after: "21:30:00"
           weekday:
             - mon
             - tue
@@ -179,7 +179,7 @@
             - thu
             - sun
         - condition: time
-          after: "00:00:00"
+          after: "23:30:00"
           weekday:
             - fri
             - sat
