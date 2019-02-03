@@ -103,7 +103,7 @@
     - platform: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 4
+      below: 5
   condition:
     - condition: state
       entity_id: input_select.presense
@@ -113,6 +113,7 @@
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: 5
       above: 0
   action:
     - service: scene.turn_on
@@ -127,7 +128,7 @@
     - platform: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 0
+      below: 1
   condition:
     - condition: state
       entity_id: input_select.presense
@@ -137,7 +138,7 @@
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 0
+      below: 1
       above: -3
   action:
     - service: scene.turn_on
