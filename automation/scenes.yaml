@@ -37,26 +37,37 @@
     - platform: state
       entity_id: input_select.presense
       to: Home
-    - platform: state
-      entity_id: sensor.google_home_alarm
-      from: "2"
-      to: "1"
     - platform: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       above: 1
     - platform: time
       at: "06:30:00"
+    - platform: time
+      at: "08:30:00"
   condition:
     - condition: state
       entity_id: input_select.presense
       state: Home
-    - condition: time
-      before: "12:00:00"
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
       below: 3.5
+    - condition: or
+      conditions:
+        - condition: time
+          after: "06:30:00"
+          weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+        - condition: time
+          after: "08:30:00"
+          weekday:
+            - sat
+            - sun
   action:
     - service: scene.turn_on
       data:
@@ -102,7 +113,6 @@
     - condition: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 4
       above: 0
   action:
     - service: scene.turn_on
