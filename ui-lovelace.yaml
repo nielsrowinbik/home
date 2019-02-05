@@ -33,7 +33,7 @@ views:
               - entity: media_player.upstairs
                 state_not: "off"
               - entity: media_player.upstairs
-                state_not: "Unavailable"
+                state_not: "unavailable"
             type: conditional
           - card:
               card:
@@ -48,7 +48,7 @@ views:
               - entity: media_player.living_room_tv
                 state_not: "off"
               - entity: media_player.living_room_tv
-                state_not: "Unavailable"
+                state_not: "unavailable"
             type: conditional
           - card:
               card:
@@ -63,7 +63,7 @@ views:
               - entity: media_player.kitchen_speakers
                 state_not: "off"
               - entity: media_player.kitchen_speakers
-                state_not: "Unavailable"
+                state_not: "unavailable"
             type: conditional
           - card:
               card:
@@ -78,7 +78,7 @@ views:
               - entity: media_player.living_room_speakers
                 state_not: "off"
               - entity: media_player.living_room_speakers
-                state_not: "Unavailable"
+                state_not: "unavailable"
             type: conditional
         type: vertical-stack
     path: home
@@ -131,6 +131,7 @@ views:
               entities:
                 - automation.turn_on_receiver_when_audio_starts_playing
                 - automation.turn_on_tv_when_media_starts_playing
+                - automation.pause_music_when_turning_on_the_tv
               show_header_toggle: false
               title: Media automations
               type: entities
