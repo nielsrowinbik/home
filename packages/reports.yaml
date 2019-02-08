@@ -4,7 +4,7 @@ binary_sensor:
       tv_on:
         friendly_name: TV is on
         value_template: >-
-          {{ is_state_attr('remote.harmony_hub', 'current_activity', 'Watch TV') or is_state_attr('remote.harmony_hub', 'current_activity', 'Watch Chromecast') }}
+          {{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast'] }}
 
 sensor:
   - platform: history_stats

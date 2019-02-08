@@ -34,16 +34,7 @@
 - alias: Pause music when turning on the TV
   trigger:
     - platform: template
-      value_template: >-
-        {%
-          if is_state_attr('remote.harmony_hub', 'current_activity', 'Watch TV')
-          or
-          is_state_attr('remote.harmony_hub', 'current_activity', 'Watch Chromecast')
-          or
-          is_state_attr('remote.harmony_hub', 'current_activity', 'Play a Game')
-        %}
-          true
-        {% endif %}
+      value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast', 'Play a Game'] }}"
   action:
     - service: media_player.pause
       data:
