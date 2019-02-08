@@ -43,12 +43,18 @@ automation:
         data_template:
           entity_id: "scene.{{ trigger.to_state.state }}"
 
-  - alias: Re-activate primary scene upon secondary scene end
+  - alias: Reactivate primary scene upon secondary scene end
     trigger:
       - platform: state
         entity_id: input_select.secondary_scene
         to: None
     action:
+      - service: script.reactivate_primary_scene
+
+script:
+  reactivate_primary_scene:
+    alias: Reactivate primary scene
+    sequence:
       - service: scene.turn_on
         data_template:
           entity_id: "scene.{{ states('input_select.primary_scene') }}"
