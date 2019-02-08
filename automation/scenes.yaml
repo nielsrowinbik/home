@@ -1,3 +1,30 @@
+- alias: Handle scene selection
+  trigger:
+    - platform: state
+      entity_id: input_select.presense
+    - platform: state
+      entity_id: input_select.primary_scene
+    - platform: state
+      entity_id: input_select.secondary_scene
+  condition:
+    condition: template
+    value_template: "{{ trigger.to_state.state != 'None' }}"
+  action:
+    - service: scene.turn_on
+      data_template:
+        entity_id: "scene.{{ trigger.to_state.state }}"
+
+- alias: Reactivate primary scene
+  trigger:
+    - platform: state
+      entity_id: input_select.secondary_scene
+      to: None
+    - platform: state
+      entity_id: climate.living_room
+      to: Smart Schedule
+  action:
+    - service: script.reactivate_primary_scene
+
 - alias: Set home mode to Home
   trigger:
     - platform: state
