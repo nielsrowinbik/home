@@ -1,7 +1,7 @@
 - alias: Handle scene selection
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
     - platform: state
       entity_id: input_select.primary_scene
     - platform: state
@@ -62,7 +62,7 @@
 - alias: Set scene to Morning
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       to: Home
     - platform: numeric_state
       entity_id: sun.sun
@@ -74,7 +74,7 @@
       at: "08:30:00"
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: time
       before: "12:00:00"
@@ -105,7 +105,7 @@
 - alias: Set scene to Day
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       to: Home
     - platform: numeric_state
       entity_id: sun.sun
@@ -113,7 +113,7 @@
       above: 3.5
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: numeric_state
       entity_id: sun.sun
@@ -127,7 +127,7 @@
 - alias: Set scene to Afternoon
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       to: Home
     - platform: numeric_state
       entity_id: sun.sun
@@ -135,7 +135,7 @@
       below: 5
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: time
       after: "12:00:00"
@@ -152,7 +152,7 @@
 - alias: Set scene to Dusk
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       to: Home
     - platform: numeric_state
       entity_id: sun.sun
@@ -160,7 +160,7 @@
       below: 1
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: time
       after: "12:00:00"
@@ -177,7 +177,7 @@
 - alias: Set scene to Evening
   trigger:
     - platform: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       to: Home
     - platform: numeric_state
       entity_id: sun.sun
@@ -185,7 +185,7 @@
       below: -3
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: time
       after: "12:00:00"
@@ -206,7 +206,7 @@
       at: "23:30:00"
   condition:
     - condition: state
-      entity_id: input_select.presense
+      entity_id: input_select.presence
       state: Home
     - condition: or
       conditions:

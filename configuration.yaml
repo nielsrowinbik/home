@@ -77,7 +77,7 @@ recorder:
       - sun
       - switch
     entities:
-      - input_select.presense
+      - input_select.presence
       - input_select.primary_scene
       - input_select.secondary_scene
       - group.everyone

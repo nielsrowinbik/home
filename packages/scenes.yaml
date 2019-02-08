@@ -1,5 +1,5 @@
 input_select:
-  presense:
+  presence:
     icon: mdi:home-circle
     name: Presence
     options:
@@ -37,7 +37,7 @@ script:
 scene:
   - name: Home
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       automation.set_home_mode_to_home: off
       automation.set_home_mode_to_away: on
@@ -53,7 +53,7 @@ scene:
 
   - name: Away
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Away
       input_select.primary_scene:
         option: Away
@@ -79,7 +79,7 @@ scene:
 
   - name: Vacation
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Vacation
       input_select.primary_scene:
         option: Vacation
@@ -105,7 +105,7 @@ scene:
 
   - name: Morning
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Morning
@@ -123,7 +123,7 @@ scene:
 
   - name: Day
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Day
@@ -141,7 +141,7 @@ scene:
 
   - name: Afternoon
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Afternoon
@@ -159,7 +159,7 @@ scene:
 
   - name: Dusk
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Dusk
@@ -177,7 +177,7 @@ scene:
 
   - name: Evening
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Evening
@@ -195,7 +195,7 @@ scene:
 
   - name: Night
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.primary_scene:
         option: Night
@@ -216,21 +216,21 @@ scene:
 
   - name: Cleaning
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.secondary_scene:
         option: Cleaning
 
   - name: Cooking
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.secondary_scene:
         option: Cooking
 
   - name: Movie
     entities:
-      input_select.presense:
+      input_select.presence:
         option: Home
       input_select.secondary_scene:
         option: Movie

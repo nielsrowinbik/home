@@ -11,7 +11,7 @@ views:
       - cards:
           - card:
               entities:
-                - input_select.presense
+                - input_select.presence
                 - input_select.primary_scene
                 - input_select.secondary_scene
               show_header_toggle: false
