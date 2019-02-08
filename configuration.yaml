@@ -46,6 +46,7 @@ http:
 logbook:
   exclude:
     domains:
+      - binary_sensor
       - climate
     entities:
       - group.everyone
