@@ -83,7 +83,7 @@ recorder:
       - group.everyone
       - group.laura
       - group.niels
-  purge_keep_days: 2
+  purge_keep_days: 7
 
 sun:
 

@@ -84,6 +84,24 @@ views:
     path: home
     title: Home
   - cards:
+      - card:
+          entities:
+            - entity: sensor.time_niels_spent_at_home_the_past_7_days
+              name: Niels was at home for
+            - entity: sensor.time_laura_spent_at_home_the_past_7_days
+              name: Laura was at home for
+            - entity: sensor.time_spent_watching_tv
+              name: The TV was on for
+          show_header_toggle: false
+          title: In the past 7 days
+          type: entities
+        style:
+          margin: 0 8px
+        type: custom:card-modder
+    icon: mdi:poll-box
+    path: reports
+    title: Reports
+  - cards:
       - cards:
           - card:
               entities:
@@ -150,3 +168,4 @@ views:
         type: vertical-stack
     icon: mdi:settings
     path: settings
+    title: Settings
