@@ -27,7 +27,9 @@ config:
 discovery:
 
 emulated_roku:
-  host_ip: !secret hass_ip
+  servers:
+    - name: Home Assistant
+      listen_port: 8060
 
 frontend:
   themes: !include_dir_named themes/

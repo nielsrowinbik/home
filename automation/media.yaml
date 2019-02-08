@@ -54,3 +54,29 @@
     - service: media_player.pause
       data:
         entity_id: media_player.upstairs
+
+- alias: Play media through Harmony remote
+  trigger:
+    - platform: event
+      event_type: roku_command
+      event_data:
+        source_name: Home Assistant
+        type: keypress
+        key: Play
+  action:
+    - service: media_player.play
+      data_template:
+        entity_id: "{{ states.media_player|selectattr('state', 'eq', 'paused') | map(attribute='entity_id') | join(',') }}"
+
+- alias: Pause media through Harmony remote
+  trigger:
+    - platform: event
+      event_type: roku_command
+      event_data:
+        source_name: Home Assistant
+        type: keypress
+        key: Info
+  action:
+    - service: media_player.pause
+      data_template:
+        entity_id: "{{ states.media_player|selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
