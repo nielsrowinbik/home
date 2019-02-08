@@ -108,8 +108,17 @@ views:
             type: custom:card-modder
           - card:
               entities:
+                - script.reactivate_primary_scene
+              show_header_toggle: false
+              title: Repair scripts
+              type: entities
+            style:
+              margin: 0 8px
+            type: custom:card-modder
+          - card:
+              entities:
                 - automation.handle_scene_selection
-                - automation.re_activate_primary_scene_upon_secondary_scene_end
+                - automation.reactivate_primary_scene_upon_secondary_scene_end
                 - style:
                     background-color: var(--divider-color)
                     height: 1px
