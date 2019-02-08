@@ -118,7 +118,7 @@ views:
           - card:
               entities:
                 - automation.handle_scene_selection
-                - automation.reactivate_primary_scene_upon_secondary_scene_end
+                - automation.reactivate_primary_scene
                 - style:
                     background-color: var(--divider-color)
                     height: 1px

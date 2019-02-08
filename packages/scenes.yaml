@@ -50,6 +50,7 @@ scene:
       automation.set_scene_to_night: on
       automation.turn_on_receiver_when_audio_starts_playing: on
       automation.turn_on_tv_when_media_starts_playing: on
+      automation.pause_music_when_turning_on_the_tv: on
 
   - name: Away
     entities:
@@ -70,6 +71,7 @@ scene:
       automation.set_scene_to_night: on
       automation.turn_on_receiver_when_audio_starts_playing: off
       automation.turn_on_tv_when_media_starts_playing: off
+      automation.pause_music_when_turning_on_the_tv: off
       climate.living_room:
         temperature: 16
       media_player.kitchen_speakers: off
@@ -96,6 +98,7 @@ scene:
       automation.set_scene_to_night: off
       automation.turn_on_receiver_when_audio_starts_playing: off
       automation.turn_on_tv_when_media_starts_playing: off
+      automation.pause_music_when_turning_on_the_tv: off
       climate.living_room:
         temperature: 16
       media_player.kitchen_speakers: off
