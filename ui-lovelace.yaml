@@ -110,7 +110,7 @@ views:
                 - group.george
               show_header_toggle: false
               title: People
-              type: entities
+              type: glance
             style:
               margin: 0 8px
             type: custom:card-modder
