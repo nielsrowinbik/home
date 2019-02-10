@@ -36,13 +36,13 @@
     - platform: template
       value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast', 'Play a Game'] }}"
   action:
-    - service: media_player.pause
+    - service: media_player.media_pause
       data:
         entity_id: media_player.kitchen_speakers
-    - service: media_player.pause
+    - service: media_player.media_pause
       data:
         entity_id: media_player.living_room_speakers
-    - service: media_player.pause
+    - service: media_player.media_pause
       data:
         entity_id: media_player.upstairs
 
@@ -55,7 +55,7 @@
         type: keypress
         key: Play
   action:
-    - service: media_player.play
+    - service: media_player.media_play
       data_template:
         entity_id: "{{ states.media_player|selectattr('state', 'eq', 'paused') | map(attribute='entity_id') | join(',') }}"
 
@@ -66,8 +66,8 @@
       event_data:
         source_name: Home Assistant
         type: keypress
-        key: Info
+        key: Info # Using "Info" because Emulated Roku does not support the "Pause" command
   action:
-    - service: media_player.pause
+    - service: media_player.media_pause
       data_template:
         entity_id: "{{ states.media_player|selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
