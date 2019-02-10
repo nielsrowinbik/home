@@ -87,6 +87,8 @@ recorder:
 
 sun:
 
+system_health:
+
 tado:
   username: !secret tado_username
   password: !secret tado_password
