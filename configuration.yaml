@@ -38,7 +38,6 @@ history:
   exclude:
     domains:
       - binary_sensor
-      - sun
     entities:
       - group.everyone
 
@@ -60,10 +59,6 @@ recorder:
   db_url: !secret db_url
   exclude:
     entities:
-      - sensor.circadian_values
-      - sensor.living_room_tado_mode
-      - sensor.niels_lauras_home_tado_bridge_status
-      - sensor.upcoming_alarm
       - switch.circadian_lighting_circadian_lighting
       - switch.harmony_activity_listen_music
       - switch.harmony_activity_play_game
@@ -73,16 +68,17 @@ recorder:
     domains:
       - binary_sensor
       - climate
-      - sensor
-      - sun
       - switch
     entities:
-      - input_select.presence
-      - input_select.primary_scene
-      - input_select.secondary_scene
       - group.everyone
       - group.laura
       - group.niels
+      - input_select.presence
+      - input_select.primary_scene
+      - input_select.secondary_scene
+      - sensor.living_room_heating
+      - sensor.living_room_humidity
+      - sensor.living_room_temperature
   purge_keep_days: 7
 
 sun:
