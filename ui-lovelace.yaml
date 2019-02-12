@@ -137,11 +137,19 @@ views:
               entities:
                 - automation.handle_scene_selection
                 - automation.reactivate_primary_scene
-                - style:
-                    background-color: var(--divider-color)
-                    height: 1px
-                    margin: 12px -16px
-                  type: divider
+                - label: Status
+                  type: section
+                - sensor.sun_direction
+                - sensor.time_of_day
+                - label: Thresholds
+                  type: section
+                - input_number.morning_threshold
+                - input_number.day_threshold
+                - input_number.afternoon_threshold
+                - input_number.dusk_threshold
+                - input_number.evening_threshold
+                - label: Automations
+                  type: section
                 - automation.set_scene_to_morning
                 - automation.set_scene_to_day
                 - automation.set_scene_to_afternoon

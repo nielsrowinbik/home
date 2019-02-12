@@ -79,6 +79,7 @@ recorder:
       - sensor.living_room_heating
       - sensor.living_room_humidity
       - sensor.living_room_temperature
+      - sensor.time_of_day
   purge_keep_days: 7
 
 sun:
