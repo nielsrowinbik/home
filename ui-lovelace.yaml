@@ -87,6 +87,8 @@ views:
                 - automation.pause_music_when_turning_on_the_tv
                 - automation.pause_media_through_harmony_remote
                 - automation.play_media_through_harmony_remote
+                - automation.pause_music_through_harmony_remote
+                - automation.play_music_through_harmony_remote
               show_header_toggle: false
               title: Media automations
               type: entities
