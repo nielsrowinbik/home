@@ -20,66 +20,6 @@ views:
             style:
               margin: 0 8px
             type: custom:card-modder
-          - card:
-              card:
-                entity: media_player.upstairs
-                hide_power: true
-                hide_volume: true
-                type: custom:mini-media-player
-              style:
-                margin: 0 8px
-              type: custom:card-modder
-            conditions:
-              - entity: media_player.upstairs
-                state_not: "off"
-              - entity: media_player.upstairs
-                state_not: "unavailable"
-            type: conditional
-          - card:
-              card:
-                entity: media_player.living_room_tv
-                hide_power: true
-                hide_volume: true
-                type: custom:mini-media-player
-              style:
-                margin: 0 8px
-              type: custom:card-modder
-            conditions:
-              - entity: media_player.living_room_tv
-                state_not: "off"
-              - entity: media_player.living_room_tv
-                state_not: "unavailable"
-            type: conditional
-          - card:
-              card:
-                entity: media_player.kitchen_speakers
-                hide_power: true
-                hide_volume: true
-                type: custom:mini-media-player
-              style:
-                margin: 0 8px
-              type: custom:card-modder
-            conditions:
-              - entity: media_player.kitchen_speakers
-                state_not: "off"
-              - entity: media_player.kitchen_speakers
-                state_not: "unavailable"
-            type: conditional
-          - card:
-              card:
-                entity: media_player.living_room_speakers
-                hide_power: true
-                hide_volume: true
-                type: custom:mini-media-player
-              style:
-                margin: 0 8px
-              type: custom:card-modder
-            conditions:
-              - entity: media_player.living_room_speakers
-                state_not: "off"
-              - entity: media_player.living_room_speakers
-                state_not: "unavailable"
-            type: conditional
         type: vertical-stack
     path: home
     title: Home
@@ -105,27 +45,6 @@ views:
       - cards:
           - card:
               entities:
-                - group.niels
-                - group.laura
-                - group.george
-              show_header_toggle: false
-              title: People
-              type: glance
-            style:
-              margin: 0 8px
-            type: custom:card-modder
-          - card:
-              entities:
-                - entity: climate.living_room
-                  name: Living Room
-              show_header_toggle: false
-              title: Climate
-              type: entities
-            style:
-              margin: 0 8px
-            type: custom:card-modder
-          - card:
-              entities:
                 - script.reactivate_primary_scene
               show_header_toggle: false
               title: Repair scripts
@@ -139,7 +58,6 @@ views:
                 - automation.reactivate_primary_scene
                 - label: Status
                   type: section
-                - sensor.sun_direction
                 - sensor.time_of_day
                 - label: Thresholds
                   type: section
