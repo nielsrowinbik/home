@@ -1,4 +1,4 @@
-- alias: Handle scene selection
+- alias: Handle scene override
   trigger:
     - platform: state
       entity_id: input_select.presence
@@ -12,18 +12,7 @@
   action:
     - service: scene.turn_on
       data_template:
-        entity_id: "scene.{{ trigger.to_state.state }}"
-
-- alias: Reactivate primary scene
-  trigger:
-    - platform: state
-      entity_id: input_select.secondary_scene
-      to: None
-    - platform: state
-      entity_id: climate.living_room
-      to: Smart Schedule
-  action:
-    - service: script.reactivate_primary_scene
+        entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
 
 - alias: Set home mode to Home
   trigger:
@@ -59,33 +48,39 @@
       data:
         entity_id: scene.vacation
 
-- alias: Set scene to Morning
+- alias: Synchronise scene to time of day
   trigger:
     - platform: state
-      entity_id: input_select.presence
-      to: Home
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      above: 1
-    - platform: time
-      at: "06:30:00"
-    - platform: time
-      at: "08:30:00"
+      entity_id: sensor.time_of_day
+    - platform: state
+      entity_id: group.everyone
+      to: home
+    - platform: state
+      entity_id: input_select.secondary_scene
+      to: None
+    - platform: state
+      entity_id: climate.living_room
+      to: Smart Schedule
   condition:
     - condition: state
-      entity_id: input_select.presence
-      state: Home
-    - condition: time
-      before: "12:00:00"
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 3.5
+      entity_id: group.everyone
+      state: home
+  action:
+    - service: scene.turn_on
+      data_template:
+        entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+
+- alias: Trigger morning scene at fixed time
+  trigger:
+    - platform: time
+      at: 06:30:00
+    - platform: time
+      at: 08:30:00
+  condition:
     - condition: or
       conditions:
         - condition: time
-          after: "06:30:00"
+          after: 06:30:30
           weekday:
             - mon
             - tue
@@ -93,7 +88,7 @@
             - thu
             - fri
         - condition: time
-          after: "08:30:00"
+          after: 08:30:30
           weekday:
             - sat
             - sun
@@ -102,112 +97,13 @@
       data:
         entity_id: scene.morning
 
-- alias: Set scene to Day
-  trigger:
-    - platform: state
-      entity_id: input_select.presence
-      to: Home
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      above: 3.5
-  condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: Home
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      above: 3.5
-  action:
-    - service: scene.turn_on
-      data:
-        entity_id: scene.day
-
-- alias: Set scene to Afternoon
-  trigger:
-    - platform: state
-      entity_id: input_select.presence
-      to: Home
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 5
-  condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: Home
-    - condition: time
-      after: "12:00:00"
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 5
-      above: 1
-  action:
-    - service: scene.turn_on
-      data:
-        entity_id: scene.afternoon
-
-- alias: Set scene to Dusk
-  trigger:
-    - platform: state
-      entity_id: input_select.presence
-      to: Home
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 1
-  condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: Home
-    - condition: time
-      after: "12:00:00"
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: 1
-      above: -3
-  action:
-    - service: scene.turn_on
-      data:
-        entity_id: scene.dusk
-
-- alias: Set scene to Evening
-  trigger:
-    - platform: state
-      entity_id: input_select.presence
-      to: Home
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -3
-  condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: Home
-    - condition: time
-      after: "12:00:00"
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -3
-  action:
-    - service: scene.turn_on
-      data:
-        entity_id: scene.evening
-
-- alias: Set scene to Night
+- alias: Trigger night scene at fixed time
   trigger:
     - platform: time
       at: "21:30:00"
     - platform: time
       at: "23:30:00"
   condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: Home
     - condition: or
       conditions:
         - condition: time

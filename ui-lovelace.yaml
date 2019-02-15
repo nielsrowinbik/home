@@ -45,17 +45,8 @@ views:
       - cards:
           - card:
               entities:
-                - script.reactivate_primary_scene
-              show_header_toggle: false
-              title: Repair scripts
-              type: entities
-            style:
-              margin: 0 8px
-            type: custom:card-modder
-          - card:
-              entities:
-                - automation.handle_scene_selection
-                - automation.reactivate_primary_scene
+                - automation.synchronise_scene_to_time_of_day
+                - automation.handle_scene_override
                 - label: Status
                   type: section
                 - sensor.time_of_day
@@ -66,16 +57,12 @@ views:
                 - input_number.afternoon_threshold
                 - input_number.dusk_threshold
                 - input_number.evening_threshold
-                - label: Automations
+                - label: Other automations
                   type: section
-                - automation.set_scene_to_morning
-                - automation.set_scene_to_day
-                - automation.set_scene_to_afternoon
-                - automation.set_scene_to_dusk
-                - automation.set_scene_to_evening
-                - automation.set_scene_to_night
+                - automation.trigger_morning_scene_at_fixed_time
+                - automation.trigger_night_scene_at_fixed_time
               show_header_toggle: false
-              title: Scene automations
+              title: Scenes
               type: entities
             style:
               margin: 0 8px
@@ -90,7 +77,7 @@ views:
                 - automation.pause_music_through_harmony_remote
                 - automation.play_music_through_harmony_remote
               show_header_toggle: false
-              title: Media automations
+              title: Media
               type: entities
             style:
               margin: 0 8px

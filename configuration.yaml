@@ -51,6 +51,9 @@ logbook:
       - climate
     entities:
       - group.everyone
+  include:
+    entities:
+      - automation.synchronise_scene_to_time_of_day
 
 lovelace:
   mode: yaml
