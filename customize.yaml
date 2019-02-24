@@ -18,3 +18,7 @@ group.niels:
   image: /local/www/niels.jpg
 group.george:
   entity_picture: /local/george.jpg
+switch.kitchen_mood_lighting:
+  icon: mdi:lightbulb
+switch.living_room_pendant:
+  icon: mdi:lightbulb
