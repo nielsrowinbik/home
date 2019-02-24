@@ -66,32 +66,23 @@
       entity_id: group.everyone
       state: home
   action:
-    - service: scene.turn_on
-      data_template:
-        entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+    - service: script.scene_sync
 
 - alias: Trigger morning scene at fixed time
   trigger:
     - platform: time
       at: 06:30:00
-    - platform: time
-      at: 08:30:00
   condition:
-    - condition: or
-      conditions:
-        - condition: time
-          after: 06:30:30
-          weekday:
-            - mon
-            - tue
-            - wed
-            - thu
-            - fri
-        - condition: time
-          after: 08:30:30
-          weekday:
-            - sat
-            - sun
+    - condition: state
+      entity_id: sensor.time_of_day
+      state: Night
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
   action:
     - service: scene.turn_on
       data:
