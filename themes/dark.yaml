@@ -48,3 +48,10 @@ paper-toggle-button-unchecked-button-color: var(--secondary-text-color)
 # DROPDOWN
 paper-item-icon-color: var(--sidebar-icon-color)
 paper-input-container-focus-color: var(--accent-color)
+
+# SLIDERS
+paper-slider-knob-color: var(--accent-color)
+paper-slider-container-color: var(--secondary-text-color)
+paper-slider-bar-color: transparent
+paper-progress-secondary-color: var(--accent-color)
+paper-progress-active-color: var(--accent-color)
