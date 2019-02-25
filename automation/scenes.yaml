@@ -116,3 +116,15 @@
     - service: scene.turn_on
       data:
         entity_id: scene.night
+
+- alias: Reactivate secondary scene upon primary scene switch
+  trigger:
+    - platform: state
+      entity_id: input_select.primary_scene
+  condition:
+    - condition: template
+      value_template: "{{ not is_state('input_select.secondary_scene', 'None') }}"
+  action:
+    - service: scene.turn_on
+      data_template:
+        entity_id: "scene.{{ states('input_select.secondary_scene') | lower | replace(' ', '_') }}"

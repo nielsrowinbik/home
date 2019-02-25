@@ -115,6 +115,7 @@ scene:
       automation.pause_music_when_turning_on_the_tv: on
       automation.play_media_through_harmony_remote: on
       automation.play_music_through_harmony_remote: on
+      automation.reactivate_secondary_scene_upon_primary_scene_switch: on
       automation.trigger_morning_scene_at_fixed_time: on
       automation.trigger_night_scene_at_fixed_time: on
       automation.turn_on_receiver_when_audio_starts_playing: on
@@ -137,6 +138,7 @@ scene:
       automation.pause_music_when_turning_on_the_tv: off
       automation.play_media_through_harmony_remote: off
       automation.play_music_through_harmony_remote: off
+      automation.reactivate_secondary_scene_upon_primary_scene_switch: off
       automation.trigger_morning_scene_at_fixed_time: off
       automation.trigger_night_scene_at_fixed_time: off
       automation.turn_on_receiver_when_audio_starts_playing: off
@@ -167,6 +169,7 @@ scene:
       automation.pause_music_when_turning_on_the_tv: off
       automation.play_media_through_harmony_remote: off
       automation.play_music_through_harmony_remote: off
+      automation.reactivate_secondary_scene_upon_primary_scene_switch: off
       automation.trigger_morning_scene_at_fixed_time: off
       automation.trigger_night_scene_at_fixed_time: off
       automation.turn_on_receiver_when_audio_starts_playing: off

@@ -59,6 +59,7 @@ views:
           - entities:
               - automation.synchronise_scene_to_time_of_day
               - automation.handle_scene_override
+              - automation.reactivate_secondary_scene_upon_primary_scene_switch
               - label: Status
                 type: section
               - sensor.time_of_day

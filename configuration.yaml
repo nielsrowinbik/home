@@ -65,14 +65,11 @@ recorder:
   exclude:
     entities:
       - switch.circadian_lighting_circadian_lighting
-      - switch.harmony_activity_listen_music
-      - switch.harmony_activity_play_game
-      - switch.harmony_activity_watch_cc
-      - switch.harmony_activity_watch_tv
   include:
     domains:
       - binary_sensor
       - climate
+      - light
       - switch
     entities:
       - group.everyone
