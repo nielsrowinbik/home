@@ -73,7 +73,7 @@ script:
     sequence:
       - service: scene.turn_on
         data_template:
-          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+          entity_id: scene.{{ states('input_select.primary_scene') | lower | replace(' ', '_') }}
 
 input_select:
   presence:
