@@ -37,9 +37,9 @@ sensor:
         friendly_name: Sun direction
         value_template: >-
           {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
-            rising
+            Rising
           {% else %}
-            setting
+            Setting
           {% endif %}
         icon_template: >-
           {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
@@ -50,17 +50,17 @@ sensor:
       time_of_day:
         friendly_name: Time of day
         value_template: >-
-          {% if is_state('sensor.sun_direction', 'rising') and state_attr('sun.sun', 'elevation') > states('input_number.day_threshold')|float %}
+          {% if is_state('sensor.sun_direction', 'Rising') and state_attr('sun.sun', 'elevation') > states('input_number.day_threshold')|float %}
             Day
-          {% elif is_state('sensor.sun_direction', 'rising') and state_attr('sun.sun', 'elevation') > states('input_number.morning_threshold')|float %}
+          {% elif is_state('sensor.sun_direction', 'Rising') and state_attr('sun.sun', 'elevation') > states('input_number.morning_threshold')|float %}
             Morning
-          {% elif is_state('sensor.sun_direction', 'rising') %}
+          {% elif is_state('sensor.sun_direction', 'Rising') %}
             Night
-          {% elif is_state('sensor.sun_direction', 'setting') and state_attr('sun.sun', 'elevation') < states('input_number.evening_threshold')|float %}
+          {% elif is_state('sensor.sun_direction', 'Setting') and state_attr('sun.sun', 'elevation') < states('input_number.evening_threshold')|float %}
             Evening
-          {% elif is_state('sensor.sun_direction', 'setting') and state_attr('sun.sun', 'elevation') < states('input_number.early_evening_threshold')|float %}
+          {% elif is_state('sensor.sun_direction', 'Setting') and state_attr('sun.sun', 'elevation') < states('input_number.early_evening_threshold')|float %}
             Early evening
-          {% elif is_state('sensor.sun_direction', 'setting') and state_attr('sun.sun', 'elevation') < states('input_number.afternoon_threshold')|float %}
+          {% elif is_state('sensor.sun_direction', 'Setting') and state_attr('sun.sun', 'elevation') < states('input_number.afternoon_threshold')|float %}
             Afternoon
           {% else %}
             Day

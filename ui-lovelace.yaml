@@ -63,6 +63,8 @@ views:
               - script.scene_sync
               - label: Status
                 type: section
+              - sun.sun
+              - sensor.sun_direction
               - sensor.time_of_day
               - label: Trigger thresholds
                 type: section
