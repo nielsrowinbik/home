@@ -189,8 +189,8 @@ scene:
         option: Morning
       climate.living_room:
         temperature: 19
-      light.kitchen_mood_lighting: on
-      light.living_room_pendant: off
+      light.kitchen_mood_lighting: off
+      light.living_room_pendant: on
 
   - name: Day
     entities:
