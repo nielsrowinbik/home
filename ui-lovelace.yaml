@@ -5,6 +5,8 @@ resources:
     type: js
   - url: /local/custom-lovelace/mini-media-player-bundle.js?v=0.9.8
     type: module
+  - url: /local/custom-lovelace/vertical-stack-in-card.js?v=0.1.1
+    type: js
 title: " "
 views:
   - cards:
@@ -13,15 +15,14 @@ views:
               - group.niels
               - group.laura
               - group.george
-            title: Niels & Laura's Home
             type: glance
           - entities:
               - input_select.presence
               - input_select.primary_scene
               - input_select.secondary_scene
-            show_header_toggle: false
             type: entities
-        type: vertical-stack
+        title: Niels & Laura's Home
+        type: custom:vertical-stack-in-card
     path: home
     title: Home
   - cards:
