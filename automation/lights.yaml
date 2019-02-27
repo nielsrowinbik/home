@@ -1,79 +1,23 @@
-- alias: Turn on toilet light
+- alias: Toggle Kitchen worktop light
   trigger:
-    - platform: state
-      entity_id: group.toilet_motion
-      to: "on"
+    - platform: mqtt
+      topic: zigbee2mqtt/kitchen_wall_switch
+  condition:
+    - condition: template
+      value_template: "{{ trigger.payload_json.click == 'right' }}"
   action:
-    - service: light.turn_on
-      entity_id: group.toilet_lights
+    - data:
+        entity_id: light.kitchen_worktop
+      service: light.toggle
 
-- alias: Turn off toilet light
+- alias: Toggle Living Room pendant
   trigger:
-    - platform: state
-      entity_id: group.toilet_motion
-      to: "off"
-      for:
-        minutes: 2
+    - platform: mqtt
+      topic: zigbee2mqtt/living_room_wall_switch
+  condition:
+    - condition: template
+      value_template: "{{ trigger.payload_json.click == 'left' }}"
   action:
-    - service: light.turn_off
-      entity_id: group.toilet_lights
-
-- alias: Turn on hallway lights
-  trigger:
-    - platform: state
-      entity_id: group.hallway_motion
-      to: "on"
-  action:
-    - service: light.turn_on
-      entity_id: group.hallway_lights
-
-- alias: Turn off hallway lights
-  trigger:
-    - platform: state
-      entity_id: group.hallway_motion
-      to: "off"
-      for:
-        seconds: 10
-  action:
-    - service: light.turn_off
-      entity_id: group.hallway_lights
-
-- alias: Turn on stairway light
-  trigger:
-    - platform: state
-      entity_id: group.stairway_motion
-      to: "on"
-  action:
-    - service: light.turn_on
-      entity_id: group.stairway_lights
-
-- alias: Turn off stairway light
-  trigger:
-    - platform: state
-      entity_id: group.stairway_motion
-      to: "off"
-      for:
-        seconds: 10
-  action:
-    - service: light.turn_off
-      entity_id: group.stairway_lights
-
-- alias: Turn on downstairs lights
-  trigger:
-    - platform: state
-      entity_id: group.downstairs_motion
-      to: "on"
-  action:
-    - service: light.turn_on
-      entity_id: group.downstairs_lights
-
-- alias: Turn off downstairs lights
-  trigger:
-    - platform: state
-      entity_id: group.downstairs_motion
-      to: "off"
-      for:
-        minutes: 1
-  action:
-    - service: light.turn_off
-      entity_id: group.downstairs_lights
+    - data:
+        entity_id: light.living_room_pendant
+      service: light.toggle
