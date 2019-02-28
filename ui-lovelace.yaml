@@ -35,13 +35,16 @@ views:
         title: Home
         type: entities
       - entities:
-          - climate.living_room
+          - entity: climate.living_room
+            name: Thermostat
           - label: Lights
             type: section
-          - light.living_room_pendant
+          - entity: light.living_room_pendant
+            name: Pendant light
           - label: Switches
             type: section
-          - sensor.kitchen_wall_switch_battery
+          - entity: sensor.living_room_wall_switch_battery
+            name: Wall switch battery status
         show_header_toggle: false
         title: Living Room
         type: entities
@@ -49,11 +52,14 @@ views:
           - binary_sensor.backdoor_contact_sensor
           - label: Lights
             type: section
-          - light.kitchen_worktop
-          - light.kitchen_mood_lighting
+          - entity: light.kitchen_worktop
+            name: Worktop light
+          - entity: light.kitchen_mood_lighting
+            name: Mood lighting
           - label: Switches
             type: section
-          - sensor.living_room_wall_switch_battery
+          - entity: sensor.kitchen_wall_switch_battery
+            name: Wall switch battery status
         show_header_toggle: false
         title: Kitchen
         type: entities

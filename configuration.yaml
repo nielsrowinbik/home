@@ -38,8 +38,6 @@ frontend:
 
 history:
   exclude:
-    domains:
-      - binary_sensor
     entities:
       - group.everyone
 
@@ -76,7 +74,6 @@ recorder:
       - binary_sensor
       - climate
       - light
-      - switch
     entities:
       - group.everyone
       - group.laura
