@@ -1,7 +1,7 @@
 - alias: Temporarily turn off heating while backdoor is open
   trigger:
     - platform: state
-      entity_id: binary_sensor.backdoor_sensor
+      entity_id: binary_sensor.backdoor_contact_sensor
       to: "on"
       for:
         seconds: 30
@@ -10,6 +10,8 @@
       data:
         entity_id: climate.living_room
         operation_mode: "Off"
-    - wait_template: "{{ states('sensor.backdoor_sensor', 'off') }}"
-    - service: script.turn_on
-      entity_id: script.scene_sync
+    - wait_template: "{{ is_state('binary_sensor.backdoor_contact_sensor', 'off') }}"
+    - service: climate.set_operation_mode
+      data:
+        entity_id: climate.living_room
+        operation_mode: "Tado mode"

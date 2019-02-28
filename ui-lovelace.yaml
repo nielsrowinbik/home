@@ -46,7 +46,7 @@ views:
         title: Living Room
         type: entities
       - entities:
-          - binary_sensor.backdoor_sensor
+          - binary_sensor.backdoor_contact_sensor
           - label: Lights
             type: section
           - light.kitchen_worktop
