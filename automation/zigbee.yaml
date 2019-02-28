@@ -1,0 +1,8 @@
+- alias: Update Zigbee network map every hour
+  trigger:
+    - platform: time_pattern
+      hours: "/1"
+      minutes: 0
+      seconds: 0
+  action:
+    - service: zigbee2mqtt_networkmap.update
