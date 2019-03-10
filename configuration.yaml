@@ -61,7 +61,7 @@ lovelace:
 panel_iframe:
   zigbee2mqtt_networkmap:
     title: Zigbee Map
-    url: /local/zigbee2mqtt_networkmap/map.html
+    url: /local/zigbee2mqtt_networkmap/map.html?engine=dot
     icon: mdi:lan
 
 recorder:
