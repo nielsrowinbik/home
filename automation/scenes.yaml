@@ -90,33 +90,6 @@
       data:
         entity_id: scene.morning
 
-- alias: Trigger night scene at fixed time
-  trigger:
-    - platform: time
-      at: "21:30:00"
-    - platform: time
-      at: "23:30:00"
-  condition:
-    - condition: or
-      conditions:
-        - condition: time
-          after: "21:30:00"
-          weekday:
-            - mon
-            - tue
-            - wed
-            - thu
-            - sun
-        - condition: time
-          after: "23:30:00"
-          weekday:
-            - fri
-            - sat
-  action:
-    - service: scene.turn_on
-      data:
-        entity_id: scene.night
-
 - alias: Reactivate secondary scene upon primary scene switch
   trigger:
     - platform: state
