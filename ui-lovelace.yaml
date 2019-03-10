@@ -1,4 +1,8 @@
 resources:
+  - url: https://fonts.googleapis.com/css?family=Product+Sans:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i
+    type: css
+  - url: /local/custom-css/styles.css
+    type: css
   - url: /local/custom-lovelace/card-tools.js?v=0.3.0
     type: js
   - url: /local/custom-lovelace/card-modder.js?v=0.1.0
@@ -27,42 +31,37 @@ views:
     path: home
     title: Home
   - cards:
-      - entities:
-          - input_select.presence
-          - input_select.primary_scene
-          - input_select.secondary_scene
-        show_header_toggle: false
-        title: Home
-        type: entities
-      - entities:
-          - entity: climate.living_room
-            name: Thermostat
-          - label: Lights
-            type: section
-          - entity: light.living_room_pendant
-            name: Pendant light
-          - label: Switches
-            type: section
-          - entity: sensor.living_room_wall_switch_battery
-            name: Wall switch battery status
-        show_header_toggle: false
-        title: Living Room
-        type: entities
-      - entities:
-          - binary_sensor.backdoor_contact_sensor
-          - label: Lights
-            type: section
-          - entity: light.kitchen_worktop
-            name: Worktop light
-          - entity: light.kitchen_mood_lighting
-            name: Mood lighting
-          - label: Switches
-            type: section
-          - entity: sensor.kitchen_wall_switch_battery
-            name: Wall switch battery status
-        show_header_toggle: false
-        title: Kitchen
-        type: entities
+      - cards:
+          - entities:
+              - input_select.presence
+              - input_select.primary_scene
+              - input_select.secondary_scene
+            show_header_toggle: false
+            title: Niels & Laura's Home
+            type: entities
+          - entities:
+              - entity: binary_sensor.backdoor_contact_sensor
+                name: Backdoor
+              - label: Lights
+                type: section
+              - entity: light.kitchen_worktop
+                name: Worktop light
+              - entity: light.kitchen_mood_lighting
+                name: Mood lighting
+            show_header_toggle: false
+            title: Kitchen
+            type: entities
+          - entities:
+              - entity: climate.living_room
+                name: Thermostat
+              - label: Lights
+                type: section
+              - entity: light.living_room_pendant
+                name: Pendant light
+            show_header_toggle: false
+            title: Living Room
+            type: entities
+        type: vertical-stack
     icon: mdi:monitor-dashboard
     path: dashboard
     title: Dashboard
@@ -82,12 +81,7 @@ views:
     title: Reports
   - cards:
       - entities:
-          - automation.synchronise_scene_to_time_of_day
-          - automation.handle_scene_override
-          - automation.reactivate_secondary_scene_upon_primary_scene_switch
           - script.scene_sync
-          - label: Status
-            type: section
           - sun.sun
           - sensor.sun_direction
           - sensor.time_of_day
@@ -98,8 +92,11 @@ views:
           - input_number.afternoon_threshold
           - input_number.early_evening_threshold
           - input_number.evening_threshold
-          - label: Other automations
+          - label: Automations
             type: section
+          - automation.synchronise_scene_to_time_of_day
+          - automation.handle_scene_override
+          - automation.reactivate_secondary_scene_upon_primary_scene_switch
           - automation.trigger_morning_scene_at_fixed_time
           - automation.trigger_night_scene_at_fixed_time
         show_header_toggle: false
@@ -121,3 +118,20 @@ views:
     icon: mdi:settings
     path: settings
     title: Settings
+  - cards:
+      - entities:
+          - sensor.dark_sky_cloud_coverage
+          - sensor.sun_elevation
+          - sensor.sun_elevation_corrected
+        show_header_toggle: false
+        title: Sun
+        type: entities
+      - entities:
+          - sensor.dark_sky_cloud_coverage
+          - sensor.sun_elevation
+          - sensor.sun_elevation_corrected
+        title: Sun (history)
+        type: history-graph
+    icon: mdi:test-tube
+    path: labs
+    title: Labs
