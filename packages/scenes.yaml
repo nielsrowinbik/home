@@ -64,6 +64,7 @@ input_select:
       - None
       - Cooking
       - Movie
+      - Door open
 
 scene:
   - name: Home
@@ -228,3 +229,12 @@ scene:
         option: Home
       input_select.secondary_scene:
         option: Movie
+
+  - name: Door open
+    entities:
+      input_select.presence:
+        option: Home
+      input_select.secondary_scene:
+        option: Door open
+      climate.living_room:
+        temperature: 16
