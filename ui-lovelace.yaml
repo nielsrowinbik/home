@@ -67,20 +67,6 @@ views:
     title: Dashboard
   - cards:
       - entities:
-          - entity: sensor.time_niels_spent_at_home_the_past_7_days
-            name: Niels was at home for
-          - entity: sensor.time_laura_spent_at_home_the_past_7_days
-            name: Laura was at home for
-          - entity: sensor.time_spent_watching_tv
-            name: The TV was on for
-        show_header_toggle: false
-        title: In the past 7 days
-        type: entities
-    icon: mdi:poll-box
-    path: reports
-    title: Reports
-  - cards:
-      - entities:
           - script.scene_sync
           - sun.sun
           - sensor.sun_direction
@@ -109,12 +95,6 @@ views:
         show_header_toggle: false
         title: Zigbee
         type: entities
-      - card:
-          type: entities
-          show_header_toggle: false
-          title: All automations
-        group: group.all_automations
-        type: custom:group-card
     icon: mdi:settings
     path: settings
     title: Settings
