@@ -32,7 +32,13 @@ input_number:
 
 script:
   scene_sync:
-    alias: Scene sync
+    alias: Sync scene to time of day
+    sequence:
+      - service: scene.turn_on
+        data_template:
+          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+  scene_selection_reactivate:
+    alias: Reactivate primary scene
     sequence:
       - service: scene.turn_on
         data_template:
@@ -154,6 +160,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Morning
+      automation.synchronise_scene_to_time_of_day: on
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
@@ -165,6 +172,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Day
+      automation.synchronise_scene_to_time_of_day: on
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
@@ -176,6 +184,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Afternoon
+      automation.synchronise_scene_to_time_of_day: on
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -187,6 +196,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Early evening
+      automation.synchronise_scene_to_time_of_day: on
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -198,6 +208,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Evening
+      automation.synchronise_scene_to_time_of_day: on
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -209,6 +220,7 @@ scene:
         option: Home
       input_select.primary_scene:
         option: Night
+      automation.synchronise_scene_to_time_of_day: off
       climate.living_room:
         temperature: 16
       light.kitchen_mood_lighting: off
