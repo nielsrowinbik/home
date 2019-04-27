@@ -5,10 +5,3 @@ light:
   - entity_id: switch.living_room_pendant
     name: Living Room pendant
     platform: switch
-
-switch:
-  - lights_brightness: []
-    lights_ct: []
-    platform: circadian_lighting
-    sleep_entity: input_select.primary_scene
-    sleep_state: Night
