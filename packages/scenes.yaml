@@ -87,7 +87,6 @@ scene:
       automation.play_music_through_harmony_remote: on
       automation.reactivate_secondary_scene_upon_primary_scene_switch: on
       automation.trigger_morning_scene_at_fixed_time: on
-      automation.trigger_night_scene_at_fixed_time: off
       automation.turn_on_receiver_when_audio_starts_playing: on
       automation.turn_on_tv_when_media_starts_playing: on
       automation.turn_on_toilet_light: on
@@ -110,7 +109,6 @@ scene:
       automation.play_music_through_harmony_remote: off
       automation.reactivate_secondary_scene_upon_primary_scene_switch: off
       automation.trigger_morning_scene_at_fixed_time: off
-      automation.trigger_night_scene_at_fixed_time: off
       automation.turn_on_receiver_when_audio_starts_playing: off
       automation.turn_on_tv_when_media_starts_playing: off
       climate.living_room:
@@ -141,7 +139,6 @@ scene:
       automation.play_music_through_harmony_remote: off
       automation.reactivate_secondary_scene_upon_primary_scene_switch: off
       automation.trigger_morning_scene_at_fixed_time: off
-      automation.trigger_night_scene_at_fixed_time: off
       automation.turn_on_receiver_when_audio_starts_playing: off
       automation.turn_on_tv_when_media_starts_playing: off
       climate.living_room:
