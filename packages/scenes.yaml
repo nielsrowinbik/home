@@ -63,8 +63,8 @@ input_select:
     options:
       - None
       - Cooking
-      - Movie
       - Door open
+      - Watching a movie
 
 scene:
   - name: Home
@@ -223,7 +223,7 @@ scene:
         option: Cooking
       light.kitchen_worktop: on
 
-  - name: Movie
+  - name: Watching a movie
     entities:
       input_select.presence:
         option: Home
