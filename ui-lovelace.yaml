@@ -83,8 +83,7 @@ views:
           - automation.synchronise_scene_to_time_of_day
           - automation.handle_scene_override
           - automation.reactivate_secondary_scene_upon_primary_scene_switch
-          - automation.trigger_morning_scene_at_fixed_time
-          - automation.trigger_night_scene_at_fixed_time
+          - automation.turn_off_night_scene
         show_header_toggle: false
         title: Scenes
         type: entities

@@ -170,6 +170,7 @@ scene:
       input_select.primary_scene:
         option: Day
       automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
@@ -182,6 +183,7 @@ scene:
       input_select.primary_scene:
         option: Afternoon
       automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -194,6 +196,7 @@ scene:
       input_select.primary_scene:
         option: Early evening
       automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -206,6 +209,7 @@ scene:
       input_select.primary_scene:
         option: Evening
       automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
       light.kitchen_mood_lighting: on
@@ -218,6 +222,7 @@ scene:
       input_select.primary_scene:
         option: Night
       automation.synchronise_scene_to_time_of_day: off
+      automation.turn_off_night_scene: on
       climate.living_room:
         temperature: 16
       light.kitchen_mood_lighting: off
