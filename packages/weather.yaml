@@ -1,9 +1,4 @@
 sensor:
-  - platform: buienradar
-    monitored_conditions:
-      - temperature
-      - precipitation
-      - irradiance
   - platform: darksky
     api_key: !secret dark_sky_api_key
     monitored_conditions:
