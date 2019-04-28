@@ -6,25 +6,27 @@
       for:
         seconds: 30
   action:
-    - service: scene.turn_on
+    - service: climate.set_operation_mode
       data:
-        entity_id: scene.door_open
+        entity_id: climate.living_room
+        operation_mode: "Off"
     - wait_template: "{{ is_state('binary_sensor.backdoor_contact_sensor', 'off') }}"
-    - service: input_select.select_option
+    - service: climate.set_operation_mode
       data:
-        entity_id: input_select.secondary_scene
-        option: None
-# - alias: Prevent heating from turning back on while backdoor is open
-#   trigger:
-#     - platform: state
-#       entity_id: climate.living_room
-#       from: "off"
-#   condition:
-#     - condition: state
-#       entity_id: binary_sensor.backdoor_contact_sensor
-#       state: "on"
-#   action:
-#     - service: climate.set_operation_mode
-#       data:
-#         entity_id: climate.living_room
-#         operation_mode: "Off"
+        entity_id: climate.living_room
+        operation_mode: "Tado mode"
+
+- alias: Prevent heating from turning back on while backdoor is open
+  trigger:
+    - platform: state
+      entity_id: climate.living_room
+      from: "off"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.backdoor_contact_sensor
+      state: "on"
+  action:
+    - service: climate.set_operation_mode
+      data:
+        entity_id: climate.living_room
+        operation_mode: "Off"
