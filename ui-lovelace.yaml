@@ -28,6 +28,20 @@ views:
             type: glance
         title: Niels & Laura's Home
         type: custom:vertical-stack-in-card
+      - card:
+          entities:
+            - type: call-service
+              name: Would you like to active the Night scene?
+              action_name: Okay
+              icon: mdi:google-assistant
+              service: scene.turn_on
+              service_data:
+                entity_id: scene.night
+          type: entities
+        conditions:
+          - entity: input_select.primary_scene
+            state: Evening
+        type: conditional
     path: home
     title: Home
   - cards:
