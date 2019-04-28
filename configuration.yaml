@@ -87,9 +87,6 @@ tado:
   username: !secret tado_username
   password: !secret tado_password
 
-tts:
-  - platform: google
-
 updater:
 
 zigbee2mqtt_networkmap:
