@@ -12,8 +12,12 @@ sensor:
         value_template: "{{ state_attr('sun.sun', 'elevation')|float|round(1) }}"
       sun_elevation_corrected:
         icon_template: mdi:white-balance-sunny
-        friendly_name: Sun elevation (corrected for cloud coverage)
-        value_template: "{{ (state_attr('sun.sun', 'elevation')|float - ((states('sensor.dark_sky_cloud_coverage')|float / 100) * state_attr('sun.sun', 'elevation')|float)|abs)|round(2) }}"
+        friendly_name: Sun elevation (corrected for cloud coverage) (alt)
+        value_template: >-
+          {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
+          {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
+          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
+          {{ "%.2f"|format(elevation - ((coverage * maxDecrease) * elevation)|abs) }}
         unit_of_measurement: "°"
       sun_direction:
         friendly_name: Sun direction
@@ -48,3 +52,13 @@ sensor:
           {% else %}
             Day
           {% endif %}
+
+input_number:
+  max_sun_elevation_decrease:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    mode: box
+    name: Max sun elevation decrease (%)
+    step: 1
+    unit_of_measurement: "%"

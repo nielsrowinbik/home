@@ -85,13 +85,14 @@ views:
           - sun.sun
           - sensor.sun_direction
           - sensor.time_of_day
-          - label: Trigger thresholds
+          - label: Settings
             type: section
           - input_number.morning_threshold
           - input_number.day_threshold
           - input_number.afternoon_threshold
           - input_number.early_evening_threshold
           - input_number.evening_threshold
+          - input_number.max_sun_elevation_decrease
           - label: Automations
             type: section
           - automation.synchronise_scene_to_time_of_day
@@ -111,20 +112,3 @@ views:
     icon: mdi:settings
     path: settings
     title: Settings
-  - cards:
-      - entities:
-          - sensor.dark_sky_cloud_coverage
-          - sensor.sun_elevation
-          - sensor.sun_elevation_corrected
-        show_header_toggle: false
-        title: Sun
-        type: entities
-      - entities:
-          - sensor.dark_sky_cloud_coverage
-          - sensor.sun_elevation
-          - sensor.sun_elevation_corrected
-        title: Sun (history)
-        type: history-graph
-    icon: mdi:test-tube
-    path: labs
-    title: Labs
