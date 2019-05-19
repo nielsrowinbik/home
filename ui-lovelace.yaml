@@ -5,30 +5,33 @@ title: " "
 views:
   - cards:
       - cards:
-          - columns: 6
-            entities:
-              - person.niels
-              - person.laura
-              - group.george
-              - input_select.scene
-            show_name: false
-            type: glance
-        title: Niels & Laura's Home
-        type: custom:vertical-stack-in-card
-      - card:
-          entities:
-            - type: call-service
-              name: Would you like to active the Night scene?
-              action_name: Okay
-              icon: mdi:google-assistant
-              service: scene.turn_on
-              service_data:
-                entity_id: scene.night
-          type: entities
-        conditions:
-          - entity: input_select.scene
-            state: Evening
-        type: conditional
+          - cards:
+              - columns: 6
+                entities:
+                  - person.niels
+                  - person.laura
+                  - group.george
+                  - input_select.scene
+                  - input_select.activity
+                show_name: false
+                type: glance
+            title: Niels & Laura's Home
+            type: custom:vertical-stack-in-card
+          - card:
+              entities:
+                - type: call-service
+                  name: Would you like to active the Night scene?
+                  action_name: Okay
+                  icon: mdi:google-assistant
+                  service: scene.turn_on
+                  service_data:
+                    entity_id: scene.night
+              type: entities
+            conditions:
+              - entity: input_select.scene
+                state: Evening
+            type: conditional
+        type: vertical-stack
     path: home
     title: Home
   - cards:
@@ -68,26 +71,28 @@ views:
     path: dashboard
     title: Dashboard
   - cards:
-      - entities:
-          - script.scene_sync
-          - automation.synchronise_scene_to_time_of_day
-          - automation.turn_off_night_scene
-          - label: Settings
-            type: section
-          - input_number.morning_threshold
-          - input_number.day_threshold
-          - input_number.afternoon_threshold
-          - input_number.early_evening_threshold
-          - input_number.evening_threshold
-          - input_number.max_sun_elevation_decrease
-        show_header_toggle: false
-        title: Scenes
-        type: entities
-      - entities:
-          - input_boolean.zigbee_permit_join
-        show_header_toggle: false
-        title: Zigbee
-        type: entities
+      - cards:
+          - entities:
+              - script.scene_sync
+              - automation.synchronise_scene_to_time_of_day
+              - automation.turn_off_night_scene
+              - label: Settings
+                type: section
+              - input_number.morning_threshold
+              - input_number.day_threshold
+              - input_number.afternoon_threshold
+              - input_number.early_evening_threshold
+              - input_number.evening_threshold
+              - input_number.max_sun_elevation_decrease
+            show_header_toggle: false
+            title: Scenes
+            type: entities
+          - entities:
+              - input_boolean.zigbee_permit_join
+            show_header_toggle: false
+            title: Zigbee
+            type: entities
+        type: vertical-stack
     icon: mdi:settings
     path: settings
     title: Settings

@@ -128,3 +128,57 @@ automation:
       - service: media_player.media_pause
         data_template:
           entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
+
+  - alias: Sync activity to Harmony Hub's current activity
+    trigger:
+      - platform: state
+        entity_id: remote.harmony_hub
+    action:
+      - service: script.turn_on
+        entity_id: script.activity_sync
+
+  - alias: Sync to Harmony Hub's current activity to activity
+    trigger:
+      - platform: state
+        entity_id: input_select.activity
+    action:
+      - service_template: >-
+          {% if trigger.to_state.state == "Off" %}
+            remote.turn_off
+          {% else %}
+            remote.turn_on
+          {% endif %}
+        data_template:
+          entity_id: remote.harmony_hub
+          activity: >-
+            {% if trigger.to_state.state == "Off" %}
+              null
+            {% else %}
+              {{ trigger.to_state.state }}
+            {% endif %}
+
+input_select:
+  activity:
+    icon: mdi:pulse
+    name: Activity
+    options:
+      - Watch TV
+      - Play a Game
+      - Watch a DVD
+      - Listen to Music
+      - Watch Chromecast
+      - "Off"
+
+script:
+  activity_sync:
+    alias: Sync activity to Harmony Hub's current activity
+    sequence:
+      - service: input_select.select_option
+        data_template:
+          entity_id: input_select.activity
+          option: >-
+            {% if state_attr('remote.harmony_hub', 'current_activity') == "PowerOff" %}
+              Off
+            {% else %}
+              {{ state_attr('remote.harmony_hub', 'current_activity') }}
+            {% endif %}
