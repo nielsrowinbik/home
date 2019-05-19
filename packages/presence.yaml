@@ -1,4 +1,28 @@
-# Pet
+device_tracker:
+  - platform: bluetooth_tracker
+    request_rssi: true
+    new_device_defaults:
+      hide_if_away: false
+      track_new_devices: false
+  - platform: upc_connect
+    host: !secret default_gateway_ip
+    new_device_defaults:
+      hide_if_away: false
+      track_new_devices: false
+
+group:
+  everyone:
+    entities:
+      - person.niels
+      - person.laura
+    icon: mdi:account-group
+    name: Everyone
+  george:
+    entities:
+      - sensor.george_home
+    icon: mdi:cat
+    name: George
+
 input_boolean:
   george_home_toggle:
     name: George
@@ -17,51 +41,3 @@ sensor:
           {% else %}
             not_home
           {% endif %}
-
-# Humans
-device_tracker:
-  - platform: bluetooth_tracker
-    request_rssi: true
-    new_device_defaults:
-      hide_if_away: false
-      track_new_devices: false
-  - platform: upc_connect
-    host: !secret default_gateway_ip
-    new_device_defaults:
-      hide_if_away: false
-      track_new_devices: false
-
-group:
-  pixel_2_xl:
-    entities:
-      - device_tracker.pixel_2_xl_bt
-      - device_tracker.pixel_2_xl_wifi
-    icon: mdi:cellphone
-    name: Niels' Pixel 2 XL
-  galaxy_a5:
-    entities:
-      - device_tracker.galaxy_a5_bt
-      - device_tracker.galaxy_a5_wifi
-    icon: mdi:cellphone
-    name: Laura's Galaxy A5
-  everyone:
-    entities:
-      - group.niels
-      - group.laura
-    icon: mdi:account-group
-    name: Everyone
-  george:
-    entities:
-      - sensor.george_home
-    icon: mdi:cat
-    name: George
-  laura:
-    entities:
-      - group.galaxy_a5
-    icon: mdi:account
-    name: Laura
-  niels:
-    entities:
-      - group.pixel_2_xl
-    icon: mdi:account
-    name: Niels

@@ -1,24 +1,8 @@
+person.niels:
+  entity_picture: https://lh3.googleusercontent.com/-q7ucVQzBrYQ/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfFORdP29ognkhyJteMdAQ7Gc-D2g.CMID/s128-c-mo/photo.jpg
+person.laura:
+  entity_picture: https://lh3.googleusercontent.com/-1iRrg-kkjZE/WE1OIBySQZI/AAAAAAAAAAA/PKpzbFlT9gQXG9QeNyP2cWlW_aOCB8VIgCOQCEAE/s128-c-mo/photo.jpg
 climate.living_room:
   friendly_name: Living Room Thermostat
-  target_temp_step: 1
-sensor.living_room_link:
-  hidden: true
-sensor.living_room_overlay:
-  hidden: true
-sensor.living_room_power:
-  hidden: true
-sensor.niels_lauras_home_tado_bridge_status:
-  hidden: true
-sensor.living_room_heating:
-  friendly_name: Living Room heating intensity
-group.laura:
-  entity_picture: /local/laura.jpg
-group.niels:
-  entity_picture: /local/niels.jpg
-  image: /local/www/niels.jpg
 group.george:
-  entity_picture: /local/george.jpg
-switch.kitchen_mood_lighting:
-  icon: mdi:lightbulb
-switch.living_room_pendant:
-  icon: mdi:lightbulb
+  entity_picture: https://lh3.googleusercontent.com/fcgrLg3edjNcvCihabrVwETVibd1wBPwCRewu-IVa0BFk8Y546qXrtl-3hkk6RMeJE-UKv6SQsJPTKijM3LlACvmE5IqIfmknoeQau5_KyCZWNabW_dxK3rwHmadg97SoPOV5Cah7Z5ytFvgj4WAci5sLIb7-VusqhhvdZEwnKlr3zbozeyUVc8U_QzeRGN6Mu1tbyaLSFToQlny071pOgEUnvga1PrLh-KNO2TjQ_Apk7HRiqtDNNpfopzj1A0BXXWuGSWjm4dqYZ2jC0n-ury9SsIzT8dRl2t5cnxPetUT9IUvuol-OyKjtxPRxuEDXPvxp92hBF31BfhCG7RBIaLpvR6cxmYESya6YQRkvNHSavO-rBX6-VUoZmqmLkZZhbKxaPphbxYmNLr-jpX9mkAiSqoaWq5cxE4ohcB4AOzmeeCry_SXjnCBkt2pOtZotGhSxTckpEsiygmNhT6TT2n2GQpZoTpMpXNLfFwXLLFM_MoRAzw7kam5ffCXSxzoqUnJyWM4cCqyfH4LirdcA7gahpotVkgg3fLCNIAQBoBv9rE8wEclux57VtognH5KM4bgl8BkmopYuaePu6ooWsVuJOYE06SY9wnqsTv3RIW9V2O8ZF9UqCxE8yfkSK7UgXGfO-UcUZd4-PnVFAC-uE0JBG7RsuwT=s128-no

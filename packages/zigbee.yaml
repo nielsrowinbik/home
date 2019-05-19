@@ -1,8 +1,18 @@
-mqtt:
-  broker: localhost
-  username: !secret mqtt_user
-  password: !secret mqtt_pass
-  discovery: true
+automation:
+  - alias: Handle pairing mode change
+    trigger:
+      - platform: state
+        entity_id: input_boolean.zigbee_permit_join
+    action:
+      - service: mqtt.publish
+        data_template:
+          topic: zigbee2mqtt/bridge/config/permit_join
+          payload: >-
+            {% if trigger.to_state.state == "on" %}
+              true
+            {% else %}
+              false
+            {% endif %}
 
 input_boolean:
   zigbee_permit_join:
@@ -10,13 +20,8 @@ input_boolean:
     initial: off
     icon: mdi:cellphone-wireless
 
-timer:
-  zigbee_permit_join:
-    name: Time remaining
-    duration: 600
-
-sensor:
-  - platform: mqtt
-    name: Bridge state
-    state_topic: "zigbee2mqtt/bridge/state"
-    icon: mdi:router-wireless
+mqtt:
+  broker: localhost
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true

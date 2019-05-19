@@ -1,44 +1,99 @@
-input_number:
-  morning_threshold:
-    icon: mdi:tune
-    max: 10
-    min: -10
-    mode: box
-    name: Activate Morning when elevation reaches
-    step: 0.5
-    unit_of_measurement: "°"
-  day_threshold:
-    icon: mdi:tune
-    max: 10
-    min: -10
-    mode: box
-    name: Activate Day when elevation reaches
-    step: 0.5
-    unit_of_measurement: "°"
-  afternoon_threshold:
-    icon: mdi:tune
-    max: 10
-    min: -10
-    mode: box
-    name: Activate Afternoon when elevation drops below
-    step: 0.5
-    unit_of_measurement: "°"
-  early_evening_threshold:
-    icon: mdi:tune
-    max: 10
-    min: -10
-    mode: box
-    name: Activate Early evening when elevation drops below
-    step: 0.5
-    unit_of_measurement: "°"
-  evening_threshold:
-    icon: mdi:tune
-    max: 10
-    min: -10
-    mode: box
-    name: Activate Evening when elevation drops below
-    step: 0.5
-    unit_of_measurement: "°"
+automation:
+  - alias: Set home mode to Home
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.home
+
+  - alias: Set home mode to Away
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          minutes: 15
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.away
+
+  - alias: Set home mode to Vacation
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          hours: 24
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.vacation
+
+  - alias: Synchronise scene to time of day
+    trigger:
+      - platform: state
+        entity_id: sensor.time_of_day
+      - platform: state
+        entity_id: group.everyone
+        to: home
+      - platform: state
+        entity_id: climate.living_room
+        to: Smart Schedule
+    condition:
+      - condition: state
+        entity_id: group.everyone
+        state: home
+    action:
+      - service: scene.turn_on
+        data_template:
+          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+
+  - alias: Turn off Night scene
+    trigger:
+      - platform: time
+        at: 06:30:00
+      - platform: time
+        at: 08:30:00
+    condition:
+      - condition: or
+        conditions:
+          - condition: time
+            after: 06:30:00
+            weekday:
+              - mon
+              - tue
+              - wed
+              - thu
+              - fri
+          - condition: time
+            after: 08:30:00
+            weekday:
+              - sat
+              - sun
+    action:
+      - service: script.turn_on
+        entity_id: script.scene_sync
+      - condition: state
+        entity_id: sensor.time_of_day
+        state: Night
+      - service: scene.turn_on
+        data:
+          entity_id: scene.morning
+
+  - alias: Handle scene override
+    trigger:
+      - platform: state
+        entity_id: input_select.presence
+      - platform: state
+        entity_id: input_select.scene
+    action:
+      - service: scene.turn_on
+        data_template:
+          entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
 
 script:
   scene_sync:
@@ -52,7 +107,7 @@ script:
     sequence:
       - service: scene.turn_on
         data_template:
-          entity_id: scene.{{ states('input_select.primary_scene') | lower | replace(' ', '_') }}
+          entity_id: scene.{{ states('input_select.scene') | lower | replace(' ', '_') }}
 
 input_select:
   presence:
@@ -62,7 +117,7 @@ input_select:
       - Home
       - Away
       - Vacation
-  primary_scene:
+  scene:
     icon: mdi:theme-light-dark
     name: Scene
     options:
@@ -74,100 +129,45 @@ input_select:
       - Night
       - Away
       - Vacation
-  secondary_scene:
-    name: Activity
-    options:
-      - None
-      - Cooking
-      - Door open
-      - Watching a movie
 
 scene:
   - name: Home
     entities:
       input_select.presence:
         option: Home
-      automation.set_home_mode_to_home: off
-      automation.set_home_mode_to_away: on
-      automation.set_home_mode_to_vacation: on
-      automation.pause_media_through_harmony_remote: on
-      automation.pause_music_through_harmony_remote: on
-      automation.pause_music_when_turning_on_the_tv: on
-      automation.play_media_through_harmony_remote: on
-      automation.play_music_through_harmony_remote: on
-      automation.reactivate_secondary_scene_upon_primary_scene_switch: on
-      automation.trigger_morning_scene_at_fixed_time: on
-      automation.turn_on_receiver_when_audio_starts_playing: on
-      automation.turn_on_tv_when_media_starts_playing: on
-      automation.turn_on_toilet_light: on
 
   - name: Away
     entities:
       input_select.presence:
         option: Away
-      input_select.primary_scene:
-        option: Away
-      input_select.secondary_scene:
-        option: None
-      automation.set_home_mode_to_home: on
-      automation.set_home_mode_to_away: off
-      automation.set_home_mode_to_vacation: on
-      automation.pause_media_through_harmony_remote: off
-      automation.pause_music_through_harmony_remote: off
-      automation.pause_music_when_turning_on_the_tv: off
-      automation.play_media_through_harmony_remote: off
-      automation.play_music_through_harmony_remote: off
-      automation.reactivate_secondary_scene_upon_primary_scene_switch: off
-      automation.trigger_morning_scene_at_fixed_time: off
-      automation.turn_on_receiver_when_audio_starts_playing: off
-      automation.turn_on_tv_when_media_starts_playing: off
+      automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 16
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
-      media_player.kitchen_speakers: off
-      media_player.living_room_tv: off
-      media_player.upstairs: off
-      remote.harmony_hub: off
 
   - name: Vacation
     entities:
       input_select.presence:
         option: Vacation
-      input_select.primary_scene:
-        option: Vacation
-      input_select.secondary_scene:
-        option: None
-      automation.set_home_mode_to_home: on
-      automation.set_home_mode_to_away: off
-      automation.set_home_mode_to_vacation: off
-      automation.pause_media_through_harmony_remote: off
-      automation.pause_music_through_harmony_remote: off
-      automation.pause_music_when_turning_on_the_tv: off
-      automation.play_media_through_harmony_remote: off
-      automation.play_music_through_harmony_remote: off
-      automation.reactivate_secondary_scene_upon_primary_scene_switch: off
-      automation.trigger_morning_scene_at_fixed_time: off
-      automation.turn_on_receiver_when_audio_starts_playing: off
-      automation.turn_on_tv_when_media_starts_playing: off
+      automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 16
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
-      media_player.kitchen_speakers: off
-      media_player.living_room_tv: off
-      media_player.upstairs: off
-      remote.harmony_hub: off
 
   - name: Morning
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Morning
       automation.synchronise_scene_to_time_of_day: on
+      automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
@@ -177,7 +177,7 @@ scene:
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Day
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
@@ -190,7 +190,7 @@ scene:
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Afternoon
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
@@ -203,7 +203,7 @@ scene:
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Early evening
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
@@ -216,7 +216,7 @@ scene:
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Evening
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
@@ -229,7 +229,7 @@ scene:
     entities:
       input_select.presence:
         option: Home
-      input_select.primary_scene:
+      input_select.scene:
         option: Night
       automation.synchronise_scene_to_time_of_day: off
       automation.turn_off_night_scene: on
@@ -238,27 +238,3 @@ scene:
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
-
-  - name: Cooking
-    entities:
-      input_select.presence:
-        option: Home
-      input_select.secondary_scene:
-        option: Cooking
-      light.kitchen_worktop: on
-
-  - name: Watching a movie
-    entities:
-      input_select.presence:
-        option: Home
-      input_select.secondary_scene:
-        option: Movie
-
-  - name: Door open
-    entities:
-      input_select.presence:
-        option: Home
-      input_select.secondary_scene:
-        option: Door open
-      climate.living_room:
-        temperature: 16

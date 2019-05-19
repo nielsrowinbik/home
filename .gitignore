@@ -5,7 +5,7 @@
 !*/
 
 # Include specific files/folders
-!www/custom-lovelace/**
+!www/js/**
 !custom_components/**
 !packages/*
 !automation/*

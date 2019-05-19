@@ -1,7 +1,0 @@
-light:
-  - entity_id: switch.kitchen_mood_lighting
-    name: Kitchen mood lighting
-    platform: switch
-  - entity_id: switch.living_room_pendant
-    name: Living Room pendant
-    platform: switch

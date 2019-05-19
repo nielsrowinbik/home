@@ -8,7 +8,7 @@ homeassistant:
   packages: !include_dir_named packages/
   customize: !include customize.yaml
 
-automation: !include_dir_merge_list automation/
+# automation: !include_dir_merge_list automation/
 
 cloud:
   google_actions:
@@ -29,7 +29,7 @@ emulated_roku:
       listen_port: 8060
 
 frontend:
-  themes: !include_dir_named themes/
+  # themes: !include_dir_named themes/
 
 history:
   exclude:
@@ -52,31 +52,32 @@ logbook:
 
 lovelace:
   mode: yaml
+#
+# mqtt:
+#   broker: "127.0.0.1"
+#   username: !secret mqtt_username
+#   password: !secret mqtt_password
 
-panel_iframe:
-  zigbee2mqtt_networkmap:
-    title: Zigbee Map
-    url: /local/zigbee2mqtt_networkmap/map.html?engine=dot
-    icon: mdi:lan
+person:
 
 recorder:
-  db_url: !secret db_url
-  include:
-    domains:
-      - binary_sensor
-      - climate
-      - light
-    entities:
-      - group.everyone
-      - group.laura
-      - group.niels
-      - input_select.presence
-      - input_select.primary_scene
-      - input_select.secondary_scene
-      - sensor.living_room_heating
-      - sensor.living_room_humidity
-      - sensor.living_room_temperature
-      - sensor.time_of_day
+  # db_url: !secret db_url
+  # include:
+  #   domains:
+  #     - binary_sensor
+  #     - climate
+  #     - light
+  #   entities:
+  #     - group.everyone
+  #     - group.laura
+  #     - group.niels
+  #     - input_select.presence
+  #     - input_select.primary_scene
+  #     - input_select.secondary_scene
+  #     - sensor.living_room_heating
+  #     - sensor.living_room_humidity
+  #     - sensor.living_room_temperature
+  #     - sensor.time_of_day
   purge_keep_days: 7
 
 sun:
@@ -88,5 +89,3 @@ tado:
   password: !secret tado_password
 
 updater:
-
-zigbee2mqtt_networkmap:

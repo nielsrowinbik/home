@@ -12,7 +12,7 @@ sensor:
         value_template: "{{ state_attr('sun.sun', 'elevation')|float|round(1) }}"
       sun_elevation_corrected:
         icon_template: mdi:white-balance-sunny
-        friendly_name: Sun elevation (corrected for cloud coverage) (alt)
+        friendly_name: Sun elevation (corrected for cloud coverage)
         value_template: >-
           {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
           {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
@@ -62,3 +62,43 @@ input_number:
     name: Max sun elevation decrease (%)
     step: 1
     unit_of_measurement: "%"
+  morning_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Activate Morning when elevation reaches
+    step: 0.5
+    unit_of_measurement: "°"
+  day_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Activate Day when elevation reaches
+    step: 0.5
+    unit_of_measurement: "°"
+  afternoon_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Activate Afternoon when elevation drops below
+    step: 0.5
+    unit_of_measurement: "°"
+  early_evening_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Activate Early evening when elevation drops below
+    step: 0.5
+    unit_of_measurement: "°"
+  evening_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Activate Evening when elevation drops below
+    step: 0.5
+    unit_of_measurement: "°"
