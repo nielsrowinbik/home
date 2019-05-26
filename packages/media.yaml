@@ -157,6 +157,19 @@ automation:
               {{ trigger.to_state.state }}
             {% endif %}
 
+  - alias: Sync subwoofer power state to receiver power state through Harmony activity
+    trigger:
+      - platform: state
+        entity_id: remote.harmony_hub
+    action:
+      - service_template: >-
+          {% if trigger.to_state.state == 'off' %}
+            switch.turn_off
+          {% else %}
+            switch.turn_on
+          {% endif %}
+        entity_id: switch.power_outlet_3
+
 input_select:
   activity:
     icon: mdi:pulse
