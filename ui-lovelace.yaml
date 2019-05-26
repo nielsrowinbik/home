@@ -52,13 +52,13 @@ views:
             title: Kitchen
             type: entities
           - entities:
-              - entity: climate.living_room
-                name: Thermostat
+              - entity: media_player.living_room_tv
+                name: Chromecast
               - entity: media_player.living_room_speakers
                 icon: mdi:speaker
                 name: Speakers
-              - entity: media_player.living_room_tv
-                name: Chromecast
+              - entity: climate.living_room
+                name: Thermostat
               - label: Lights
                 type: section
               - entity: light.living_room_pendant
