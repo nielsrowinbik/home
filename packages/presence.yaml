@@ -1,3 +1,38 @@
+automation:
+  - alias: Set home mode to Home
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.home
+
+  - alias: Set home mode to Away
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          minutes: 15
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.away
+
+  - alias: Set home mode to Vacation
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          hours: 24
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.vacation
+
 device_tracker:
   - platform: bluetooth_tracker
     request_rssi: true
@@ -28,6 +63,15 @@ input_boolean:
     name: George
     initial: on
     icon: mdi:cat
+
+input_select:
+  presence:
+    icon: mdi:home-circle
+    name: Presence
+    options:
+      - Home
+      - Away
+      - Vacation
 
 sensor:
   - platform: template

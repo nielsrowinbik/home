@@ -1,38 +1,4 @@
 automation:
-  - alias: Set home mode to Home
-    trigger:
-      - platform: state
-        entity_id: group.everyone
-        to: home
-    action:
-      - service: scene.turn_on
-        data:
-          entity_id: scene.home
-
-  - alias: Set home mode to Away
-    trigger:
-      - platform: state
-        entity_id: group.everyone
-        to: not_home
-        for:
-          minutes: 15
-    action:
-      - service: scene.turn_on
-        data:
-          entity_id: scene.away
-
-  - alias: Set home mode to Vacation
-    trigger:
-      - platform: state
-        entity_id: group.everyone
-        to: not_home
-        for:
-          hours: 24
-    action:
-      - service: scene.turn_on
-        data:
-          entity_id: scene.vacation
-
   - alias: Synchronise scene to time of day
     trigger:
       - platform: state
@@ -110,13 +76,6 @@ script:
           entity_id: scene.{{ states('input_select.scene') | lower | replace(' ', '_') }}
 
 input_select:
-  presence:
-    icon: mdi:home-circle
-    name: Presence
-    options:
-      - Home
-      - Away
-      - Vacation
   scene:
     icon: mdi:theme-light-dark
     name: Scene
@@ -140,6 +99,8 @@ scene:
     entities:
       input_select.presence:
         option: Away
+      input_select.scene:
+        option: Away
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
       climate.living_room:
@@ -151,6 +112,8 @@ scene:
   - name: Vacation
     entities:
       input_select.presence:
+        option: Vacation
+      input_select.scene:
         option: Vacation
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
