@@ -42,6 +42,39 @@ automation:
         data:
           entity_id: light.living_room_pendant
 
+  - alias: Toggle Toilet spot through wall button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/toilet_wall_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click == 'single' }}"
+    action:
+      - service: light.toggle
+        data_template:
+          entity_id: light.toilet_spot
+          brightness: 255
+
+  - alias: Toggle Toilet spot through motion sensor
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.toilet_occupancy
+        to: "on"
+    action:
+      - service: light.turn_on
+        data_template:
+          entity_id: light.toilet_spot
+          brightness: "{{ states('sensor.global_brightness')|int }}"
+      - wait_template: "{{ is_state('binary_sensor.toilet_occupancy', 'off') }}"
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: light.toilet_spot
+            state: "on"
+      - service: light.turn_off
+        data_template:
+          entity_id: light.toilet_spot
+
 input_number:
   morning_brightness:
     icon: mdi:tune
