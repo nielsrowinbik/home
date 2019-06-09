@@ -17,6 +17,17 @@ automation:
               false
             {% endif %}
 
+  - alias: Generate network map every hour
+    trigger:
+      - platform: time_pattern
+        minutes: 0
+        seconds: 0
+    action:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/bridge/networkmap
+          payload: graphviz
+
 input_boolean:
   zigbee_permit_join:
     name: Allow devices to join
