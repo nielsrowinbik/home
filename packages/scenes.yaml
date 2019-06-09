@@ -108,6 +108,8 @@ scene:
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.toilet_spot: off
+      remote.harmony_hub: off
 
   - name: Vacation
     entities:
@@ -122,6 +124,8 @@ scene:
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.toilet_spot: off
+      remote.harmony_hub: off
 
   - name: Morning
     entities:
@@ -201,3 +205,4 @@ scene:
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      remote.harmony_hub: off
