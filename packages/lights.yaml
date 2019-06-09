@@ -23,6 +23,50 @@ automation:
           entity_id: light.living_room_pendant
         service: light.toggle
 
+input_number:
+  morning_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Morning brightness
+    step: 1
+    unit_of_measurement: "%"
+  day_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Day brightness
+    step: 1
+    unit_of_measurement: "%"
+  afternoon_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Afternoon brightness
+    step: 1
+    unit_of_measurement: "%"
+  early_evening_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Early evening brightness
+    step: 1
+    unit_of_measurement: "%"
+  evening_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Evening brightness
+    step: 1
+    unit_of_measurement: "%"
+  night_brightness:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    name: Night brightness
+    step: 1
+    unit_of_measurement: "%"
+
 light:
   - platform: switch
     name: Kitchen mood lighting
@@ -30,3 +74,14 @@ light:
   - platform: switch
     name: Living Room pendant
     entity_id: switch.power_outlet_2
+
+sensor:
+  - platform: template
+    sensors:
+      global_brightness:
+        friendly_name: Brightness
+        icon_template: mdi:brightness-6
+        value_template: >-
+          {% set currentScene = states('input_select.scene')|lower|replace(' ', '_') %}
+          {% set settingEntity = "input_number.%s_brightness"|format(currentScene) %}
+          {{ ((states(settingEntity)|int / 100) * 255)|int }}
