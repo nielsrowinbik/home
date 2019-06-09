@@ -1,4 +1,23 @@
 automation:
+  - alias: Update global brightness when settings change
+    trigger:
+      - platform: state
+        entity_id: input_number.morning_brightness
+      - platform: state
+        entity_id: input_number.day_brightness
+      - platform: state
+        entity_id: input_number.afternoon_brightness
+      - platform: state
+        entity_id: input_number.early_evening_brightness
+      - platform: state
+        entity_id: input_number.evening_brightness
+      - platform: state
+        entity_id: input_number.night_brightness
+    action:
+      - service: homeassistant.update_entity
+        data:
+          entity_id: sensor.global_brightness
+
   - alias: Toggle Kitchen worktop light through wall button press
     trigger:
       - platform: mqtt
