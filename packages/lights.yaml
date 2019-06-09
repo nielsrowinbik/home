@@ -1,5 +1,5 @@
 automation:
-  - alias: Toggle Kitchen worktop light
+  - alias: Toggle Kitchen worktop light through wall button press
     trigger:
       - platform: mqtt
         topic: zigbee2mqtt/kitchen_wall_switch
@@ -7,9 +7,9 @@ automation:
       - condition: template
         value_template: "{{ trigger.payload_json.click == 'right' }}"
     action:
-      - data:
+      - service: light.toggle
+        data:
           entity_id: light.kitchen_worktop
-        service: light.toggle
 
   - alias: Toggle Living Room pendant
     trigger:
