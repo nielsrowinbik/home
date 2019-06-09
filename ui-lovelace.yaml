@@ -66,6 +66,15 @@ views:
             show_header_toggle: false
             title: Living Room
             type: entities
+          - entities:
+              - entity: binary_sensor.toilet_occupancy
+                name: Occupancy
+              - label: Lights
+                type: section
+              - light.toilet_spot
+            show_header_toggle: false
+            title: Toilet
+            type: entities
         type: vertical-stack
     icon: mdi:monitor-dashboard
     path: dashboard
@@ -86,6 +95,24 @@ views:
               - input_number.max_sun_elevation_decrease
             show_header_toggle: false
             title: Scenes
+            type: entities
+          - entities:
+              - sensor.global_brightness
+              - label: Settings
+                type: section
+              - input_number.morning_brightness
+              - input_number.day_brightness
+              - input_number.afternoon_brightness
+              - input_number.early_evening_brightness
+              - input_number.evening_brightness
+              - input_number.night_brightness
+            show_header_toggle: false
+            title: Lights
+            type: entities
+          - entities:
+              - script.reset_volume
+            show_header_toggle: false
+            title: Media
             type: entities
           - entities:
               - input_boolean.zigbee_permit_join
