@@ -4,18 +4,8 @@ automation:
       - platform: time
         at: "04:00:00"
     action:
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.kitchen_speakers
-          volume_level: 0.1
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.living_room_home
-          volume_level: 0.3
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.living_room_speakers
-          volume_level:
+      - service: script.turn_on
+        entity_id: script.reset_volume
 
   - alias: Turn on receiver when audio starts playing
     trigger:
@@ -195,3 +185,19 @@ script:
             {% else %}
               {{ state_attr('remote.harmony_hub', 'current_activity') }}
             {% endif %}
+
+  reset_volume:
+    alias: Reset speaker volumes
+    sequence:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.kitchen_speakers
+          volume_level: 0.1
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.living_room_home
+          volume_level: 0.3
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.living_room_speakers
+          volume_level: 1
