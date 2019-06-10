@@ -20,6 +20,8 @@ cloud:
 config:
 
 discovery:
+  ignore:
+    - plex_mediaserver
 
 emulated_roku:
   servers:
