@@ -23,10 +23,8 @@ automation:
         minutes: 0
         seconds: 0
     action:
-      - service: mqtt.publish
-        data:
-          topic: zigbee2mqtt/bridge/networkmap
-          payload: graphviz
+      - service: script.turn_on
+        entity_id: script.generate_network_map
 
 input_boolean:
   zigbee_permit_join:
@@ -39,3 +37,12 @@ mqtt:
   username: !secret mqtt_username
   password: !secret mqtt_password
   discovery: true
+
+script:
+  generate_network_map:
+    alias: Generate Zigbee network map
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: zigbee2mqtt/bridge/networkmap
+          payload: graphviz
