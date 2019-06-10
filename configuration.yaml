@@ -11,6 +11,9 @@ homeassistant:
 cloud:
   google_actions:
     filter:
+      exclude_entities:
+        - light.kitchen_spot_1
+        - light.kitchen_spot_2
       include_domains:
         - light
         - scene
