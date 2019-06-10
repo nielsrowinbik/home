@@ -92,6 +92,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Morning brightness
     step: 1
     unit_of_measurement: "%"
@@ -99,6 +100,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Day brightness
     step: 1
     unit_of_measurement: "%"
@@ -106,6 +108,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Afternoon brightness
     step: 1
     unit_of_measurement: "%"
@@ -113,6 +116,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Early evening brightness
     step: 1
     unit_of_measurement: "%"
@@ -120,6 +124,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Evening brightness
     step: 1
     unit_of_measurement: "%"
@@ -127,6 +132,7 @@ input_number:
     icon: mdi:tune
     max: 100
     min: 0
+    mode: box
     name: Night brightness
     step: 1
     unit_of_measurement: "%"

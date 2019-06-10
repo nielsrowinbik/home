@@ -46,10 +46,10 @@ views:
                 type: section
               - entity: light.kitchen_spots
                 name: Spots
-              - entity: light.kitchen_worktop
-                name: Worktop light
               - entity: light.kitchen_mood_lighting
                 name: Mood lighting
+              - entity: light.kitchen_worktop
+                name: Worktop light
             show_header_toggle: false
             title: Kitchen
             type: entities
@@ -73,7 +73,8 @@ views:
                 name: Occupancy
               - label: Lights
                 type: section
-              - light.toilet_spot
+              - entity: light.toilet_spot
+                name: Spot
             show_header_toggle: false
             title: Toilet
             type: entities
