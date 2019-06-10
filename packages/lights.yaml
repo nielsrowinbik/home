@@ -30,6 +30,18 @@ automation:
         data:
           entity_id: light.kitchen_worktop
 
+  - alias: Toggle Kitchen spots through wall button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_wall_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click == 'left' }}"
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.kitchen_spots
+
   - alias: Toggle Living Room pendant through wall button press
     trigger:
       - platform: mqtt
@@ -126,6 +138,12 @@ light:
   - platform: switch
     name: Living Room pendant
     entity_id: switch.power_outlet_2
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/kitchen_spots/set"
+    name: Kitchen spots
+    schema: json
+    state_topic: "zigbee2mqtt/kitchen_spots"
 
 sensor:
   - platform: template
