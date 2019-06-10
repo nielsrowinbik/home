@@ -17,8 +17,7 @@ cloud:
       include_domains:
         - light
         - scene
-      include_entities:
-        - script.scene_sync
+        - script
 
 config:
 
