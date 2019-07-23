@@ -10,6 +10,7 @@
 !packages/*
 !automation/*
 !*.yaml
+!*.yml
 !.gitignore
 !*.md
 
