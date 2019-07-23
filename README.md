@@ -2,6 +2,8 @@
 
 Configuration for our Home Assistant instance.
 
+[![Build Status](https://travis-ci.org/nielsrowinbik/home.svg?branch=master)](https://travis-ci.org/nielsrowinbik/home)
+
 ## Devices
 
 - 1x Google Chromecast
