@@ -100,7 +100,8 @@ views:
             title: Scenes
             type: entities
           - entities:
-              - sensor.global_brightness
+              - entity: sensor.global_brightness
+                name: Current brightness used in scenes
               - label: Settings
                 type: section
               - input_number.morning_brightness
