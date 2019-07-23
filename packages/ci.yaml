@@ -1,0 +1,19 @@
+automation:
+  - alias: System Travis Build Passed
+    trigger:
+      - platform: state
+        entity_id: sensor.travis_build_status
+        from: "started"
+        to: "passed"
+    action:
+      - service: hassio.addon_start
+        data:
+          addon: core_git_pull
+
+sensor:
+  - platform: rest
+    resource: https://api.travis-ci.org/repos/nielsrowinbik/home/builds
+    headers:
+      Accept: application/vnd.travis-ci.2+json
+    value_template: "{{ value_json.builds[0].state }}"
+    name: "Travis Build Status"
