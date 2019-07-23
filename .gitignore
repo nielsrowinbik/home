@@ -13,6 +13,7 @@
 !*.yml
 !.gitignore
 !*.md
+!.HA_VERSION
 
 # Ignore folders
 *pycache*
