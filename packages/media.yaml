@@ -153,10 +153,10 @@ automation:
         entity_id: remote.harmony_hub
     action:
       - service_template: >-
-          {% if trigger.to_state.state == 'off' %}
-            switch.turn_off
-          {% else %}
+          {% if trigger.to_state.state == 'on' %}
             switch.turn_on
+          {% else %}
+            switch.turn_off
           {% endif %}
         entity_id: switch.power_outlet_3
 
