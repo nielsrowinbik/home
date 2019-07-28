@@ -52,8 +52,12 @@ automation:
       - platform: state
         entity_id: binary_sensor.toilet_occupancy
         to: "on"
+    condition:
+      - condition: state
+        entity_id: light.toilet_spot
+        state: "off"
     action:
-      - service: light.turn_on
+      - service: light.toggle
         data_template:
           entity_id: light.toilet_spot
           brightness: >-
@@ -63,12 +67,14 @@ automation:
               255
             {% endif %}
       - wait_template: "{{ is_state('binary_sensor.toilet_occupancy', 'off') }}"
+      - delay:
+          seconds: 10
       - condition: and
         conditions:
           - condition: state
             entity_id: light.toilet_spot
             state: "on"
-      - service: light.turn_off
+      - service: light.toggle
         data_template:
           entity_id: light.toilet_spot
 
