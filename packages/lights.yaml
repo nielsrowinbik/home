@@ -40,7 +40,6 @@ automation:
     action:
       - service: light.toggle
         data:
-          brightness: "{{ states('sensor.global_brightness')|int }}"
           entity_id: light.kitchen_spots
 
   - alias: Toggle Living Room pendant through wall button press
