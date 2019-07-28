@@ -100,20 +100,6 @@ views:
             title: Scenes
             type: entities
           - entities:
-              - entity: sensor.global_brightness
-                name: Current brightness used in scenes
-              - label: Settings
-                type: section
-              - input_number.morning_brightness
-              - input_number.day_brightness
-              - input_number.afternoon_brightness
-              - input_number.early_evening_brightness
-              - input_number.evening_brightness
-              - input_number.night_brightness
-            show_header_toggle: false
-            title: Lights
-            type: entities
-          - entities:
               - script.reset_volume
             show_header_toggle: false
             title: Media
