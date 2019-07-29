@@ -37,6 +37,12 @@ views:
   - cards:
       - cards:
           - entities:
+              - entity: media_player.downstairs_speaker
+                icon: mdi:speaker
+            show_header_toggle: false
+            title: Downstairs
+            type: entities
+          - entities:
               - entity: binary_sensor.backdoor_contact_sensor
                 name: Backdoor
               - entity: media_player.kitchen_speakers

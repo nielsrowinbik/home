@@ -101,7 +101,7 @@ automation:
     action:
       - service: media_player.media_play
         data_template:
-          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'paused') | map(attribute='entity_id') | join(',') }}"
+          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'paused') | map(attribute='entity_id') | join(',') }}"
 
   - alias: Pause music through Harmony remote
     trigger:
@@ -117,7 +117,7 @@ automation:
     action:
       - service: media_player.media_pause
         data_template:
-          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
+          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
 
   - alias: Sync activity to Harmony Hub's current activity
     trigger:
@@ -189,6 +189,10 @@ script:
   reset_volume:
     alias: Reset speaker volumes
     sequence:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.downstairs_speaker
+          volume_level: 0.45
       - service: media_player.volume_set
         data:
           entity_id: media_player.kitchen_speakers
