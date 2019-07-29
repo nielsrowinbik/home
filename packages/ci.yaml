@@ -1,5 +1,5 @@
 automation:
-  - alias: System Travis Build Passed
+  - alias: Pull new configuration from GitHub when Travis-CI build passes
     trigger:
       - platform: state
         entity_id: sensor.travis_build_status
@@ -16,4 +16,4 @@ sensor:
     headers:
       Accept: application/vnd.travis-ci.2+json
     value_template: "{{ value_json.builds[0].state }}"
-    name: "Travis Build Status"
+    name: Travis-CI status
