@@ -6,6 +6,13 @@ automation:
         from: "started"
         to: "passed"
     action:
+      - service: script.turn_on
+        entity_id: script.do_git_pull
+
+script:
+  do_git_pull:
+    alias: Pull new configuration from GitHub
+    sequence:
       - service: hassio.addon_start
         data:
           addon: core_git_pull
