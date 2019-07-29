@@ -78,6 +78,27 @@ automation:
         data_template:
           entity_id: light.toilet_spot
 
+  - alias: Toggle lights when movie changes state
+    trigger:
+      - entity_id: media_player.living_room_tv
+        from: playing
+        platform: state
+        to: paused
+    condition:
+      - condition: template
+        value_template: "{{ states('input_select.scene') in ['Afternoon', 'Early evening', 'Evening'] }}"
+    action:
+      - service: light.turn_on
+        data:
+          brightness: 255
+          entity_id: light.kitchen_spots
+          transition: 1
+      - wait_template: "{{ is_state('media_player.living_room_tv', 'playing') }}"
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen_spots
+          transition: 1
+
 light:
   - platform: switch
     name: Kitchen mood lighting
