@@ -2,7 +2,7 @@ automation:
   - alias: Pull new configuration from GitHub when Travis-CI build passes
     trigger:
       - platform: state
-        entity_id: sensor.travis_build_status
+        entity_id: sensor.travis_ci_status
         from: "started"
         to: "passed"
     action:
