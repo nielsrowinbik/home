@@ -192,7 +192,7 @@ script:
       - service: media_player.volume_set
         data:
           entity_id: media_player.downstairs_speaker
-          volume_level: 0.45
+          volume_level: 0.4
       - service: media_player.volume_set
         data:
           entity_id: media_player.kitchen_speakers
