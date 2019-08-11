@@ -67,8 +67,6 @@ automation:
               255
             {% endif %}
       - wait_template: "{{ is_state('binary_sensor.toilet_occupancy', 'off') }}"
-      - delay:
-          seconds: 10
       - condition: and
         conditions:
           - condition: state
