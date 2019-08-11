@@ -39,6 +39,7 @@ views:
           - entities:
               - entity: media_player.downstairs_speaker
                 icon: mdi:speaker
+                name: Speaker
             show_header_toggle: false
             title: Downstairs
             type: entities
