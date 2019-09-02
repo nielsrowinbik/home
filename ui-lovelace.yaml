@@ -92,12 +92,6 @@ views:
   - cards:
       - cards:
           - entities:
-              - sensor.travis_ci_status
-              - script.do_git_pull
-            show_header_toggle: false
-            title: Configuration
-            type: entities
-          - entities:
               - script.reset_volume
             show_header_toggle: false
             title: Media
