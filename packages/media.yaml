@@ -65,8 +65,10 @@ automation:
       - service_template: >-
           {% set scripts = {
             "BackSpace": "media_player.media_stop",
+            "Fwd": "media_player.media_next_track",
             "Info": "media_player.media_pause",
             "Play": "media_player.media_play",
+            "Rev": "media_player.media_previous_track",
           } %}
           {{ scripts[trigger.event.data.key] }}
         data_template:
