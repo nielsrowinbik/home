@@ -54,101 +54,23 @@ automation:
         data:
           entity_id: media_player.upstairs
 
-  - alias: Play media through Harmony remote
+  - alias: Media controls through Harmony remote
     trigger:
       - platform: event
         event_type: roku_command
         event_data:
           source_name: Home Assistant
           type: keypress
-          key: Play
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast'] }}"
     action:
-      - service: media_player.media_play
-        data:
-          entity_id: media_player.living_room_tv
-
-  - alias: Pause media through Harmony remote
-    trigger:
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-          key: Info # Using "Info" because Emulated Roku does not support the "Pause" command
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast'] }}"
-    action:
-      - service: media_player.media_pause
-        data:
-          entity_id: media_player.living_room_tv
-
-  - alias: Stop media through Harmony remote
-    trigger:
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-          key: BackSpace # Using "BackSpace" because Emulated Roku does not support the "Pause" command
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast'] }}"
-    action:
-      - service: media_player.media_stop
-        data:
-          entity_id: media_player.living_room_tv
-
-  - alias: Play music through Harmony remote
-    trigger:
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-          key: Play
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Listen to Music'] }}"
-    action:
-      - service: media_player.media_play
+      - service_template: >-
+          {% set scripts = {
+            "BackSpace": "media_player.media_stop",
+            "Pause": "media_player.media_pause",
+            "Info": "media_player.media_play",
+          } %}
+          {{ scripts[trigger.event.data['key']] }}
         data_template:
-          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'paused') | map(attribute='entity_id') | join(',') }}"
-
-  - alias: Pause music through Harmony remote
-    trigger:
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-          key: Info # Using "Info" because Emulated Roku does not support the "Pause" command
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Listen to Music'] }}"
-    action:
-      - service: media_player.media_pause
-        data_template:
-          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
-
-  - alias: Stop music through Harmony remote
-    trigger:
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-          key: BackSpace # Using "BackSpace" because Emulated Roku does not support the "Pause" command
-    condition:
-      - condition: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Listen to Music'] }}"
-    action:
-      - service: media_player.media_stop
-        data_template:
-          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
+          entity_id: "{{ 'media_player.living_room_tv' if state_attr('remote.harmony_hub', 'current_activity') in ['Watch Chromecast'] else 'media_player.living_room_speakers' }}"
 
   - alias: Sync activity to Harmony Hub's current activity
     trigger:
