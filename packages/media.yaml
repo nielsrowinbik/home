@@ -12,9 +12,8 @@ automation:
       - platform: state
         entity_id: media_player.living_room_speakers
         to: playing
-      - platform: state
-        entity_id: media_player.upstairs
-        to: playing
+      # No need to include other media players (such as groups), because once they start playing
+      # the only speaker that matters, living_room_speakers, also starts playing.
     condition:
       - condition: state
         entity_id: remote.harmony_hub
