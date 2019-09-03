@@ -68,7 +68,7 @@ automation:
             "Pause": "media_player.media_pause",
             "Info": "media_player.media_play",
           } %}
-          {{ scripts[trigger.event.data['key']] }}
+          {{ scripts[trigger.event.data.key] }}
         data_template:
           entity_id: "{{ 'media_player.living_room_tv' if state_attr('remote.harmony_hub', 'current_activity') in ['Watch Chromecast'] else 'media_player.living_room_speakers' }}"
 
