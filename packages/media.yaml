@@ -70,7 +70,16 @@ automation:
           } %}
           {{ scripts[trigger.event.data.key] }}
         data_template:
-          entity_id: "{{ 'media_player.living_room_tv' if state_attr('remote.harmony_hub', 'current_activity') in ['Watch Chromecast'] else 'media_player.living_room_speakers' }}"
+          entity_id: >-
+            {% set entities = {
+              "Watch TV": "",
+              "Play a Game": "",
+              "Watch a DVD": "",
+              "Watch Chromecast": "media_player.living_room_tv",
+              "Listen to Music": "media_player.living_room_speakers"
+            } %}
+            {% set current_activity = state_attr('remote.harmony_hub', 'current_activity') %}
+            {{ entities[current_activity] }}
 
   - alias: Sync activity to Harmony Hub's current activity
     trigger:
