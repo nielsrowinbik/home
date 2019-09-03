@@ -140,8 +140,11 @@ scene:
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
-      light.kitchen_spots: off
+      light.kitchen_spots: on
       light.living_room_pendant: on
+      light.toilet_spot:
+        brightness: 255
+        state: on
 
   - name: Day
     entities:
@@ -211,4 +214,7 @@ scene:
       light.kitchen_spots: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.toilet_spot:
+        brightness: 1
+        state: on
       remote.harmony_hub: off
