@@ -86,6 +86,22 @@ automation:
         data:
           entity_id: media_player.living_room_tv
 
+  - alias: Stop media through Harmony remote
+    trigger:
+      - platform: event
+        event_type: roku_command
+        event_data:
+          source_name: Home Assistant
+          type: keypress
+          key: BackSpace # Using "BackSpace" because Emulated Roku does not support the "Pause" command
+    condition:
+      - condition: template
+        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast'] }}"
+    action:
+      - service: media_player.media_stop
+        data:
+          entity_id: media_player.living_room_tv
+
   - alias: Play music through Harmony remote
     trigger:
       - platform: event
@@ -115,6 +131,22 @@ automation:
         value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Listen to Music'] }}"
     action:
       - service: media_player.media_pause
+        data_template:
+          entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
+
+  - alias: Stop music through Harmony remote
+    trigger:
+      - platform: event
+        event_type: roku_command
+        event_data:
+          source_name: Home Assistant
+          type: keypress
+          key: BackSpace # Using "BackSpace" because Emulated Roku does not support the "Pause" command
+    condition:
+      - condition: template
+        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Listen to Music'] }}"
+    action:
+      - service: media_player.media_stop
         data_template:
           entity_id: "{{ states.media_player | selectattr('entity_id', 'in', ['media_player.everywhere', 'media_player.kitchen_speakers', 'media_player.living_room_speakers', 'media_player.upstairs']) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | join(',') }}"
 
