@@ -56,17 +56,21 @@ automation:
         data:
           entity_id: light.toilet_spot
 
-  - alias: Turn off Toilet spot after scene change unless toilet occupied
+  - alias: Set correct brightness on Toilet spot
     trigger:
       - platform: state
-        entity_id: input_select.scene
-    condition:
-      - condition: template
-        value_template: "{{ not is_state('binary_sensor.toilet_occupancy', 'on') }}"
+        entity_id: light.toilet_spot
+        to: "on"
     action:
-      - service: light.turn_off
-        data:
+      - service: light.turn_on
+        data_template:
           entity_id: light.toilet_spot
+          brightness: >-
+            {% if states('input_select.scene') in ['Night'] %}
+              1
+            {% else %}
+              255
+            {% endif %}
 
   - alias: Toggle lights when movie changes state
     trigger:
