@@ -11,7 +11,7 @@ surface-16dp: "#353535"
 surface-24dp: "#383838"
 
 # ACCENTS
-accent-color: "#8ab4f8"
+accent-color: "#87b0f3"
 dark-color: var(--surface-00dp)
 light-color: var(--primary-text-color)
 
@@ -21,22 +21,28 @@ background-card-color: var(--surface-00dp)
 light-primary-color: var(--surface-1dp)
 primary-color: var(--surface-00dp)
 primary-background-color: var(--surface-00dp)
-secondary-background-color: var(--surface-24dp)
+secondary-background-color: var(--surface-16dp)
 
 # CARDS
-more-info-header-background: var(--surface-24dp)
+more-info-header-background: var(--surface-16dp)
 more-info-header-color: var(--primary-text-color)
 paper-card-background-color: var(--surface-01dp)
-paper-dialog-background-color: var(--surface-24dp)
+paper-dialog-background-color: var(--surface-16dp)
+paper-item-icon-color: var(--primary-text-color)
+paper-item-icon-active-color: var(--accent-color)
 
-# ICONS
-iron-icon-fill-color: var(--primary-text-color)
+# INPUT
+paper-input-container-color: var(--secondary-text-color)
+paper-input-container-focus-color: var(--accent-color)
 
 # SIDEBAR
 paper-listbox-background-color: var(--surface-00dp)
 sidebar-icon-color: var(--primary-text-color)
 sidebar-selected-icon-color: var(--accent-color)
 sidebar-selected-text-color: var(--accent-color)
+
+# TABS
+paper-tabs-selection-bar-color: var(--accent-color)
 
 # TEXT
 primary-text-color: rgba(255, 255, 255, 0.87)
@@ -45,7 +51,7 @@ secondary-text-color: rgba(255, 255, 255, 0.6);
 disabled-text-color: rgba(255, 255, 255, 0.3);
 
 # TOGGLE
-paper-toggle-button-checked-bar-color: var(--surface-24dp)
-paper-toggle-button-checked-button-color: var(--accent-color)
-paper-toggle-button-unchecked-bar-color: var(--surface-24dp)
-paper-toggle-button-unchecked-button-color: var(--disabled-text-color)
+paper-toggle-button-checked-bar-color: "#404d64"
+paper-toggle-button-checked-button-color: "#87b0f3"
+paper-toggle-button-unchecked-bar-color: "#636466"
+paper-toggle-button-unchecked-button-color: "#b9b9b9"
