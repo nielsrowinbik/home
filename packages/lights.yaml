@@ -56,6 +56,25 @@ automation:
         data:
           entity_id: light.toilet_spot
 
+  - alias: Toggle Toilet spot through motion sensor at night
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.toilet_occupancy
+    condition:
+      - condition: template
+        value_template: >-
+          not (
+            (trigger.to_state.state == 'on' and is_state('light.toilet_spot', 'on'))
+            or
+            (trigger.to_state.state == 'off' and is_state('light.toilet_spot', 'off'))
+          )
+    action:
+      - service: light.toggle
+        data:
+          brightness: 1
+          entity_id: light.toilet_spot
+          transition: 1
+
   - alias: Toggle lights when movie changes state
     trigger:
       - entity_id: media_player.living_room_tv
