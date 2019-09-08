@@ -31,11 +31,6 @@ views:
               - entity: input_select.scene
                 state: Evening
             type: conditional
-        type: vertical-stack
-    path: home
-    title: Home
-  - cards:
-      - cards:
           - entities:
               - entity: media_player.downstairs_speaker
                 icon: mdi:speaker
@@ -86,9 +81,9 @@ views:
             title: Toilet
             type: entities
         type: vertical-stack
-    icon: mdi:monitor-dashboard
-    path: dashboard
-    title: Dashboard
+    icon: mdi:home-variant-outline
+    path: home
+    title: Home
   - cards:
       - cards:
           - entities:
@@ -110,6 +105,11 @@ views:
               - input_number.max_sun_elevation_decrease
             show_header_toggle: false
             title: Scenes
+            type: entities
+          - entities:
+              - script.reload_themes
+            show_header_toggle: false
+            title: Theme
             type: entities
           - entities:
               - entity: script.generate_network_map

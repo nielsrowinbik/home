@@ -1,0 +1,5 @@
+script:
+  reload_themes:
+    alias: Reload themes
+    sequence:
+      - service: frontend.reload_themes

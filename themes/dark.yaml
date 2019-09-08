@@ -1,0 +1,51 @@
+# SURFACES
+surface-00dp: "#121212"
+surface-01dp: "#1e1e1e"
+surface-02dp: "#222222"
+surface-03dp: "#242424"
+surface-04dp: "#272727"
+surface-06dp: "#2c2c2c"
+surface-08dp: "#2e2e2e"
+surface-12dp: "#323232"
+surface-16dp: "#353535"
+surface-24dp: "#383838"
+
+# ACCENTS
+accent-color: "#8ab4f8"
+dark-color: var(--surface-00dp)
+light-color: var(--primary-text-color)
+
+# BACKGROUND
+background-color: var(--surface-00dp)
+background-card-color: var(--surface-00dp)
+light-primary-color: var(--surface-1dp)
+primary-color: var(--surface-00dp)
+primary-background-color: var(--surface-00dp)
+secondary-background-color: var(--surface-24dp)
+
+# CARDS
+more-info-header-background: var(--surface-24dp)
+more-info-header-color: var(--primary-text-color)
+paper-card-background-color: var(--surface-01dp)
+paper-dialog-background-color: var(--surface-24dp)
+
+# ICONS
+iron-icon-fill-color: var(--primary-text-color)
+
+# SIDEBAR
+paper-listbox-background-color: var(--surface-00dp)
+sidebar-icon-color: var(--primary-text-color)
+sidebar-selected-icon-color: var(--accent-color)
+sidebar-selected-text-color: var(--accent-color)
+
+# TEXT
+primary-text-color: rgba(255, 255, 255, 0.87)
+text-primary-color: rgba(255, 255, 255, 0.87)
+secondary-text-color: rgba(255, 255, 255, 0.6);
+disabled-text-color: rgba(255, 255, 255, 0.3);
+
+# TOGGLE
+paper-toggle-button-checked-bar-color: var(--surface-24dp)
+paper-toggle-button-checked-button-color: var(--accent-color)
+paper-toggle-button-unchecked-bar-color: var(--surface-24dp)
+paper-toggle-button-unchecked-button-color: var(--disabled-text-color)

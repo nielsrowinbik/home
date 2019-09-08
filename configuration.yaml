@@ -31,6 +31,7 @@ emulated_roku:
       listen_port: 8060
 
 frontend:
+  themes: !include_dir_named themes/
 
 history:
   exclude:
