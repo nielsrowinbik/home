@@ -146,6 +146,7 @@ scene:
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
+      light.kitchen_spots: on
       light.living_room_pendant: on
 
   - name: Day
@@ -161,6 +162,7 @@ scene:
       climate.living_room:
         temperature: 19
       light.kitchen_mood_lighting: off
+      light.kitchen_spots: off
       light.living_room_pendant: off
 
   - name: Afternoon
