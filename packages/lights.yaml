@@ -62,12 +62,7 @@ automation:
         entity_id: binary_sensor.toilet_occupancy
     condition:
       - condition: template
-        value_template: >-
-          not (
-            (trigger.to_state.state == 'on' and is_state('light.toilet_spot', 'on'))
-            or
-            (trigger.to_state.state == 'off' and is_state('light.toilet_spot', 'off'))
-          )
+        value_template: "{{ not ((trigger.to_state.state == 'off' and is_state('light.toilet_spot', 'off')) or (trigger.to_state.state == 'on' and is_state('light.toilet_spot', 'on'))) }}"
     action:
       - service: light.toggle
         data:
