@@ -22,3 +22,4 @@
 ip_bans.yaml
 secrets.yaml
 known_devices.yaml
+packages/gha.yaml
