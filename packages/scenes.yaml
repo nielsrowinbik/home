@@ -102,8 +102,6 @@ scene:
       input_select.scene:
         option: Away
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 16
@@ -121,8 +119,6 @@ scene:
       input_select.scene:
         option: Vacation
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 16
@@ -140,8 +136,6 @@ scene:
       input_select.scene:
         option: Morning
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 19
@@ -156,8 +150,6 @@ scene:
       input_select.scene:
         option: Day
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 19
@@ -172,8 +164,6 @@ scene:
       input_select.scene:
         option: Afternoon
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
@@ -187,8 +177,6 @@ scene:
       input_select.scene:
         option: Early evening
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
@@ -202,8 +190,6 @@ scene:
       input_select.scene:
         option: Evening
       automation.synchronise_scene_to_time_of_day: on
-      automation.toggle_toilet_spot_through_motion_sensor: on
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: off
       automation.turn_off_night_scene: off
       climate.living_room:
         temperature: 20
@@ -217,8 +203,6 @@ scene:
       input_select.scene:
         option: Night
       automation.synchronise_scene_to_time_of_day: off
-      automation.toggle_toilet_spot_through_motion_sensor: off
-      automation.toggle_toilet_spot_through_motion_sensor_at_night: on
       automation.turn_off_night_scene: on
       climate.living_room:
         temperature: 16
