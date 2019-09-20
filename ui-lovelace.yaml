@@ -92,14 +92,20 @@ views:
             title: Media
             type: entities
           - entities:
+              - sensor.dark_sky_cloud_coverage
+              - sensor.sun_elevation_corrected
+              - sensor.time_of_day
+              - label: Actions
+                type: section
               - script.scene_selection_reactivate
               - script.scene_sync
+              - script.fix_toilet_spot_brightness
+              - label: Settings
+                type: section
               - entity: automation.synchronise_scene_to_time_of_day
                 name: Synchronise scene to time of day automatically
               - entity: automation.turn_off_night_scene
                 name: Turn off Night scene automatically
-              - label: Settings
-                type: section
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
