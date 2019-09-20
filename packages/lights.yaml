@@ -69,11 +69,8 @@ automation:
       - condition: template
         value_template: "{{ not is_state_attr('light.toilet_spot', 'brightness', 1 if is_state('input_select.scene', 'Night') else 255) }}"
     action:
-      - service: light.turn_on
-        data_template:
-          entity_id: light.toilet_spot
-          brightness: "{{ 1 if is_state('input_select.scene', 'Night') else 255 }}"
-          transition: 1
+      - service: script.turn_on
+        entity_id: script.fix_toilet_spot_brightness
 
   - alias: Toggle lights when movie changes state
     trigger:
@@ -109,3 +106,15 @@ light:
     name: Kitchen spots
     schema: json
     state_topic: "zigbee2mqtt/kitchen_spots"
+
+script:
+  fix_toilet_spot_brightness:
+    alias: Fix toilet spot brightness
+    sequence:
+      - condition: template
+        value_template: "{{ not is_state_attr('light.toilet_spot', 'brightness', 1 if is_state('input_select.scene', 'Night') else 255) }}"
+      - service: light.turn_on
+        data_template:
+          entity_id: light.toilet_spot
+          brightness: "{{ 1 if is_state('input_select.scene', 'Night') else 255 }}"
+          transition: 1
