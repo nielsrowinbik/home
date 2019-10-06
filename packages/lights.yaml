@@ -33,9 +33,13 @@ automation:
         to: "on"
     # TODO: determine correct value to use as a threshold
     condition:
-      - condition: numeric_state
-        entity_id: sensor.kitchen_illuminance
-        below: 10
+      condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.state == 'off' }}"
+        - condition: numeric_state
+          entity_id: sensor.kitchen_illuminance
+          below: 10
     action:
       - service_template: "light.turn_{{ trigger.to_state.state }}"
         data:
