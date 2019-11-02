@@ -204,6 +204,7 @@ views:
                     display: grid !important;
                     gap: 24px 20px;
                     grid-template-columns: repeat(2, minmax(1px, 250px));
+                    padding: 20px 0 !important;
                     text-align: center;
                   }
 
@@ -295,6 +296,7 @@ views:
                     display: grid !important;
                     gap: 24px 20px;
                     grid-template-columns: repeat(2, minmax(1px, 250px));
+                    padding: 20px 0 !important;
                     text-align: center;
                   }
 
@@ -395,6 +397,7 @@ views:
                     display: grid !important;
                     gap: 24px 20px;
                     grid-template-columns: repeat(2, minmax(1px, 250px));
+                    padding: 20px 0 !important;
                     text-align: center;
                   }
 
@@ -459,6 +462,7 @@ views:
                     display: grid !important;
                     gap: 24px 20px;
                     grid-template-columns: repeat(2, minmax(1px, 250px));
+                    padding: 20px 0 !important;
                     text-align: center;
                   }
 
@@ -532,6 +536,7 @@ views:
                     display: grid !important;
                     gap: 24px 20px;
                     grid-template-columns: repeat(2, minmax(1px, 250px));
+                    padding: 20px 0 !important;
                     text-align: center;
                   }
 
