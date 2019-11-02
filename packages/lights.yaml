@@ -31,7 +31,6 @@ automation:
       - platform: state
         entity_id: binary_sensor.kitchen_motion
         to: "on"
-    # TODO: determine correct value to use as a threshold
     condition:
       condition: or
       conditions:

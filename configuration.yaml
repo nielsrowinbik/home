@@ -64,7 +64,6 @@ recorder:
       - input_select.activity
       - person.laura
       - person.niels
-      - sensor.kitchen_illuminance
       - sensor.living_room_heating
       - sensor.living_room_humidity
       - sensor.living_room_temperature
