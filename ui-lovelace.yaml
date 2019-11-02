@@ -3,8 +3,6 @@ cch:
 resources:
   - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
     type: css
-  - url: /local/js/layout-card?v=1
-    type: js
   - url: /local/js/card-mod.js?v=6
     type: module
   - url: /local/js/group-card.js?v=0.0.3
@@ -14,473 +12,555 @@ resources:
 title: " "
 views:
   - cards:
-      - cards:
-          - entities:
-              - entity: input_select.activity
-                name: Activities
+      - entities:
+          - cards:
+              - entities:
+                  - entity: input_select.activity
+                    name: Activities
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-indigo-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-indigo);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: group.all_lights
+                    icon: mdi:lightbulb-outline
+                    name: Lights
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-yellow-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-yellow);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: group.all_media_players
+                    icon: mdi:music-note
+                    name: Play
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-green-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-green);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: input_select.scene
+                    name: Scenes
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-blue-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-blue);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: climate.living_room
+                    icon: mdi:thermometer
+                    name: Thermostat
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-red-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-red);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: group.all_scripts
+                    icon: mdi:brightness-6
+                    name: Routines
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-purple-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-purple);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                  - entity: group.all_scripts
+                    icon: mdi:settings
+                    name: Settings
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        border: 1px solid var(--divider-color);
+                        border-radius: 100%;
+                        color: var(--primary-text-color);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/settings
+                show_state: false
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: transparent;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 32px;
+                    margin: 0 0 16px;
+                    padding-top: 0;
+                    text-align: center;
+                  }
+
+                  .entities {
                     align-items: center;
-                    background-color: var(--accent-color-indigo-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-indigo);
-                    display: flex;
-                    height: 56px;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    padding: 0 16px 7px !important;
                   }
-              - entity: group.all_lights
-                icon: mdi:lightbulb-outline
-                name: Lights
+
+                  .entity {
+                    font-family: 'Product Sans' !important;
+                    font-size: 0.9rem;
+                    flex-direction: column-reverse !important;
+                    height: 96px;
+                    justify-content: center;
+                    margin: -8px -5px 8px !important;
+                    padding: 0 !important;
+                    width: 96px !important;
+                  }
+                title: Niels & Laura's Home
+                type: glance
+
+              - entities: []
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - entity: media_player.downstairs_speaker
+                    image: /local/icons/chromecast_audio.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                show_state: false
+                style: |
+                  :host {
+                    margin: 0 auto !important;
+                    max-width: 640px;
+                  }
+
+                  ha-card {
+                    background-color: transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 19px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 10px 20px 0px;
+                  }
+
+                  .entities {
+                    display: grid !important;
+                    gap: 24px 20px;
+                    grid-template-columns: repeat(2, minmax(1px, 250px));
+                    text-align: center;
+                  }
+
+                  .entity {
                     align-items: center;
-                    background-color: var(--accent-color-yellow-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-yellow);
-                    display: flex;
-                    height: 56px;
+                    font-family: 'Product Sans' !important;
+                    font-size: 1.15rem;
+                    flex-direction: column-reverse !important;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    margin-bottom: 34px !important;
+                    width: 100% !important;
                   }
-              - entity: group.all_media_players
-                icon: mdi:music-note
-                name: Play
+                title: Downstairs
+                type: glance
+
+              - entities: []
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - entity: light.kitchen_mood_lighting
+                    image: /local/icons/light.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: light.kitchen_spots
+                    image: /local/icons/light.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: light.kitchen_worktop
+                    image: /local/icons/light.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: media_player.kitchen_speakers
+                    image: /local/icons/chromecast_audio.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                show_state: false
+                style: |
+                  :host {
+                    margin: 0 auto !important;
+                    max-width: 640px;
+                  }
+
+                  ha-card {
+                    background-color: transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 19px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 10px 20px 0px;
+                  }
+
+                  .entities {
+                    display: grid !important;
+                    gap: 24px 20px;
+                    grid-template-columns: repeat(2, minmax(1px, 250px));
+                    text-align: center;
+                  }
+
+                  .entity {
                     align-items: center;
-                    background-color: var(--accent-color-green-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-green);
-                    display: flex;
-                    height: 56px;
+                    font-family: 'Product Sans' !important;
+                    font-size: 1.15rem;
+                    flex-direction: column-reverse !important;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    margin-bottom: 34px !important;
+                    width: 100% !important;
                   }
-              - entity: input_select.scene
-                name: Scenes
+                title: Kitchen
+                type: glance
+
+              - entities: []
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - entity: light.living_room_pendant
+                    image: /local/icons/light.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: media_player.living_room_tv
+                    image: /local/icons/chromecast.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: media_player.living_room_home_mini
+                    image: /local/icons/google_home_mini.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: media_player.living_room_speakers
+                    image: /local/icons/chromecast_audio.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: climate.living_room
+                    image: /local/icons/thermostat.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                show_state: false
+                style: |
+                  :host {
+                    margin: 0 auto !important;
+                    max-width: 640px;
+                  }
+
+                  ha-card {
+                    background-color: transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 19px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 10px 20px 0px;
+                  }
+
+                  .entities {
+                    display: grid !important;
+                    gap: 24px 20px;
+                    grid-template-columns: repeat(2, minmax(1px, 250px));
+                    text-align: center;
+                  }
+
+                  .entity {
                     align-items: center;
-                    background-color: var(--accent-color-blue-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-blue);
-                    display: flex;
-                    height: 56px;
+                    font-family: 'Product Sans' !important;
+                    font-size: 1.15rem;
+                    flex-direction: column-reverse !important;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    margin-bottom: 34px !important;
+                    width: 100% !important;
                   }
-              - entity: climate.living_room
-                icon: mdi:thermometer
-                name: Thermostat
+                title: Living Room
+                type: glance
+
+              - entities: []
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - entity: light.toilet_spot
+                    image: /local/icons/light.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                show_state: false
+                style: |
+                  :host {
+                    margin: 0 auto !important;
+                    max-width: 640px;
+                  }
+
+                  ha-card {
+                    background-color: transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 19px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 10px 20px 0px;
+                  }
+
+                  .entities {
+                    display: grid !important;
+                    gap: 24px 20px;
+                    grid-template-columns: repeat(2, minmax(1px, 250px));
+                    text-align: center;
+                  }
+
+                  .entity {
                     align-items: center;
-                    background-color: var(--accent-color-red-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-red);
-                    display: flex;
-                    height: 56px;
+                    font-family: 'Product Sans' !important;
+                    font-size: 1.15rem;
+                    flex-direction: column-reverse !important;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    margin-bottom: 34px !important;
+                    width: 100% !important;
                   }
-              - entity: group.all_scripts
-                icon: mdi:brightness-6
-                name: Routines
+                title: Toilet
+                type: glance
+
+              - entities: []
                 style: |
-                  state-badge {
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - entity: media_player.everywhere
+                    image: /local/icons/chromecast_audio.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                  - entity: media_player.upstairs
+                    image: /local/icons/chromecast_audio.svg
+                    style: |
+                      state-badge {
+                        border-radius: 0px;
+                        height: 64px;
+                        margin: 0 auto 12px auto;
+                        width: 64px;
+                      }
+                show_state: false
+                style: |
+                  :host {
+                    margin: 0 auto !important;
+                    max-width: 640px;
+                  }
+
+                  ha-card {
+                    background-color: transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                  }
+
+                  .card-header {
+                    font-family: 'Product Sans';
+                    font-size: 19px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 10px 20px 0px;
+                  }
+
+                  .entities {
+                    display: grid !important;
+                    gap: 24px 20px;
+                    grid-template-columns: repeat(2, minmax(1px, 250px));
+                    text-align: center;
+                  }
+
+                  .entity {
                     align-items: center;
-                    background-color: var(--accent-color-purple-light);
-                    border-radius: 100%;
-                    color: var(--accent-color-purple);
-                    display: flex;
-                    height: 56px;
+                    font-family: 'Product Sans' !important;
+                    font-size: 1.15rem;
+                    flex-direction: column-reverse !important;
                     justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
+                    margin-bottom: 34px !important;
+                    width: 100% !important;
                   }
-              - entity: group.all_scripts
-                icon: mdi:creation
-                name: Customize
-                style: |
-                  state-badge {
-                    align-items: center;
-                    border: 1px solid var(--divider-color);
-                    border-radius: 100%;
-                    color: var(--primary-text-color);
-                    display: flex;
-                    height: 56px;
-                    justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
-                  }
-                tap_action:
-                  action: navigate
-                  navigation_path: /config/customize
-              - entity: group.all_scripts
-                icon: mdi:settings
-                name: Settings
-                style: |
-                  state-badge {
-                    align-items: center;
-                    border: 1px solid var(--divider-color);
-                    border-radius: 100%;
-                    color: var(--primary-text-color);
-                    display: flex;
-                    height: 56px;
-                    justify-content: center;
-                    margin: 0 0 6px;
-                    width: 56px;
-                  }
-                tap_action:
-                  action: navigate
-                  navigation_path: /lovelace/settings
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                box-shadow: none;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 32px;
-                margin: 0 0 16px;
-                text-align: center;
-              }
-
-              .entities {
-                align-items: center;
-                justify-content: center;
-              }
-
-              .entity {
-                font-family: 'Product Sans' !important;
-                font-size: 0.9rem;
-                flex-direction: column-reverse !important;
-                height: 96px;
-                justify-content: center;
-                margin: -8px -5px 0px !important;
-                padding: 0 !important;
-                width: 96px !important;
-              }
-            title: Niels & Laura's Home
-            type: glance
-
-          - entities:
-              - entity: media_player.downstairs_speaker
-                image: /local/icons/chromecast_audio.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                border-radius: 0;
-                border-top: 1px solid var(--divider-color);
-                box-shadow: none;
-                margin-top: 12px;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 19px;
-                text-align: center;
-              }
-
-              .entities {
-                display: grid !important;
-                gap: 24px 20px;
-                grid-template-columns: repeat(2, minmax(1px, 250px));
-                text-align: center;
-              }
-
-              .entity {
-                align-items: center;
-                font-family: 'Product Sans' !important;
-                font-size: 1.15rem;
-                flex-direction: column-reverse !important;
-                justify-content: center;
-                width: 100% !important;
-              }
-            title: Downstairs
-            type: glance
-
-          - entities:
-              - entity: light.kitchen_spots
-                image: /local/icons/light.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: light.kitchen_worktop
-                image: /local/icons/light.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: media_player.kitchen_speakers
-                image: /local/icons/chromecast_audio.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                border-radius: 0;
-                border-top: 1px solid var(--divider-color);
-                box-shadow: none;
-                margin-top: 12px;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 19px;
-                text-align: center;
-              }
-
-              .entities {
-                display: grid !important;
-                gap: 24px 20px;
-                grid-template-columns: repeat(2, minmax(1px, 250px));
-                text-align: center;
-              }
-
-              .entity {
-                align-items: center;
-                font-family: 'Product Sans' !important;
-                font-size: 1.15rem;
-                flex-direction: column-reverse !important;
-                justify-content: center;
-                width: 100% !important;
-              }
-            title: Kitchen
-            type: glance
-
-          - entities:
-              - entity: light.living_room_pendant
-                image: /local/icons/light.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: media_player.living_room_tv
-                image: /local/icons/chromecast.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: media_player.living_room_home_mini
-                image: /local/icons/google_home_mini.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: media_player.living_room_speakers
-                image: /local/icons/chromecast_audio.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: climate.living_room
-                image: /local/icons/thermostat.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                border-radius: 0;
-                border-top: 1px solid var(--divider-color);
-                box-shadow: none;
-                margin-top: 12px;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 19px;
-                text-align: center;
-              }
-
-              .entities {
-                display: grid !important;
-                gap: 24px 20px;
-                grid-template-columns: repeat(2, minmax(1px, 250px));
-                text-align: center;
-              }
-
-              .entity {
-                align-items: center;
-                font-family: 'Product Sans' !important;
-                font-size: 1.15rem;
-                flex-direction: column-reverse !important;
-                justify-content: center;
-                width: 100% !important;
-              }
-            title: Living Room
-            type: glance
-
-          - entities:
-              - entity: light.toilet_spot
-                image: /local/icons/light.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                border-radius: 0;
-                border-top: 1px solid var(--divider-color);
-                box-shadow: none;
-                margin-top: 12px;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 19px;
-                text-align: center;
-              }
-
-              .entities {
-                display: grid !important;
-                gap: 24px 20px;
-                grid-template-columns: repeat(2, minmax(1px, 250px));
-                text-align: center;
-              }
-
-              .entity {
-                align-items: center;
-                font-family: 'Product Sans' !important;
-                font-size: 1.15rem;
-                flex-direction: column-reverse !important;
-                justify-content: center;
-                width: 100% !important;
-              }
-            title: Toilet
-            type: glance
-
-          - entities:
-              - entity: media_player.everywhere
-                image: /local/icons/chromecast_audio.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-              - entity: media_player.upstairs
-                image: /local/icons/chromecast_audio.svg
-                style: |
-                  state-badge {
-                    border-radius: 0px;
-                    height: 64px;
-                    margin: 0 auto 12px auto;
-                    width: 64px;
-                  }
-            show_state: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                border-radius: 0;
-                border-top: 1px solid var(--divider-color);
-                box-shadow: none;
-                margin-top: 12px;
-              }
-
-              .card-header {
-                font-family: 'Product Sans';
-                font-size: 19px;
-                text-align: center;
-              }
-
-              .entities {
-                display: grid !important;
-                gap: 24px 20px;
-                grid-template-columns: repeat(2, minmax(1px, 250px));
-                text-align: center;
-              }
-
-              .entity {
-                align-items: center;
-                font-family: 'Product Sans' !important;
-                font-size: 1.15rem;
-                flex-direction: column-reverse !important;
-                justify-content: center;
-                width: 100% !important;
-              }
-            title: Groups
-            type: glance
-
-        type: vertical-stack
+                title: Groups
+                type: glance
+            type: custom:hui-vertical-stack-card
+        style: |
+          ha-card {
+            box-shadow: none;
+            margin: 0 auto;
+            max-width: 1024px;
+          }
+        type: entities
     icon: mdi:home-variant-outline
     path: home
+    panel: true
     title: Home
   - cards:
       - cards:
           - entities:
-              - script.reset_volume
-            show_header_toggle: false
-            title: Media
-            type: entities
-          - entities:
-              - sensor.dark_sky_cloud_coverage
-              - sensor.sun_elevation_corrected
-              - sensor.time_of_day
-              - label: Actions
-                type: section
-              - script.scene_selection_reactivate
-              - script.scene_sync
-              - script.fix_toilet_spot_brightness
-              - label: Settings
-                type: section
-              - entity: automation.synchronise_scene_to_time_of_day
-                name: Synchronise scene to time of day automatically
-              - entity: automation.turn_off_night_scene
-                name: Turn off Night scene automatically
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
@@ -491,13 +571,6 @@ views:
             title: Scenes
             type: entities
           - entities:
-              - script.reload_themes
-            show_header_toggle: false
-            title: Theme
-            type: entities
-          - entities:
-              - entity: script.generate_network_map
-                name: Generate network map
               - input_boolean.zigbee_permit_join
             show_header_toggle: false
             title: Zigbee
