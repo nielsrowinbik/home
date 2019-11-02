@@ -11,6 +11,18 @@ surface-16dp: "#353535"
 surface-24dp: "#383838"
 
 # ACCENTS
+accent-color-indigo: "#3f51b5"
+accent-color-indigo-light: "#e8eaf6"
+accent-color-yellow: "#ffda65"
+accent-color-yellow-light: "#554c33"
+accent-color-green: "#81c995"
+accent-color-green-light: "#37493f"
+accent-color-blue: "#8ab4f8"
+accent-color-blue-light: "#394456"
+accent-color-red: "#f5ada8"
+accent-color-red-light: "#534343"
+accent-color-purple: "#c086f1"
+accent-color-purple-light: "#473a57"
 accent-color: "#87b0f3"
 dark-color: var(--surface-00dp)
 light-color: var(--primary-text-color)
@@ -30,6 +42,11 @@ paper-card-background-color: var(--surface-01dp)
 paper-dialog-background-color: var(--surface-16dp)
 paper-item-icon-color: var(--primary-text-color)
 paper-item-icon-active-color: var(--accent-color)
+
+# ICONS
+state-icon-color: "#606367"
+state-icon-active-color: "#ffb750"
+state-icon-unavailable-color: var(--disabled-text-color)
 
 # INPUT
 paper-input-container-color: var(--secondary-text-color)
@@ -55,3 +72,7 @@ paper-toggle-button-checked-bar-color: "#404d64"
 paper-toggle-button-checked-button-color: "#87b0f3"
 paper-toggle-button-unchecked-bar-color: "#636466"
 paper-toggle-button-unchecked-button-color: "#b9b9b9"
+
+# OTHER
+iron-overlay-backdrop-background-color: var(--surface-00dp)
+mdc-theme-primary: var(--accent-color)
