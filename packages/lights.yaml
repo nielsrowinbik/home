@@ -127,6 +127,14 @@ automation:
         data:
           entity_id: light.kitchen_spots
 
+group:
+  kitchen_lights:
+    entities:
+      - light.kitchen_mood_lighting
+      - light.kitchen_spots
+      - light.kitchen_worktop
+    name: kitchen lights
+
 light:
   - platform: switch
     name: Kitchen mood lighting

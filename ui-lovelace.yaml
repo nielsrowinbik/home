@@ -235,26 +235,9 @@ views:
                 type: entities
 
               - entities:
-                  - entity: light.kitchen_mood_lighting
-                    image: /local/icons/light.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: light.kitchen_spots
-                    image: /local/icons/light.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: light.kitchen_worktop
-                    image: /local/icons/light.svg
+                  - entity: group.kitchen_lights
+                    image: /local/icons/lightgroup.svg
+                    name: Kitchen lights
                     style: |
                       state-badge {
                         border-radius: 0px;
