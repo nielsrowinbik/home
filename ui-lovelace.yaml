@@ -59,7 +59,8 @@ views:
                         margin: 0 0 6px;
                         width: 56px;
                       }
-                  - entity: input_select.scene
+                  - entity: group.all_scenes
+                    icon: mdi:theme-light-dark
                     name: Scenes
                     style: |
                       state-badge {
