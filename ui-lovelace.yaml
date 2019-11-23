@@ -547,24 +547,78 @@ views:
     path: home
     panel: true
     title: Home
+
   - cards:
-      - cards:
-          - entities:
-              - input_number.morning_threshold
-              - input_number.day_threshold
-              - input_number.afternoon_threshold
-              - input_number.early_evening_threshold
-              - input_number.evening_threshold
-              - input_number.max_sun_elevation_decrease
-            show_header_toggle: false
-            title: Scenes
-            type: entities
-          - entities:
-              - input_boolean.zigbee_permit_join
-            show_header_toggle: false
-            title: Zigbee
-            type: entities
-        type: vertical-stack
+      - entities:
+          - cards:
+              - entities:
+                  - input_number.morning_threshold
+                  - input_number.day_threshold
+                  - input_number.afternoon_threshold
+                  - input_number.early_evening_threshold
+                  - input_number.evening_threshold
+                  - input_number.max_sun_elevation_decrease
+                show_header_toggle: false
+                style: |
+                  ha-card {
+                    background-color: transparent;
+                    box-shadow: none;
+                  }
+                type: entities
+
+              - entities: []
+                style: |
+                  ha-card {
+                    background-color: var(--divider-color);
+                    box-shadow: none;
+                    padding: 0px;
+                    height: 1px;
+                  }
+
+                  .card-content {
+                    padding: 0;
+                  }
+                type: entities
+
+              - entities:
+                  - input_boolean.zigbee_permit_join
+                show_header_toggle: false
+                style: |
+                  ha-card {
+                    background-color: transparent;
+                    box-shadow: none;
+                  }
+                type: entities
+            type: custom:hui-vertical-stack-card
+        style: |
+          ha-card {
+            box-shadow: none;
+            margin: 0 auto;
+            max-width: 640px;
+          }
+        type: entities
     icon: mdi:settings
     path: settings
+    panel: true
     title: Settings
+  # - cards:
+  #     - cards:
+  #         - entities:
+  #             - input_number.morning_threshold
+  #             - input_number.day_threshold
+  #             - input_number.afternoon_threshold
+  #             - input_number.early_evening_threshold
+  #             - input_number.evening_threshold
+  #             - input_number.max_sun_elevation_decrease
+  #           show_header_toggle: false
+  #           title: Scenes
+  #           type: entities
+  #         - entities:
+  #             - input_boolean.zigbee_permit_join
+  #           show_header_toggle: false
+  #           title: Zigbee
+  #           type: entities
+  #       type: vertical-stack
+  #   icon: mdi:settings
+  #   path: settings
+  #   title: Settings
