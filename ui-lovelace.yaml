@@ -45,7 +45,7 @@ views:
                         width: 56px;
                       }
                   - entity: group.all_media_players
-                    icon: mdi:music-note-outline
+                    icon: mdi:music-note
                     name: Play
                     style: |
                       state-badge {
@@ -120,7 +120,7 @@ views:
                         width: 56px;
                       }
                   - entity: group.all_scripts
-                    icon: mdi:settings-outline
+                    icon: mdi:settings
                     name: Settings
                     style: |
                       state-badge {
