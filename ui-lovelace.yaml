@@ -59,6 +59,21 @@ views:
                         margin: 0 0 6px;
                         width: 56px;
                       }
+                  - entity: group.everyone
+                    icon: mdi:account-group-outline
+                    name: People
+                    style: |
+                      state-badge {
+                        align-items: center;
+                        background-color: var(--accent-color-cyan-light);
+                        border-radius: 100%;
+                        color: var(--accent-color-cyan);
+                        display: flex;
+                        height: 56px;
+                        justify-content: center;
+                        margin: 0 0 6px;
+                        width: 56px;
+                      }
                   - entity: input_select.scene
                     icon: mdi:theme-light-dark
                     name: Scenes
