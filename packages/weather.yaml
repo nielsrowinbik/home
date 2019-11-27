@@ -59,7 +59,7 @@ input_number:
     max: 100
     min: 0
     mode: box
-    name: Max sun elevation decrease (%)
+    name: Sun elevation decrease limit
     step: 1
     unit_of_measurement: "%"
   morning_threshold:
@@ -67,7 +67,7 @@ input_number:
     max: 10
     min: -10
     mode: box
-    name: Activate Morning when elevation reaches
+    name: Morning threshold
     step: 0.5
     unit_of_measurement: "°"
   day_threshold:
@@ -75,7 +75,7 @@ input_number:
     max: 10
     min: -10
     mode: box
-    name: Activate Day when elevation reaches
+    name: Day threshold
     step: 0.5
     unit_of_measurement: "°"
   afternoon_threshold:
@@ -83,7 +83,7 @@ input_number:
     max: 10
     min: -10
     mode: box
-    name: Activate Afternoon when elevation drops below
+    name: Afternoon threshold
     step: 0.5
     unit_of_measurement: "°"
   early_evening_threshold:
@@ -91,7 +91,7 @@ input_number:
     max: 10
     min: -10
     mode: box
-    name: Activate Early evening when elevation drops below
+    name: Early evening threshold
     step: 0.5
     unit_of_measurement: "°"
   evening_threshold:
@@ -99,6 +99,6 @@ input_number:
     max: 10
     min: -10
     mode: box
-    name: Activate Evening when elevation drops below
+    name: Evening threshold
     step: 0.5
     unit_of_measurement: "°"
