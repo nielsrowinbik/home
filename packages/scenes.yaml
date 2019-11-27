@@ -61,19 +61,6 @@ automation:
         data_template:
           entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
 
-group:
-  all_scenes:
-    entities:
-      - scene.morning
-      - scene.day
-      - scene.afternoon
-      - scene.early_evening
-      - scene.evening
-      - scene.night
-      - scene.away
-      - scene.vacation
-    name: all scenes
-
 script:
   scene_sync:
     alias: Sync scene to time of day

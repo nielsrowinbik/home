@@ -59,7 +59,7 @@ views:
                         margin: 0 0 6px;
                         width: 56px;
                       }
-                  - entity: group.all_scenes
+                  - entity: input_select.scene
                     icon: mdi:theme-light-dark
                     name: Scenes
                     style: |
