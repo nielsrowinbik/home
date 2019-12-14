@@ -92,18 +92,16 @@ input_select:
 scene:
   - name: Home
     entities:
-      input_select.presence:
-        option: Home
+      input_select.presence: Home
 
   - name: Away
     entities:
-      input_select.presence:
-        option: Away
-      input_select.scene:
-        option: Away
+      input_select.presence: Away
+      input_select.scene: Away
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 16
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
@@ -114,13 +112,12 @@ scene:
 
   - name: Vacation
     entities:
-      input_select.presence:
-        option: Vacation
-      input_select.scene:
-        option: Vacation
+      input_select.presence: Vacation
+      input_select.scene: Vacation
       automation.synchronise_scene_to_time_of_day: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 16
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
@@ -131,14 +128,13 @@ scene:
 
   - name: Morning
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Morning
+      input_select.presence: Home
+      input_select.scene: Morning
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: off
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 19
       light.kitchen_mood_lighting: off
       light.kitchen_spots: on
@@ -146,70 +142,65 @@ scene:
 
   - name: Day
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Day
+      input_select.presence: Home
+      input_select.scene: Day
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 19
       light.kitchen_mood_lighting: off
       light.living_room_pendant: off
 
   - name: Afternoon
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Afternoon
+      input_select.presence: Home
+      input_select.scene: Afternoon
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
       light.living_room_pendant: on
 
   - name: Early evening
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Early evening
+      input_select.presence: Home
+      input_select.scene: Early evening
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
       light.living_room_pendant: on
 
   - name: Evening
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Evening
+      input_select.presence: Home
+      input_select.scene: Evening
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
       climate.living_room:
+        state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
       light.living_room_pendant: on
 
   - name: Night
     entities:
-      input_select.presence:
-        option: Home
-      input_select.scene:
-        option: Night
+      input_select.presence: Home
+      input_select.scene: Night
       automation.synchronise_scene_to_time_of_day: off
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: on
       climate.living_room:
+        state: heat
         temperature: 16
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
