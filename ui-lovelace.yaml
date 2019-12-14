@@ -3,11 +3,9 @@ cch:
 resources:
   - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
     type: css
-  - url: /local/js/card-mod.js?v=6
+  - url: /local/js/card-mod.js?v=11
     type: module
-  - url: /local/js/group-card.js?v=0.0.3
-    type: module
-  - url: /local/js/compact-custom-header.js?v=1.4.5
+  - url: /local/js/compact-custom-header.js?v=1.4.9
     type: module
 title: " "
 views:
@@ -791,26 +789,4 @@ views:
         type: vertical-stack
     icon: mdi:settings
     path: settings
-    # panel: true
     title: Settings
-  # - cards:
-  #     - cards:
-  #         - entities:
-  #             - input_number.morning_threshold
-  #             - input_number.day_threshold
-  #             - input_number.afternoon_threshold
-  #             - input_number.early_evening_threshold
-  #             - input_number.evening_threshold
-  #             - input_number.max_sun_elevation_decrease
-  #           show_header_toggle: false
-  #           title: Scenes
-  #           type: entities
-  #         - entities:
-  #             - input_boolean.zigbee_permit_join
-  #           show_header_toggle: false
-  #           title: Zigbee
-  #           type: entities
-  #       type: vertical-stack
-  #   icon: mdi:settings
-  #   path: settings
-  #   title: Settings
