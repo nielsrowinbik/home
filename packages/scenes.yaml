@@ -138,6 +138,7 @@ scene:
         temperature: 19
       light.kitchen_mood_lighting: off
       light.kitchen_spots: on
+      light.kitchen_worktop: off
       light.living_room_pendant: on
 
   - name: Day
@@ -151,6 +152,7 @@ scene:
         state: heat
         temperature: 19
       light.kitchen_mood_lighting: off
+      light.kitchen_worktop: off
       light.living_room_pendant: off
 
   - name: Afternoon
@@ -164,6 +166,7 @@ scene:
         state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
+      light.kitchen_worktop: off
       light.living_room_pendant: on
 
   - name: Early evening
@@ -177,6 +180,7 @@ scene:
         state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
+      light.kitchen_worktop: off
       light.living_room_pendant: on
 
   - name: Evening
@@ -190,6 +194,7 @@ scene:
         state: heat
         temperature: 19
       light.kitchen_mood_lighting: on
+      light.kitchen_worktop: off
       light.living_room_pendant: on
 
   - name: Night
@@ -207,3 +212,9 @@ scene:
       light.kitchen_worktop: off
       light.living_room_pendant: off
       remote.harmony_hub: off
+
+  - name: Cooking
+    entities:
+      automation.toggle_kitchen_spots_through_motion_sensor: off
+      light.kitchen_worktop: on
+      light.kitchen_spots: on
