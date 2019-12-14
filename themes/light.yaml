@@ -77,3 +77,4 @@ table-row-alternative-background-color: var(--secondary-background-color)
 iron-overlay-backdrop-background-color: "#ffffff"
 mdc-theme-primary: "#4284F4"
 mdc-theme-secondary: var(--accent-color-blue)
+ha-card-header-font-family: "Product Sans"
