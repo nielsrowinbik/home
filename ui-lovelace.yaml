@@ -564,238 +564,234 @@ views:
     title: Home
 
   - cards:
-      - entities:
-          - cards:
-              - entities:
-                  - entity: input_number.morning_threshold
-                    name: Morning threshold
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+      - cards:
+          - entities:
+              - entity: input_number.morning_threshold
+                name: Morning threshold
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Activate the Morning scene when the sun\'s elevation reaches a certain value';
-                          }
-                  - entity: input_number.day_threshold
-                    name: Day threshold
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Activate the Morning scene when the sun\'s elevation reaches a certain value';
+                      }
+              - entity: input_number.day_threshold
+                name: Day threshold
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Activate the Day scene when the sun\'s elevation reaches a certain value';
-                          }
-                  - entity: input_number.afternoon_threshold
-                    name: Afternoon threshold
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Activate the Day scene when the sun\'s elevation reaches a certain value';
+                      }
+              - entity: input_number.afternoon_threshold
+                name: Afternoon threshold
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Activate the Afternoon scene when the sun\'s elevation drops below a certain value';
-                          }
-                  - entity: input_number.early_evening_threshold
-                    name: Early evening threshold
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Activate the Afternoon scene when the sun\'s elevation drops below a certain value';
+                      }
+              - entity: input_number.early_evening_threshold
+                name: Early evening threshold
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Activate the Early evening scene when the sun\'s elevation drops below a certain value';
-                          }
-                  - entity: input_number.evening_threshold
-                    name: Evening threshold
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Activate the Early evening scene when the sun\'s elevation drops below a certain value';
+                      }
+              - entity: input_number.evening_threshold
+                name: Evening threshold
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Activate the Evening scene when the sun\'s elevation drops below a certain value';
-                          }
-                  - entity: input_number.max_sun_elevation_decrease
-                    name: Sun elevation decrease limit
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Activate the Evening scene when the sun\'s elevation drops below a certain value';
+                      }
+              - entity: input_number.max_sun_elevation_decrease
+                name: Sun elevation decrease limit
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Set by how much the sun\'s elevation should be decreased at most as a result of cloud coverage';
-                          }
-                  - entity: input_boolean.zigbee_permit_join
-                    name: Zigbee network joining
-                    secondary_info: last-changed
-                    style:
-                      "hui-generic-entity-row":
-                        $: |
-                          state-badge {
-                            display: none;
-                          }
+                      .info .secondary:before {
+                        content: 'Set by how much the sun\'s elevation should be decreased at most as a result of cloud coverage';
+                      }
+              - entity: input_boolean.zigbee_permit_join
+                name: Zigbee network joining
+                secondary_info: last-changed
+                style:
+                  "hui-generic-entity-row":
+                    $: |
+                      state-badge {
+                        display: none;
+                      }
 
-                          .info {
-                            font-size: 16px;
-                            line-height: 24px;
-                            margin-right: 36px;
-                          }
+                      .info {
+                        font-size: 16px;
+                        line-height: 24px;
+                        margin-right: 36px;
+                      }
 
-                          .info .secondary {
-                            font-size: 14px;
-                            line-height: 20px;
-                            white-space: normal;
-                          }
+                      .info .secondary {
+                        font-size: 14px;
+                        line-height: 20px;
+                        white-space: normal;
+                      }
 
-                          .info .secondary * {
-                            display: none;
-                          }
+                      .info .secondary * {
+                        display: none;
+                      }
 
-                          .info .secondary:before {
-                            content: 'Allow devices to join the Zigbee network';
-                          }
-                show_header_toggle: false
-                style: |
-                  ha-card {
-                    background-color: transparent;
-                    box-shadow: none;
-                  }
+                      .info .secondary:before {
+                        content: 'Allow devices to join the Zigbee network';
+                      }
+            show_header_toggle: false
+            style: |
+              ha-card {
+                background-color: transparent;
+                box-shadow: none;
+              }
 
-                  ha-card .card-content > div {
-                    padding: 8px 0;
-                  }
+              ha-card .card-content {
+                padding: 8px 0;
+              }
 
-                  ha-card .card-content > div:not(:last-child) {
-                    border-bottom: 1px solid var(--divider-color);
-                  }
-                type: entities
-            type: custom:hui-vertical-stack-card
-        style: |
-          ha-card {
-            box-shadow: none;
-            margin: 0 auto;
-            max-width: 640px;
-          }
-        type: entities
+              ha-card .card-content > div {
+                padding: 8px 16px 8px 0;
+              }
+
+              ha-card .card-content > div:not(:last-child) {
+                border-bottom: 1px solid var(--divider-color);
+              }
+            type: entities
+        type: vertical-stack
     icon: mdi:settings
     path: settings
-    panel: true
+    # panel: true
     title: Settings
   # - cards:
   #     - cards:
