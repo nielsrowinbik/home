@@ -39,12 +39,12 @@ device_tracker:
     new_device_defaults:
       hide_if_away: false
       track_new_devices: false
-  # - platform: upc_connect
-  #   host: !secret default_gateway_ip
-  #   new_device_defaults:
-  #     hide_if_away: false
-  #     track_new_devices: false
-  #   password: !secret default_gateway_password
+  - platform: upc_connect
+    host: !secret default_gateway_ip
+    new_device_defaults:
+      hide_if_away: false
+      track_new_devices: false
+    password: !secret default_gateway_password
 
 group:
   everyone:
