@@ -7,786 +7,180 @@ resources:
     type: module
   - url: /local/js/compact-custom-header.js?v=1.4.9
     type: module
+  - url: /local/js/google-home-assistant.js?v0.4.0
+    type: module
 title: " "
 views:
-  - cards:
-      - entities:
-          - cards:
-              - entities:
-                  - entity: input_select.activity
-                    name: Activities
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-indigo-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-indigo);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: group.all_lights
-                    icon: mdi:lightbulb-outline
-                    name: Lights
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-yellow-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-yellow);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: group.all_media_players
-                    icon: mdi:music-note
-                    name: Play
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-green-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-green);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: group.everyone
-                    icon: mdi:account-group-outline
-                    name: People
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-cyan-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-cyan);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: input_select.scene
-                    icon: mdi:theme-light-dark
-                    name: Scenes
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-blue-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-blue);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: climate.living_room
-                    icon: mdi:thermometer
-                    name: Thermostat
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-red-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-red);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: group.all_scripts
-                    icon: mdi:brightness-6
-                    name: Routines
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        background-color: var(--accent-color-purple-light);
-                        border-radius: 100%;
-                        color: var(--accent-color-purple);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                  - entity: group.all_scripts
-                    icon: mdi:settings
-                    name: Settings
-                    style: |
-                      state-badge {
-                        align-items: center;
-                        border: 1px solid var(--divider-color);
-                        border-radius: 100%;
-                        color: var(--primary-text-color);
-                        display: flex;
-                        height: 56px;
-                        justify-content: center;
-                        margin: 0 0 6px;
-                        width: 56px;
-                      }
-                    tap_action:
-                      action: navigate
-                      navigation_path: /lovelace/settings
-                show_state: false
-                style: |
-                  ha-card {
-                    background-color: transparent;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 32px;
-                    margin: 0 0 16px;
-                    padding-top: 0;
-                    text-align: center;
-                  }
-
-                  .entities {
-                    align-items: center;
-                    justify-content: center;
-                    padding: 0 16px 7px !important;
-                  }
-
-                  .entity {
-                    font-family: 'Product Sans' !important;
-                    font-size: 0.9rem;
-                    flex-direction: column-reverse !important;
-                    height: 96px;
-                    justify-content: center;
-                    margin: -8px -5px 8px !important;
-                    padding: 0 !important;
-                    width: 96px !important;
-                  }
-                title: Niels & Laura's Home
-                type: glance
-
-              - entities: []
-                style: |
-                  ha-card {
-                    background-color: var(--divider-color);
-                    box-shadow: none;
-                    padding: 0px;
-                    height: 1px;
-                  }
-
-                  .card-content {
-                    padding: 0;
-                  }
-                type: entities
-
-              - entities:
-                  - entity: media_player.downstairs_speaker
-                    image: /local/icons/speaker.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                show_state: false
-                style: |
-                  :host {
-                    margin: 0 auto !important;
-                    max-width: 640px;
-                  }
-
-                  ha-card {
-                    background-color: transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 19px;
-                    font-weight: 500;
-                    text-align: center;
-                    padding: 10px 20px 0px;
-                  }
-
-                  .entities {
-                    display: grid !important;
-                    gap: 24px 20px;
-                    grid-template-columns: repeat(2, minmax(1px, 250px));
-                    padding: 20px 0 !important;
-                    text-align: center;
-                  }
-
-                  .entity {
-                    align-items: center;
-                    font-family: 'Product Sans' !important;
-                    font-size: 1.15rem;
-                    flex-direction: column-reverse !important;
-                    justify-content: center;
-                    margin-bottom: 34px !important;
-                    width: 100% !important;
-                  }
-                title: Downstairs
-                type: glance
-
-              - entities: []
-                style: |
-                  ha-card {
-                    background-color: var(--divider-color);
-                    box-shadow: none;
-                    padding: 0px;
-                    height: 1px;
-                  }
-
-                  .card-content {
-                    padding: 0;
-                  }
-                type: entities
-
-              - entities:
-                  - entity: group.kitchen_lights
-                    image: /local/icons/lightgroup.svg
-                    name: Kitchen lights
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: media_player.kitchen_speakers
-                    image: /local/icons/chromecast_audio.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                show_state: false
-                style: |
-                  :host {
-                    margin: 0 auto !important;
-                    max-width: 640px;
-                  }
-
-                  ha-card {
-                    background-color: transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 19px;
-                    font-weight: 500;
-                    text-align: center;
-                    padding: 10px 20px 0px;
-                  }
-
-                  .entities {
-                    display: grid !important;
-                    gap: 24px 20px;
-                    grid-template-columns: repeat(2, minmax(1px, 250px));
-                    padding: 20px 0 !important;
-                    text-align: center;
-                  }
-
-                  .entity {
-                    align-items: center;
-                    font-family: 'Product Sans' !important;
-                    font-size: 1.15rem;
-                    flex-direction: column-reverse !important;
-                    justify-content: center;
-                    margin-bottom: 34px !important;
-                    width: 100% !important;
-                  }
-                title: Kitchen
-                type: glance
-
-              - entities: []
-                style: |
-                  ha-card {
-                    background-color: var(--divider-color);
-                    box-shadow: none;
-                    padding: 0px;
-                    height: 1px;
-                  }
-
-                  .card-content {
-                    padding: 0;
-                  }
-                type: entities
-
-              - entities:
-                  - entity: light.living_room_pendant
-                    image: /local/icons/light.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: media_player.living_room_tv
-                    image: /local/icons/chromecast.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: media_player.living_room_home_mini
-                    image: /local/icons/google_home_mini.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: media_player.living_room_speakers
-                    image: /local/icons/chromecast_audio.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: climate.living_room
-                    image: /local/icons/thermostat.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                show_state: false
-                style: |
-                  :host {
-                    margin: 0 auto !important;
-                    max-width: 640px;
-                  }
-
-                  ha-card {
-                    background-color: transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 19px;
-                    font-weight: 500;
-                    text-align: center;
-                    padding: 10px 20px 0px;
-                  }
-
-                  .entities {
-                    display: grid !important;
-                    gap: 24px 20px;
-                    grid-template-columns: repeat(2, minmax(1px, 250px));
-                    padding: 20px 0 !important;
-                    text-align: center;
-                  }
-
-                  .entity {
-                    align-items: center;
-                    font-family: 'Product Sans' !important;
-                    font-size: 1.15rem;
-                    flex-direction: column-reverse !important;
-                    justify-content: center;
-                    margin-bottom: 34px !important;
-                    width: 100% !important;
-                  }
-                title: Living Room
-                type: glance
-
-              - entities: []
-                style: |
-                  ha-card {
-                    background-color: var(--divider-color);
-                    box-shadow: none;
-                    padding: 0px;
-                    height: 1px;
-                  }
-
-                  .card-content {
-                    padding: 0;
-                  }
-                type: entities
-
-              - entities:
-                  - entity: light.toilet_spot
-                    image: /local/icons/light.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                show_state: false
-                style: |
-                  :host {
-                    margin: 0 auto !important;
-                    max-width: 640px;
-                  }
-
-                  ha-card {
-                    background-color: transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 19px;
-                    font-weight: 500;
-                    text-align: center;
-                    padding: 10px 20px 0px;
-                  }
-
-                  .entities {
-                    display: grid !important;
-                    gap: 24px 20px;
-                    grid-template-columns: repeat(2, minmax(1px, 250px));
-                    padding: 20px 0 !important;
-                    text-align: center;
-                  }
-
-                  .entity {
-                    align-items: center;
-                    font-family: 'Product Sans' !important;
-                    font-size: 1.15rem;
-                    flex-direction: column-reverse !important;
-                    justify-content: center;
-                    margin-bottom: 34px !important;
-                    width: 100% !important;
-                  }
-                title: Toilet
-                type: glance
-
-              - entities: []
-                style: |
-                  ha-card {
-                    background-color: var(--divider-color);
-                    box-shadow: none;
-                    padding: 0px;
-                    height: 1px;
-                  }
-
-                  .card-content {
-                    padding: 0;
-                  }
-                type: entities
-
-              - entities:
-                  - entity: media_player.everywhere
-                    image: /local/icons/chromecast_audio.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                  - entity: media_player.upstairs
-                    image: /local/icons/chromecast_audio.svg
-                    style: |
-                      state-badge {
-                        border-radius: 0px;
-                        height: 64px;
-                        margin: 0 auto 12px auto;
-                        width: 64px;
-                      }
-                show_state: false
-                style: |
-                  :host {
-                    margin: 0 auto !important;
-                    max-width: 640px;
-                  }
-
-                  ha-card {
-                    background-color: transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                  }
-
-                  .card-header {
-                    font-family: 'Product Sans';
-                    font-size: 19px;
-                    font-weight: 500;
-                    text-align: center;
-                    padding: 10px 20px 0px;
-                  }
-
-                  .entities {
-                    display: grid !important;
-                    gap: 24px 20px;
-                    grid-template-columns: repeat(2, minmax(1px, 250px));
-                    padding: 20px 0 !important;
-                    text-align: center;
-                  }
-
-                  .entity {
-                    align-items: center;
-                    font-family: 'Product Sans' !important;
-                    font-size: 1.15rem;
-                    flex-direction: column-reverse !important;
-                    justify-content: center;
-                    margin-bottom: 34px !important;
-                    width: 100% !important;
-                  }
-                title: Groups
-                type: glance
-            type: custom:hui-vertical-stack-card
-        style: |
-          ha-card {
-            box-shadow: none;
-            margin: 0 auto;
-            max-width: 1024px;
-          }
-        type: entities
-    icon: mdi:home-variant-outline
+  - title: Home
     path: home
+    icon: mdi:home-variant-outline
     panel: true
-    title: Home
-
-  - cards:
-      - cards:
-          - entities:
-              - entity: input_number.morning_threshold
-                name: Morning threshold
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Activate the Morning scene when the sun\'s elevation reaches a certain value';
-                      }
-              - entity: input_number.day_threshold
-                name: Day threshold
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Activate the Day scene when the sun\'s elevation reaches a certain value';
-                      }
-              - entity: input_number.afternoon_threshold
-                name: Afternoon threshold
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Activate the Afternoon scene when the sun\'s elevation drops below a certain value';
-                      }
-              - entity: input_number.early_evening_threshold
-                name: Early evening threshold
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Activate the Early evening scene when the sun\'s elevation drops below a certain value';
-                      }
-              - entity: input_number.evening_threshold
-                name: Evening threshold
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Activate the Evening scene when the sun\'s elevation drops below a certain value';
-                      }
-              - entity: input_number.max_sun_elevation_decrease
-                name: Sun elevation decrease limit
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Set by how much the sun\'s elevation should be decreased at most as a result of cloud coverage';
-                      }
-              - entity: input_boolean.zigbee_permit_join
-                name: Zigbee network joining
-                secondary_info: last-changed
-                style:
-                  "hui-generic-entity-row":
-                    $: |
-                      state-badge {
-                        display: none;
-                      }
-
-                      .info {
-                        font-size: 16px;
-                        line-height: 24px;
-                        margin-right: 36px;
-                      }
-
-                      .info .secondary {
-                        font-size: 14px;
-                        line-height: 20px;
-                        white-space: normal;
-                      }
-
-                      .info .secondary * {
-                        display: none;
-                      }
-
-                      .info .secondary:before {
-                        content: 'Allow devices to join the Zigbee network';
-                      }
-            show_header_toggle: false
-            style: |
-              ha-card {
-                background-color: transparent;
-                box-shadow: none;
-              }
-
-              ha-card .card-content {
-                padding: 8px 0;
-              }
-
-              ha-card .card-content > div {
-                padding: 8px 16px 8px 0;
-              }
-
-              ha-card .card-content > div:not(:last-child) {
-                border-bottom: 1px solid var(--divider-color);
-              }
-            type: entities
-        type: vertical-stack
-    icon: mdi:settings
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:google-home-menu
+            title: Niels & Laura's Home
+            cards:
+              - type: custom:google-home-menu-item
+                entity: input_select.activity
+                color: indigo
+                icon: mdi:pulse
+                name: Activities
+              - type: custom:google-home-menu-item
+                entity: group.all_lights
+                color: yellow
+                icon: mdi:lightbulb-outline
+                name: Lights
+              - type: custom:google-home-menu-item
+                entity: group.all_media_players
+                color: green
+                icon: mdi:music-note-outline
+                name: Play
+              - type: custom:google-home-menu-item
+                entity: group.everyone
+                color: cyan
+                icon: mdi:account-group-outline
+                name: People
+              - type: custom:google-home-menu-item
+                entity: input_select.scene
+                color: blue
+                icon: mdi:theme-light-dark
+                name: Scenes
+              - type: custom:google-home-menu-item
+                entity: climate.living_room
+                color: red
+                icon: mdi:thermometer
+                name: Thermostat
+              - type: custom:google-home-menu-item
+                entity: group.all_scripts
+                color: purple
+                icon: mdi:brightness-6
+                name: Routines
+              - type: custom:google-home-menu-item
+                entity: group.all_scripts
+                color: none
+                icon: mdi:settings-outline
+                name: Settings
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/settings
+          - type: custom:google-home-grid
+            title: Downstairs
+            cards:
+              - type: custom:google-home-grid-item
+                entity: media_player.downstairs_speaker
+                icon: /local/icons/speaker.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+          - type: custom:google-home-grid
+            title: Kitchen
+            cards:
+              - type: custom:google-home-grid-item
+                entity: group.kitchen_lights
+                icon: /local/icons/lightgroup.svg
+                name: Kitchen lights
+                actions:
+                  - label: "Off"
+                    service: group.turn_off
+                  - label: "On"
+                    service: group.turn_on
+              - type: custom:google-home-grid-item
+                entity: media_player.kitchen_speakers
+                icon: /local/icons/speaker.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+          - type: custom:google-home-grid
+            title: Living Room
+            cards:
+              - type: custom:google-home-grid-item
+                entity: light.living_room_pendant
+                icon: /local/icons/light.svg
+                actions:
+                  - label: "Off"
+                    service: light.turn_off
+                  - label: "On"
+                    service: light.turn_on
+              - type: custom:google-home-grid-item
+                entity: media_player.living_room_tv
+                icon: /local/icons/chromecast.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+              - type: custom:google-home-grid-item
+                entity: media_player.living_room_home_mini
+                icon: /local/icons/google_home_mini.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+              - type: custom:google-home-grid-item
+                entity: media_player.living_room_speakers
+                icon: /local/icons/speaker.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+              - type: custom:google-home-grid-item
+                entity: climate.living_room
+                icon: /local/icons/thermostat.svg
+          - type: custom:google-home-grid
+            title: Toilet
+            cards:
+              - type: custom:google-home-grid-item
+                entity: light.toilet_spot
+                icon: /local/icons/light.svg
+                actions:
+                  - label: "Off"
+                    service: light.turn_off
+                  - label: "On"
+                    service: light.turn_on
+          - type: custom:google-home-grid
+            title: Groups
+            cards:
+              - type: custom:google-home-grid-item
+                entity: media_player.everywhere
+                icon: /local/icons/speaker.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+              - type: custom:google-home-grid-item
+                entity: media_player.upstairs
+                icon: /local/icons/speaker.svg
+                actions:
+                  - label: Play
+                    service: media_player.media_play
+                    state: paused
+                  - label: Pause
+                    service: media_player.media_pause
+                    state: playing
+  - title: Settings
     path: settings
-    title: Settings
+    icon: mdi:settings-outline
+    panel: true
+    cards:
+      - type: vertical-stack
+        cards: []
