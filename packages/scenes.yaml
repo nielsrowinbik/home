@@ -27,28 +27,24 @@ automation:
     condition:
       - condition: or
         conditions:
-          - condition: time
-            after: 06:30:00
-            weekday:
-              - mon
-              - tue
-              - wed
-              - thu
-              - fri
-          - condition: time
-            after: 08:30:00
-            weekday:
-              - sat
-              - sun
+          - condition: and
+            conditions:
+              - condition: time
+                after: 06:30:00
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: "on"
+          - condition: and
+            conditions:
+              - condition: time
+                after: 08:30:00
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: "off"
     action:
-      - service: script.turn_on
-        entity_id: script.scene_sync
-      - condition: state
-        entity_id: sensor.time_of_day
-        state: Night
-      - service: scene.turn_on
-        data:
-          entity_id: scene.morning
+      - service_template: "{{ 'scene' if is_state('input_select.scene', 'Night') else 'script' }}.turn_on"
+        data_template:
+          entity_id: "{{ 'scene.morning' if is_state('input_select.scene', 'Night') else 'script.scene_sync' }}"
 
   - alias: Handle scene override
     trigger:
@@ -60,6 +56,10 @@ automation:
       - service: scene.turn_on
         data_template:
           entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
+
+binary_sensor:
+  - platform: workday
+    country: NL
 
 script:
   scene_sync:

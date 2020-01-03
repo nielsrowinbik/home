@@ -52,6 +52,7 @@ recorder:
   exclude:
     entities:
       - binary_sensor.remote_ui
+      - binary_sensor.workday_sensor
   include:
     domains:
       - binary_sensor
