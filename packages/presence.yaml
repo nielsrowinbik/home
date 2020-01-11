@@ -39,12 +39,6 @@ device_tracker:
     new_device_defaults:
       hide_if_away: false
       track_new_devices: false
-  - platform: upc_connect
-    host: !secret default_gateway_ip
-    new_device_defaults:
-      hide_if_away: false
-      track_new_devices: false
-    password: !secret default_gateway_password
 
 group:
   everyone:
@@ -75,6 +69,8 @@ input_select:
       - Vacation
 
 sensor:
+  - platform: google_wifi
+    host: !secret default_gateway_ip
   - platform: template
     sensors:
       george_home:
