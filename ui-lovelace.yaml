@@ -3,12 +3,16 @@ cch:
 resources:
   - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
     type: css
+  - url: /local/js/lottie.min.js?v=5.6.0
+    type: js
   - url: /local/js/card-mod.js?v=11
     type: module
   - url: /local/js/compact-custom-header.js?v=1.4.9
     type: module
-  - url: /local/js/google-home-assistant.js?v0.4.0
+  - url: /local/js/google-home-assistant.js?v0.6.0
     type: module
+  # - url: "http://127.0.0.1:5000/google-home-assistant.js"
+  #   type: module
 title: " "
 views:
   - title: Home
@@ -22,11 +26,6 @@ views:
             title: Niels & Laura's Home
             cards:
               - type: custom:google-home-menu-item
-                entity: input_select.activity
-                color: indigo
-                icon: mdi:pulse
-                name: Activities
-              - type: custom:google-home-menu-item
                 entity: group.all_lights
                 color: yellow
                 icon: mdi:lightbulb-outline
@@ -34,23 +33,28 @@ views:
               - type: custom:google-home-menu-item
                 entity: group.all_media_players
                 color: green
-                icon: mdi:music-note-outline
-                name: Play
-              - type: custom:google-home-menu-item
-                entity: group.everyone
-                color: cyan
-                icon: mdi:account-group-outline
-                name: People
+                icon: mdi:play-box-outline
+                name: Media
               - type: custom:google-home-menu-item
                 entity: input_select.scene
                 color: blue
                 icon: mdi:theme-light-dark
                 name: Scenes
               - type: custom:google-home-menu-item
+                entity: group.everyone
+                color: cyan
+                icon: mdi:account-group-outline
+                name: People
+              - type: custom:google-home-menu-item
                 entity: climate.living_room
                 color: red
                 icon: mdi:thermometer
                 name: Thermostat
+              - type: custom:google-home-menu-item
+                entity: sensor.google_wifi_status
+                color: dark-green
+                icon: mdi:wifi
+                name: Wi-Fi
               - type: custom:google-home-menu-item
                 entity: group.all_scripts
                 color: purple
@@ -69,7 +73,6 @@ views:
             cards:
               - type: custom:google-home-grid-item
                 entity: media_player.downstairs_speaker
-                icon: /local/icons/speaker.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -77,21 +80,21 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                icon: /local/images/speaker.svg
           - type: custom:google-home-grid
             title: Kitchen
             cards:
               - type: custom:google-home-grid-item
                 entity: group.kitchen_lights
-                icon: /local/icons/lightgroup.svg
-                name: Kitchen lights
                 actions:
                   - label: "Off"
-                    service: group.turn_off
+                    service: homeassistant.turn_off
                   - label: "On"
-                    service: group.turn_on
+                    service: homeassistant.turn_on
+                icon: /local/images/lightgroup.svg
+                name: Kitchen lights
               - type: custom:google-home-grid-item
                 entity: media_player.kitchen_speakers
-                icon: /local/icons/speaker.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -99,20 +102,20 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                icon: /local/images/speaker.svg
           - type: custom:google-home-grid
             title: Living Room
             cards:
               - type: custom:google-home-grid-item
                 entity: light.living_room_pendant
-                icon: /local/icons/light.svg
                 actions:
                   - label: "Off"
                     service: light.turn_off
                   - label: "On"
                     service: light.turn_on
+                icon: /local/images/light.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_tv
-                icon: /local/icons/chromecast.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -120,9 +123,9 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                icon: /local/images/chromecast.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_home_mini
-                icon: /local/icons/google_home_mini.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -130,9 +133,9 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                icon: /local/images/google_home_mini.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_speakers
-                icon: /local/icons/speaker.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -140,26 +143,58 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                icon: /local/images/speaker.svg
               - type: custom:google-home-grid-item
                 entity: climate.living_room
-                icon: /local/icons/thermostat.svg
+                icon: /local/images/thermostat.svg
+              - type: custom:google-home-grid-item
+                entity: switch.remote_chromecast
+                actions:
+                  - label: Turn off
+                    service: switch.turn_off
+                    state: "on"
+                icon: /local/images/remote.svg
+              - type: custom:google-home-grid-item
+                entity: switch.remote_receiver
+                actions:
+                  - label: Turn off
+                    service: switch.turn_off
+                    state: "on"
+                icon: /local/images/remote.svg
+              - type: custom:google-home-grid-item
+                entity: switch.remote_tv
+                actions:
+                  - label: Turn off
+                    service: switch.turn_off
+                    state: "on"
+                icon: /local/images/remote.svg
+              - type: custom:google-home-grid-item
+                entity: switch.remote_xbox
+                actions:
+                  - label: Turn off
+                    service: switch.turn_off
+                    state: "on"
+                icon: /local/images/remote.svg
+              - type: custom:google-home-grid-item
+                entity: sensor.google_wifi_status
+                icon: /local/images/generic_device.svg
+                name: Google Wifi router
           - type: custom:google-home-grid
             title: Toilet
             cards:
               - type: custom:google-home-grid-item
                 entity: light.toilet_spot
-                icon: /local/icons/light.svg
                 actions:
                   - label: "Off"
                     service: light.turn_off
                   - label: "On"
                     service: light.turn_on
+                animation: /local/animations/icn_light.json
           - type: custom:google-home-grid
             title: Groups
             cards:
               - type: custom:google-home-grid-item
                 entity: media_player.everywhere
-                icon: /local/icons/speaker.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -167,9 +202,10 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                animation: /local/animations/icn_speaker.json
+                group_size: 3
               - type: custom:google-home-grid-item
                 entity: media_player.upstairs
-                icon: /local/icons/speaker.svg
                 actions:
                   - label: Play
                     service: media_player.media_play
@@ -177,6 +213,9 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
+                animation: /local/animations/icn_speaker.json
+                group_size: 2
+            counter_text: group
   - title: Settings
     path: settings
     icon: mdi:settings-outline
