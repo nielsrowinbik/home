@@ -62,6 +62,18 @@ binary_sensor:
   - platform: workday
     country: NL
 
+group:
+  all_scenes:
+    entities:
+      - scene.morning
+      - scene.day
+      - scene.afternoon
+      - scene.early_evening
+      - scene.evening
+      - scene.night
+    icon: mdi:theme-light-dark
+    name: Scenes
+
 script:
   scene_sync:
     alias: Sync scene to time of day

@@ -128,12 +128,21 @@ automation:
           entity_id: light.kitchen_spots
 
 group:
+  all_lights:
+    entities:
+      - light.kitchen_mood_lighting
+      - light.kitchen_spots
+      - light.kitchen_worktop
+      - light.living_room_pendant
+      - light.toilet_spot
+    icon: mdi:lightbulb-outline
+    name: Lights
   kitchen_lights:
     entities:
       - light.kitchen_mood_lighting
       - light.kitchen_spots
       - light.kitchen_worktop
-    name: kitchen lights
+    name: Kitchen lights
 
 light:
   - platform: switch

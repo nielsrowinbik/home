@@ -106,7 +106,8 @@ group:
       - media_player.living_room_speakers
       - media_player.living_room_tv
       - media_player.upstairs
-    name: all media players
+    icon: mdi:play-box-outline
+    name: Media
 
 script:
   reset_volume:

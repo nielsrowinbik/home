@@ -1,0 +1,11 @@
+group:
+  all_scripts:
+    entities:
+      - script.fix_toilet_spot_brightness
+      - script.generate_network_map
+      - script.scene_selection_reactivate
+      - script.reload_themes
+      - script.reset_volume
+      - script.scene_sync
+    icon: mdi:brightness-6
+    name: Routines

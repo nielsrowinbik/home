@@ -45,8 +45,8 @@ group:
     entities:
       - person.niels
       - person.laura
-    icon: mdi:account-group
-    name: Everyone
+    icon: mdi:account-group-outline
+    name: People
   george:
     entities:
       - sensor.george_home
