@@ -6,17 +6,18 @@ automation:
       - platform: state
         entity_id: group.everyone
         to: home
-      - platform: state
-        entity_id: climate.living_room
-        to: Smart Schedule
     condition:
+      # Make sure everyone is home
       - condition: state
         entity_id: group.everyone
         state: home
+      # Make sure we're not turning Night scene back on when Morning is active
+      - condition: template
+        value_template: "{{ not is_state('sensor.time_of_day', 'Night') and not is_state('input_select.scene', 'Morning') }}"
     action:
-      - service: scene.turn_on
-        data_template:
-          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+      - service: script.turn_on
+        data:
+          entity_id: script.scene_sync
 
   - alias: Turn off Night scene
     trigger:
