@@ -28,23 +28,15 @@ views:
               - type: custom:google-home-menu-item
                 entity: group.all_lights
                 color: yellow
-                icon: mdi:lightbulb-outline
-                name: Lights
               - type: custom:google-home-menu-item
                 entity: group.all_media_players
                 color: green
-                icon: mdi:play-box-outline
-                name: Media
               - type: custom:google-home-menu-item
-                entity: input_select.scene
+                entity: group.all_scenes
                 color: blue
-                icon: mdi:theme-light-dark
-                name: Scenes
               - type: custom:google-home-menu-item
                 entity: group.everyone
                 color: cyan
-                icon: mdi:account-group-outline
-                name: People
               - type: custom:google-home-menu-item
                 entity: climate.living_room
                 color: red
@@ -58,8 +50,6 @@ views:
               - type: custom:google-home-menu-item
                 entity: group.all_scripts
                 color: purple
-                icon: mdi:brightness-6
-                name: Routines
               - type: custom:google-home-menu-item
                 entity: group.all_scripts
                 color: none
@@ -92,7 +82,6 @@ views:
                   - label: "On"
                     service: homeassistant.turn_on
                 animation: /local/animations/icn_lightgroup.json
-                name: Kitchen lights
               - type: custom:google-home-grid-item
                 entity: media_player.kitchen_speakers
                 actions:
