@@ -142,6 +142,7 @@ group:
       - light.kitchen_mood_lighting
       - light.kitchen_spots
       - light.kitchen_worktop
+    icon: mdi:lightbulb-group-outline
     name: Kitchen lights
 
 light:
