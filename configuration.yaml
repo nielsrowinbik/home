@@ -46,6 +46,8 @@ http:
 lovelace:
   mode: yaml
 
+mobile_app:
+
 person:
 
 sun:
