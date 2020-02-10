@@ -1,0 +1,144 @@
+automation:
+  - alias: Synchronise scene to time of day
+    trigger:
+      - platform: state
+        entity_id: sensor.time_of_day
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    condition:
+      - condition: state
+        entity_id: group.everyone
+        state: home
+    action:
+      - service: script.turn_on
+        data:
+          entity_id: script.scene_sync
+
+script:
+  scene_sync:
+    alias: Sync scene to time of day
+    sequence:
+      - service: scene.turn_on
+        data_template:
+          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
+  scene_selection_reactivate:
+    alias: Reactivate primary scene
+    sequence:
+      - service: scene.turn_on
+        data_template:
+          entity_id: scene.{{ states('input_select.scene') | lower | replace(' ', '_') }}
+
+sensor:
+  - platform: template
+    sensors:
+      sun_elevation:
+        friendly_name: Sun elevation
+        icon_template: mdi:white-balance-sunny
+        unit_of_measurement: "°"
+        value_template: "{{ state_attr('sun.sun', 'elevation')|float|round(1) }}"
+      sun_elevation_corrected:
+        icon_template: mdi:white-balance-sunny
+        friendly_name: Sun elevation (corrected for cloud coverage)
+        value_template: >-
+          {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
+          {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
+          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
+          {{ "%.2f"|format(elevation - ((coverage * maxDecrease) * elevation)|abs) }}
+        unit_of_measurement: "°"
+      sun_direction:
+        friendly_name: Sun direction
+        icon_template: >-
+          {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
+            mdi:weather-sunset-up
+          {% else %}
+            mdi:weather-sunset-down
+          {% endif %}
+        value_template: >-
+          {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
+            Rising
+          {% else %}
+            Setting
+          {% endif %}
+      time_of_day:
+        friendly_name: Time of day
+        icon_template: mdi:calendar-clock
+        value_template: >-
+          {% set direction = states('sensor.sun_direction') %}
+          {% set elevation = states('sensor.sun_elevation_corrected')|float %}
+          
+          {% set morning_threshold = states('input_number.morning_threshold')|float %}
+          {% set day_threshold = states('input_number.day_threshold')|float %}
+          {% set afternoon_threshold = states('input_number.afternoon_threshold')|float %}
+          {% set early_evening_threshold = states('input_number.early_evening_threshold')|float %}
+          {% set evening_threshold = states('input_number.evening_threshold')|float %}
+
+          {% if direction == 'Rising' %}
+            {% if elevation > day_threshold %}
+              Day
+            {% elif elevation > morning_threshold %}
+              Morning
+            {% else %}
+              Night
+            {% endif %}
+          {% elif direction == 'Setting' %}
+            {% if elevation < evening_threshold %}
+              Evening
+            {% elif elevation < early_evening_threshold %}
+              Early evening
+            {% elif elevation < afternoon_threshold %}
+              Afternoon
+            {% endif %}
+          {% else %}
+            Day
+          {% endif %}
+
+input_number:
+  max_sun_elevation_decrease:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    mode: box
+    name: Sun elevation decrease limit
+    step: 1
+    unit_of_measurement: "%"
+  morning_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Morning threshold
+    step: 0.5
+    unit_of_measurement: "°"
+  day_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Day threshold
+    step: 0.5
+    unit_of_measurement: "°"
+  afternoon_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Afternoon threshold
+    step: 0.5
+    unit_of_measurement: "°"
+  early_evening_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Early evening threshold
+    step: 0.5
+    unit_of_measurement: "°"
+  evening_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Evening threshold
+    step: 0.5
+    unit_of_measurement: "°"

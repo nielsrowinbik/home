@@ -1,16 +1,4 @@
 automation:
-  - alias: Toggle Kitchen worktop light through wall button press
-    trigger:
-      - platform: mqtt
-        topic: zigbee2mqtt/kitchen_wall_switch
-    condition:
-      - condition: template
-        value_template: "{{ trigger.payload_json.click == 'right' }}"
-    action:
-      - service: light.toggle
-        data:
-          entity_id: light.kitchen_worktop
-
   - alias: Toggle Kitchen spots through wall button press
     trigger:
       - platform: mqtt
@@ -44,11 +32,14 @@ automation:
         data:
           entity_id: light.kitchen_spots
 
-  - alias: Turn off Kitchen spots when Day scene is turned on
+  - alias: Turn off Kitchen spots on certain scene changes
     trigger:
       - platform: state
         entity_id: input_select.scene
         to: Day
+      - platform: state
+        entity_id: input_select.scene
+        from: Eating
     condition:
       condition: and
       conditions:
