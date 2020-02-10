@@ -1,7 +1,6 @@
 group:
   all_scripts:
     entities:
-      - script.fix_toilet_spot_brightness
       - script.generate_network_map
       - script.scene_selection_reactivate
       - script.reload_themes
