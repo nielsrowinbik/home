@@ -11,8 +11,8 @@ resources:
     type: module
   - url: /local/js/google-home-assistant.js?v0.6.0
     type: module
-  # - url: "http://127.0.0.1:5000/google-home-assistant.js"
-  #   type: module
+#   - url: "http://127.0.0.1:5000/google-home-assistant.js"
+#     type: module
 title: " "
 views:
   - title: Home
@@ -97,6 +97,14 @@ views:
             cards:
               - type: custom:google-home-grid-item
                 entity: light.living_room_pendant
+                actions:
+                  - label: "Off"
+                    service: light.turn_off
+                  - label: "On"
+                    service: light.turn_on
+                animation: /local/animations/icn_light.json
+              - type: custom:google-home-grid-item
+                entity: light.living_room_spots
                 actions:
                   - label: "Off"
                     service: light.turn_off

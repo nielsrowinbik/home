@@ -41,7 +41,7 @@ automation:
   - alias: Toggle Cooking scene through wall button press
     trigger:
       - platform: mqtt
-        topic: zigbee2mqtt/kitchen_wall_switch
+        topic: zigbee2mqtt/kitchen_switch
     condition:
       - condition: template
         value_template: "{{ trigger.payload_json.click == 'right' }}"
@@ -111,8 +111,10 @@ scene:
       light.kitchen_spots: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.living_room_spots: off
       light.toilet_spot: off
-      remote.harmony_hub: off
+      remote.harmony_hub:
+        state: off
 
   - name: Vacation
     entities:
@@ -127,8 +129,10 @@ scene:
       light.kitchen_spots: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.living_room_spots: off
       light.toilet_spot: off
-      remote.harmony_hub: off
+      remote.harmony_hub:
+        state: off
 
   - name: Morning
     entities:
@@ -144,6 +148,7 @@ scene:
       light.kitchen_spots: on
       light.kitchen_worktop: off
       light.living_room_pendant: on
+      light.living_room_spots: off
 
   - name: Day
     entities:
@@ -158,6 +163,7 @@ scene:
       light.kitchen_mood_lighting: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.living_room_spots: off
 
   - name: Afternoon
     entities:
@@ -215,6 +221,7 @@ scene:
       light.kitchen_spots: off
       light.kitchen_worktop: off
       light.living_room_pendant: off
+      light.living_room_spots: off
       remote.harmony_hub: off
 
   - name: Cooking

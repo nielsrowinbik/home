@@ -10,6 +10,7 @@ Configuration for our Home Assistant instance.
 - 3x IKEA Tradfri power socket
 - 1x IKEA Tradfri LED light strip
 - 3x IKEA Tradfri dimmable LED spot
+- 5x IKEA Tradfri white spectrum dimmable LED spot
 - 1x JBL Link 20 wireless speaker
 - 1x Tado smart radiator thermostat
 - 2x Xiaomi Aqara double-key wireless switch
