@@ -88,6 +88,8 @@ sensor:
               Early evening
             {% elif elevation < afternoon_threshold %}
               Afternoon
+            {% else %}
+              Day
             {% endif %}
           {% else %}
             Day
