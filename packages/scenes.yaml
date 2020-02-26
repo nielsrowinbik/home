@@ -113,8 +113,7 @@ scene:
       light.living_room_pendant: off
       light.living_room_spots: off
       light.toilet_spot: off
-      remote.harmony_hub:
-        state: off
+      remote.harmony_hub: off
 
   - name: Vacation
     entities:
@@ -131,8 +130,7 @@ scene:
       light.living_room_pendant: off
       light.living_room_spots: off
       light.toilet_spot: off
-      remote.harmony_hub:
-        state: off
+      remote.harmony_hub: off
 
   - name: Morning
     entities:
@@ -178,6 +176,7 @@ scene:
       light.kitchen_mood_lighting: on
       light.kitchen_worktop: off
       light.living_room_pendant: on
+      light.living_room_spots: off
 
   - name: Early evening
     entities:
@@ -192,6 +191,11 @@ scene:
       light.kitchen_mood_lighting: on
       light.kitchen_worktop: off
       light.living_room_pendant: on
+      light.living_room_spots:
+        brightness: 65
+        color_temp: 475
+        state: on
+        transition: 1
 
   - name: Evening
     entities:
@@ -206,6 +210,11 @@ scene:
       light.kitchen_mood_lighting: on
       light.kitchen_worktop: off
       light.living_room_pendant: on
+      light.living_room_spots:
+        brightness: 65
+        color_temp: 475
+        state: on
+        transition: 1
 
   - name: Night
     entities:
