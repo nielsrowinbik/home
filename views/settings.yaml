@@ -14,3 +14,6 @@ cards:
           - input_number.afternoon_threshold
           - input_number.early_evening_threshold
           - input_number.evening_threshold
+      - type: entities
+        entities:
+          - input_boolean.zigbee_permit_join
