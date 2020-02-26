@@ -1,5 +1,6 @@
-cch:
-  hide_tabs: "0,1"
+custom_header:
+  header_css: "box-shadow: none !important;"
+  split_mode: true
 resources:
   - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
     type: css
@@ -7,7 +8,7 @@ resources:
     type: js
   - url: /local/js/card-mod.js?v=11
     type: module
-  - url: /local/js/compact-custom-header.js?v=1.4.9
+  - url: /local/js/custom-header.js?v1.3.2
     type: module
   - url: /local/js/google-home-assistant.js?v0.7.0
     type: module
