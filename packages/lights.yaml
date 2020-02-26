@@ -72,7 +72,7 @@ automation:
       - service: light.toggle
         data:
           brightness: 255
-          color_temp: 375
+          color_temp: 344
           entity_id: light.living_room_spots
 
   - alias: Toggle Toilet spot through wall button press
