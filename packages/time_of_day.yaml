@@ -5,11 +5,16 @@ automation:
         entity_id: sensor.time_of_day
       - platform: state
         entity_id: group.everyone
-        to: home
     condition:
-      - condition: state
-        entity_id: group.everyone
-        state: home
+      - condition: template
+        value_template: >-
+          {% if trigger.entity_id == 'group.everyone' %}
+            {{ trigger.to_state.state == 'home' }}
+          {% elif trigger.entity_id == 'sensor.time_of_day' %}
+            {{ trigger.to_state.state != 'Night' }}
+          {% else %}
+            False
+          {% endif %}
     action:
       - service: script.turn_on
         data:
