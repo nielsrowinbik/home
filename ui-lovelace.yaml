@@ -70,7 +70,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_g_assistant_speaker.json
+                icon: /local/images/google_assistant_speaker.svg
           - type: custom:google-home-grid
             title: Kitchen
             cards:
@@ -81,7 +81,7 @@ views:
                     service: homeassistant.turn_off
                   - label: "On"
                     service: homeassistant.turn_on
-                animation: /local/animations/icn_lightgroup.json
+                icon: /local/images/lightgroup.svg
               - type: custom:google-home-grid-item
                 entity: media_player.kitchen_speakers
                 actions:
@@ -91,7 +91,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_speaker.json
+                icon: /local/images/speaker.svg
           - type: custom:google-home-grid
             title: Living Room
             cards:
@@ -102,7 +102,7 @@ views:
                     service: light.turn_off
                   - label: "On"
                     service: light.turn_on
-                animation: /local/animations/icn_light.json
+                icon: /local/images/light.svg
               - type: custom:google-home-grid-item
                 entity: light.living_room_spots
                 actions:
@@ -110,7 +110,7 @@ views:
                     service: light.turn_off
                   - label: "On"
                     service: light.turn_on
-                animation: /local/animations/icn_light.json
+                icon: /local/images/light.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_tv
                 actions:
@@ -120,7 +120,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_chromecast.json
+                icon: /local/images/chromecast.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_home_mini
                 actions:
@@ -130,7 +130,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_mini.json
+                icon: /local/images/google_home_mini.svg
               - type: custom:google-home-grid-item
                 entity: media_player.living_room_speakers
                 actions:
@@ -140,41 +140,41 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_speaker.json
+                icon: /local/images/speaker.svg
               - type: custom:google-home-grid-item
                 entity: climate.living_room
-                animation: /local/animations/icn_thermostat.json
+                icon: /local/images/thermostat.svg
               - type: custom:google-home-grid-item
                 entity: switch.remote_chromecast
                 actions:
                   - label: Turn off
                     service: switch.turn_off
                     state: "on"
-                animation: /local/animations/icn_remote.json
+                icon: /local/images/remote.svg
               - type: custom:google-home-grid-item
                 entity: switch.remote_receiver
                 actions:
                   - label: Turn off
                     service: switch.turn_off
                     state: "on"
-                animation: /local/animations/icn_remote.json
+                icon: /local/images/remote.svg
               - type: custom:google-home-grid-item
                 entity: switch.remote_tv
                 actions:
                   - label: Turn off
                     service: switch.turn_off
                     state: "on"
-                animation: /local/animations/icn_remote.json
+                icon: /local/images/remote.svg
               - type: custom:google-home-grid-item
                 entity: switch.remote_xbox
                 actions:
                   - label: Turn off
                     service: switch.turn_off
                     state: "on"
-                animation: /local/animations/icn_remote.json
+                icon: /local/images/remote.svg
               - type: custom:google-home-grid-item
                 entity: sensor.google_wifi_status
-                animation: /local/animations/icn_device_generic.json
+                icon: /local/images/generic_device.svg
                 name: Google Wifi router
           - type: custom:google-home-grid
             title: Toilet
@@ -186,7 +186,7 @@ views:
                     service: light.turn_off
                   - label: "On"
                     service: light.turn_on
-                animation: /local/animations/icn_light.json
+                icon: /local/images/light.svg
           - type: custom:google-home-grid
             title: Groups
             cards:
@@ -199,7 +199,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_speaker.json
+                icon: /local/images/speaker.svg
                 group_size: 3
               - type: custom:google-home-grid-item
                 entity: media_player.upstairs
@@ -210,7 +210,7 @@ views:
                   - label: Pause
                     service: media_player.media_pause
                     state: playing
-                animation: /local/animations/icn_speaker.json
+                icon: /local/images/speaker.svg
                 group_size: 2
             counter_text: group
   - title: Settings
