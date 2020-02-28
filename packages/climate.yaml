@@ -7,19 +7,16 @@ automation:
         for:
           seconds: 30
     action:
-      - service: climate.set_hvac_mode
-        data:
-          entity_id: climate.living_room
-          hvac_mode: "off"
+      - service: script.turn_off_heating
 
   - alias: Reset scene when door closes
     trigger:
       - platform: state
         entity_id: binary_sensor.backdoor_contact_sensor
+        from: "on"
         to: "off"
     action:
-      - service: script.turn_on
-        entity_id: script.scene_selection_reactivate
+      - service: script.scene_selection_reactivate
 
   - alias: Prevent heating from turning back on while backdoor is open
     trigger:
@@ -31,7 +28,13 @@ automation:
         entity_id: binary_sensor.backdoor_contact_sensor
         state: "on"
     action:
-      - service: climate.set_hvac_mode
+      - service: script.turn_off_heating
+
+script:
+  turn_off_heating:
+    alias: Turn off heating
+    sequence:
+      - service: scene.apply
         data:
-          entity_id: climate.living_room
-          hvac_mode: "off"
+          entities:
+            climate.living_room: off
