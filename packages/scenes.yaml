@@ -1,4 +1,46 @@
 automation:
+  - alias: Set home mode to Home
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.home
+      - service_template: "{{ 'script' if not is_state('sensor.time_of_day', 'Night') else 'scene'}}.turn_on"
+        data_template:
+          entity_id: >-
+            {% if is_state('sensor.time_of_day', 'Night') %}
+              scene.{{ 'morning' if is_state('sensor.sun_direction', 'Rising') else 'evening' }}
+            {% else %}
+              script.scene_sync
+            {% endif %}
+
+  - alias: Set home mode to Away
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          minutes: 15
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.away
+
+  - alias: Set home mode to Vacation
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: not_home
+        for:
+          hours: 24
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.vacation
+
   - alias: Turn off Night scene
     trigger:
       - platform: time
@@ -102,7 +144,7 @@ scene:
     entities:
       input_select.presence: Away
       input_select.scene: Away
-      automation.synchronise_scene_to_time_of_day: on
+      automation.synchronise_scene_to_time_of_day: off
       automation.turn_off_night_scene: off
       climate.living_room:
         state: heat
@@ -119,7 +161,7 @@ scene:
     entities:
       input_select.presence: Vacation
       input_select.scene: Vacation
-      automation.synchronise_scene_to_time_of_day: on
+      automation.synchronise_scene_to_time_of_day: off
       automation.turn_off_night_scene: off
       climate.living_room:
         state: heat
