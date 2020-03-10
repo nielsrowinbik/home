@@ -116,7 +116,7 @@ automation:
         data:
           entity_id: light.toilet_spot
 
-  - alias: Toggle Toilet spot through motion sensor
+  - alias: Toggle Toilet spot through occupancy sensor
     trigger:
       - platform: state
         entity_id: binary_sensor.toilet_occupancy
@@ -158,6 +158,15 @@ automation:
       - service: light.turn_off
         data:
           entity_id: light.kitchen_spots
+
+binary_sensor:
+  - platform: template
+    sensors:
+      toilet_occupancy:
+        device_class: occupancy
+        friendly_name: Toilet occupancy
+        icon_template: "mdi:{{ 'minus-circle' if (is_state('binary_sensor.toilet_motion', 'on') or is_state('binary_sensor.toilet_door', 'on')) else 'checkbox-blank-circle-outline' }}"
+        value_template: "{{ is_state('binary_sensor.toilet_motion', 'on') or is_state('binary_sensor.toilet_door', 'on') }}"
 
 group:
   all_lights:
