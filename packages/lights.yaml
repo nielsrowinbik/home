@@ -65,14 +65,10 @@ automation:
         data:
           entity_id: light.kitchen_spots
 
-  - alias: Turn off Kitchen spots on certain scene changes
+  - alias: Turn off Kitchen spots on scene changes
     trigger:
       - platform: state
         entity_id: input_select.scene
-        to: Day
-      - platform: state
-        entity_id: input_select.scene
-        from: Eating
     condition:
       - condition: state
         entity_id: binary_sensor.kitchen_motion
