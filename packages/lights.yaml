@@ -100,6 +100,18 @@ automation:
     action:
       - service: light.toggle
         data:
+          entity_id: light.living_room_spots
+
+  - alias: Set Living Room spots to full brightness through wall button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/living_room_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click == 'right_double' }}"
+    action:
+      - service: light.turn_on
+        data:
           brightness: 255
           color_temp: 344
           entity_id: light.living_room_spots
