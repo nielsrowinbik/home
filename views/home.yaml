@@ -79,21 +79,13 @@ cards:
         title: Living Room
         cards:
           - type: custom:google-home-grid-item
-            entity: light.living_room_pendant
+            entity: group.living_room_lights
             actions:
               - label: "Off"
-                service: light.turn_off
+                service: homeassistant.turn_off
               - label: "On"
-                service: light.turn_on
-            icon: /local/images/light.svg
-          - type: custom:google-home-grid-item
-            entity: light.living_room_spots
-            actions:
-              - label: "Off"
-                service: light.turn_off
-              - label: "On"
-                service: light.turn_on
-            icon: /local/images/light.svg
+                service: homeassistant.turn_on
+            icon: /local/images/lightgroup.svg
           - type: custom:google-home-grid-item
             entity: media_player.living_room_tv
             actions:

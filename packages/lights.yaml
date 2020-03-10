@@ -148,6 +148,12 @@ group:
       - light.kitchen_worktop
     icon: mdi:lightbulb-group-outline
     name: Kitchen lights
+  living_room_lights:
+    entities:
+      - light.living_room_pendant
+      - light.living_room_spots
+    icon: mdi:lightbulb-group-outline
+    name: Living Room lights
 
 light:
   - platform: switch
