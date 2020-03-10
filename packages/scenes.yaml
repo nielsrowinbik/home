@@ -80,7 +80,7 @@ automation:
         data_template:
           entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
 
-  - alias: Toggle Cooking scene through wall button press
+  - alias: Toggle Cooking scenes through wall button press
     trigger:
       - platform: mqtt
         topic: zigbee2mqtt/kitchen_switch
@@ -88,9 +88,21 @@ automation:
       - condition: template
         value_template: "{{ trigger.payload_json.click == 'right' }}"
     action:
-      - service: scene.turn_on
+      - service_template: >-
+          {% if states('input_select.scene') == 'Eating' %}
+            script.turn_on
+          {% else %}
+            scene.turn_on
+          {% endif %}
         data_template:
-          entity_id: "scene.{{ 'cooking' if not is_state('input_select.scene', 'Cooking') else 'eating' }}"
+          entity_id: >-
+            {% if is_state('input_select.scene', 'Cooking') %}
+              scene.eating
+            {% elif is_state('input_select.scene', 'Eating') %}
+              script.scene_sync
+            {% else %}
+              scene.cooking
+            {% endif %}
 
   - alias: Turn off Eating scene after 30 minutes
     trigger:
