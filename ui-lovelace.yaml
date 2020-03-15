@@ -12,8 +12,6 @@ resources:
     type: module
   - url: /local/js/google-home-assistant.js?v0.7.0
     type: module
-#   - url: "http://127.0.0.1:5000/google-home-assistant.js"
-#     type: module
 title: " "
 views:
   - !include views/home.yaml
