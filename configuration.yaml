@@ -12,6 +12,8 @@ cloud:
   google_actions:
     filter:
       exclude_entities:
+        # - light.hallway_spot_1
+        # - light.hallway_spot_2
         - light.kitchen_spot_1
         - light.kitchen_spot_2
         - light.living_room_spot_1
@@ -57,10 +59,8 @@ person:
 
 sun:
 
-system_health:
-
 tado:
   username: !secret tado_username
   password: !secret tado_password
 
-updater:
+zeroconf:
