@@ -149,7 +149,7 @@ cards:
             icon: /local/images/remote.svg
           - type: custom:google-home-grid-item
             entity: sensor.google_wifi_status
-            icon: /local/images/generic_device.svg
+            icon: /local/images/nest_wifi.png
             name: Google Wifi router
       - type: custom:google-home-grid
         title: Toilet
