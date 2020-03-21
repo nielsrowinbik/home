@@ -2,7 +2,6 @@ device_tracker:
   - platform: bluetooth_tracker
     request_rssi: true
     new_device_defaults:
-      hide_if_away: false
       track_new_devices: false
 
 group:
