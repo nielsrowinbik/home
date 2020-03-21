@@ -1,34 +1,42 @@
 automation:
-  - alias: Temporarily turn off heating while backdoor is open
+  - alias: Temporarily turn off heating when a door or window opens
     trigger:
       - platform: state
-        entity_id: binary_sensor.backdoor_contact_sensor
+        entity_id: binary_sensor.door_or_window_open
         to: "on"
         for:
           seconds: 30
     action:
       - service: script.turn_off_heating
 
-  - alias: Reset scene when door closes
+  - alias: Turn heating back on when both door and window are closed
     trigger:
       - platform: state
-        entity_id: binary_sensor.backdoor_contact_sensor
+        entity_id: binary_sensor.door_or_window_open
         from: "on"
         to: "off"
     action:
-      - service: script.scene_selection_reactivate
+      - service: script.turn_on_heating
 
-  - alias: Prevent heating from turning back on while backdoor is open
+  - alias: Keep heating off while a door or window is open
     trigger:
       - platform: state
         entity_id: climate.living_room
         from: "off"
     condition:
       - condition: state
-        entity_id: binary_sensor.backdoor_contact_sensor
+        entity_id: binary_sensor.door_or_window_open
         state: "on"
     action:
       - service: script.turn_off_heating
+
+binary_sensor:
+  - platform: template
+    sensors:
+      door_or_window_open:
+        device_class: opening
+        friendly_name: Backdoor or window open
+        value_template: "{{ is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') }}"
 
 script:
   turn_off_heating:
@@ -38,3 +46,11 @@ script:
         data:
           entities:
             climate.living_room: off
+  turn_on_heating:
+    alias: Turn on heating
+    sequence:
+      - service: scene.apply
+        data:
+          entities:
+            climate.living_room:
+              state: heat
