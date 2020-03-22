@@ -104,16 +104,15 @@ automation:
               scene.cooking
             {% endif %}
 
-  - alias: Turn off Eating scene after 30 minutes
+  - alias: Sync scene through wall button press
     trigger:
-      - platform: state
-        entity_id: input_select.scene
-        to: Eating
-        for: 00:30:00
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click == 'right_double' }}"
     action:
-      - service: script.turn_on
-        data:
-          entity_id: script.scene_sync
+      - service: script.scene_sync
 
 binary_sensor:
   - platform: workday
