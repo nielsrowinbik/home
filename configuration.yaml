@@ -58,6 +58,8 @@ mobile_app:
 
 person:
 
+ssdp:
+
 sun:
 
 zeroconf:
