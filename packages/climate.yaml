@@ -2,7 +2,12 @@ automation:
   - alias: Temporarily turn off heating when a door or window opens
     trigger:
       - platform: state
-        entity_id: binary_sensor.door_or_window_open
+        entity_id: binary_sensor.kitchen_door
+        to: "on"
+        for:
+          seconds: 30
+      - platform: state
+        entity_id: binary_sensor.living_room_window
         to: "on"
         for:
           seconds: 30
@@ -12,9 +17,20 @@ automation:
   - alias: Turn heating back on when both door and window are closed
     trigger:
       - platform: state
-        entity_id: binary_sensor.door_or_window_open
+        entity_id: binary_sensor.kitchen_door
         from: "on"
         to: "off"
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        from: "on"
+        to: "off"
+    condition:
+      - condition: state
+        entity_id: binary_sensor.kitchen_door
+        state: "off"
+      - condition: state
+        entity_id: binary_sensor.living_room_window
+        state: "off"
     action:
       - service: script.turn_on_heating
 
@@ -24,19 +40,16 @@ automation:
         entity_id: climate.living_room
         from: "off"
     condition:
-      - condition: state
-        entity_id: binary_sensor.door_or_window_open
-        state: "on"
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.kitchen_door
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.living_room_window
+          state: "on"
     action:
       - service: script.turn_off_heating
-
-binary_sensor:
-  - platform: template
-    sensors:
-      door_or_window_open:
-        device_class: opening
-        friendly_name: Backdoor or window open
-        value_template: "{{ is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') }}"
 
 script:
   turn_off_heating:
