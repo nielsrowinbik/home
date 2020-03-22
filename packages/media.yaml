@@ -35,6 +35,9 @@ group:
     name: Media
 
 media_player:
+  # - platform: ziggo_mediabox_xl
+  #   host: !secret ziggo_mediabox_xl_host
+  #   name: Mediabox XL
   - platform: xboxone
     device: !secret xbox_one_device_id
     name: Xbox
