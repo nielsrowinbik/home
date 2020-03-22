@@ -141,6 +141,15 @@ automation:
         data:
           entity_id: light.toilet_spot
 
+  - alias: Turn on Toilet spot when door opens
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.toilet_door
+        to: "on"
+    action:
+      - service: light.turn_on
+        entity_id: light.toilet_spot
+
   - alias: Fix toilet spot brightness as it turns on
     trigger:
       - platform: state
