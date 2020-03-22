@@ -43,6 +43,11 @@ group:
     icon: mdi:play-box-outline
     name: Media
 
+media_player:
+  - platform: xboxone
+    device: !secret xbox_one_device_id
+    name: Xbox One
+
 script:
   reset_volume:
     alias: Reset speaker volumes
