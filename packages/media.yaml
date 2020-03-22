@@ -21,15 +21,6 @@ automation:
         data:
           entity_id: media_player.upstairs
 
-  - alias: Sync subwoofer power state to receiver power state through Harmony activity
-    trigger:
-      - platform: state
-        entity_id: remote.harmony_hub
-    action:
-      - service: script.turn_on
-        data:
-          entity_id: script.sync_subwoofer
-
 group:
   all_media_players:
     entities:
@@ -68,9 +59,3 @@ script:
         data:
           entity_id: media_player.living_room_speakers
           volume_level: 1
-  sync_subwoofer:
-    alias: Sync subwoofer power state to receiver power state
-    sequence:
-      - service_template: "switch.turn_{{ 'on' if is_state('remote.harmony_hub', 'on') else 'off' }}"
-        data:
-          entity_id: switch.power_outlet_3
