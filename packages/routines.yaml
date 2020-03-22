@@ -1,10 +1,10 @@
 group:
   all_scripts:
     entities:
-      - script.generate_network_map
+      - script.scene_sync
       - script.scene_selection_reactivate
+      - script.activity_sync
       - script.reload_themes
       - script.reset_volume
-      - script.scene_sync
     icon: mdi:brightness-6
     name: Routines
