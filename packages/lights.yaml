@@ -159,8 +159,7 @@ automation:
       - condition: template
         value_template: "{{ not is_state_attr('light.toilet_spot', 'brightness', 1 if is_state('input_select.scene', 'Night') else 255) }}"
     action:
-      - service: script.turn_on
-        entity_id: script.fix_toilet_spot_brightness
+      - service: script.fix_toilet_spot_brightness
 
   - alias: Toggle lights when movie changes state
     trigger:

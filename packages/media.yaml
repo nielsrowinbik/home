@@ -4,8 +4,7 @@ automation:
       - platform: time
         at: "04:00:00"
     action:
-      - service: script.turn_on
-        entity_id: script.reset_volume
+      - service: script.reset_volume
 
   - alias: Pause music when turning on the TV
     trigger:
