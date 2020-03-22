@@ -46,7 +46,7 @@ group:
 media_player:
   - platform: xboxone
     device: !secret xbox_one_device_id
-    name: Xbox One
+    name: Xbox
 
 script:
   reset_volume:
