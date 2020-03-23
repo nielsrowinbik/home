@@ -6,21 +6,6 @@ automation:
     action:
       - service: script.reset_volume
 
-  - alias: Pause music when turning on the TV
-    trigger:
-      - platform: template
-        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') in ['Watch TV', 'Watch Chromecast', 'Play a Game'] }}"
-    action:
-      - service: media_player.media_pause
-        data:
-          entity_id: media_player.kitchen_speakers
-      - service: media_player.media_pause
-        data:
-          entity_id: media_player.living_room_speakers
-      - service: media_player.media_pause
-        data:
-          entity_id: media_player.upstairs
-
 group:
   all_media_players:
     entities:
