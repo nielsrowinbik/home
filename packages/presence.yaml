@@ -11,17 +11,6 @@ group:
       - person.laura
     icon: mdi:account-group-outline
     name: People
-  george:
-    entities:
-      - sensor.george_home
-    icon: mdi:cat
-    name: George
-
-input_boolean:
-  george_home_toggle:
-    name: George
-    initial: on
-    icon: mdi:cat
 
 input_select:
   presence:
@@ -35,14 +24,3 @@ input_select:
 sensor:
   - platform: google_wifi
     host: !secret default_gateway_ip
-  - platform: template
-    sensors:
-      george_home:
-        friendly_name: George
-        icon_template: mdi:cat
-        value_template: >-
-          {% if is_state('input_boolean.george_home_toggle', 'on') %}
-            home
-          {% else %}
-            not_home
-          {% endif %}
