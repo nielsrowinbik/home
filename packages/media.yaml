@@ -35,6 +35,9 @@ group:
     name: Media
 
 media_player:
+  - platform: nadtcp2
+    name: amplifier
+    host: !secret nad_amplifier_ip
   - platform: xboxone
     device: !secret xbox_one_device_id
     name: Xbox
