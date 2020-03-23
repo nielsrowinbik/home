@@ -115,7 +115,7 @@ cards:
               - label: Pause
                 service: media_player.media_pause
                 state: playing
-            icon: /local/images/speaker.svg
+            icon: /local/images/google_assistant_speaker.svg
           - type: custom:google-home-grid-item
             entity: climate.living_room
             icon: /local/images/thermostat.svg
