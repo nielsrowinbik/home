@@ -127,7 +127,14 @@ cards:
                 state: "on"
             icon: /local/images/remote.svg
           - type: custom:google-home-grid-item
-            entity: switch.remote_receiver
+            entity: switch.remote_xbox
+            actions:
+              - label: Turn off
+                service: switch.turn_off
+                state: "on"
+            icon: /local/images/remote.svg
+          - type: custom:google-home-grid-item
+            entity: switch.remote_music
             actions:
               - label: Turn off
                 service: switch.turn_off
@@ -141,7 +148,7 @@ cards:
                 state: "on"
             icon: /local/images/remote.svg
           - type: custom:google-home-grid-item
-            entity: switch.remote_xbox
+            entity: switch.remote_vinyl
             actions:
               - label: Turn off
                 service: switch.turn_off
