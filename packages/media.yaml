@@ -6,6 +6,19 @@ automation:
     action:
       - service: script.reset_volume
 
+  # - alias: Reset amplifier volume when it turns on
+  #   trigger:
+  #     - platform: state
+  #       entity_id: media_player.amplifier
+  #       to: "on"
+  #       for:
+  #         seconds: 5
+  #   action:
+  #     service: media_player.volume_set
+  #     data:
+  #       entity_id: media_player.amplifier
+  #       volume_level: 0.35714285714285715
+
 group:
   all_media_players:
     entities:
@@ -23,6 +36,7 @@ media_player:
   - platform: nadtcp2
     name: Amplifier
     host: !secret nad_amplifier_ip
+    volume_step: 2
 
 script:
   reset_volume:
@@ -40,7 +54,3 @@ script:
         data:
           entity_id: media_player.living_room_home_mini
           volume_level: 0.35
-      - service: media_player.volume_set
-        data:
-          entity_id: media_player.living_room_speakers
-          volume_level: 0.42857142857142855
