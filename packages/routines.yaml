@@ -2,8 +2,8 @@ group:
   all_scripts:
     entities:
       - script.scene_sync
+      - script.input_sync
       - script.scene_selection_reactivate
-      - script.activity_sync
       - script.reload_themes
       - script.reset_volume
     icon: mdi:brightness-6

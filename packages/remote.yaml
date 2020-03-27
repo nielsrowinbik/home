@@ -35,10 +35,7 @@ automation:
     action:
       - delay:
           seconds: "{{ 6 if trigger.from_state.state == 'off' else 0 }}"
-      - service: media_player.select_source
-        data_template:
-          entity_id: media_player.amplifier
-          source: "{{ 'Wireless' if trigger.to_state.attributes.current_activity == 'Listen to Music' else 'Opt2' }}"
+      - service: script.input_sync
 
   - alias: Sync subwoofer power to amplifier power
     trigger:
@@ -65,6 +62,25 @@ automation:
         data:
           entity_id: remote.harmony_hub
           activity: Listen to Music
+
+script:
+  input_sync:
+    alias: Set correct input on amplifier based on Harmony activity
+    sequence:
+      - condition: state
+        entity_id: remote.harmony_hub
+        state: 'on'
+      - service: media_player.select_source
+        data_template:
+          entity_id: media_player.amplifier
+          source: >-
+            {% if is_state_attr('remote.harmony_hub', 'current_activity', 'Listen to Music') %}
+              Wireless
+            {% elif is_state_attr('remote.harmony_hub', 'current_activity', 'Listen to Vinyl') %}
+              Phono
+            {% else %}
+              Opt2
+            {% endif %}
 
 switch:
   - platform: template
