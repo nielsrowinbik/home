@@ -1,18 +1,2 @@
-custom_header:
-  header_css: "box-shadow: none !important;"
-  split_mode: true
-resources:
-  - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
-    type: css
-  - url: /local/js/lottie.min.js?v=5.6.0
-    type: js
-  - url: /local/js/card-mod.js?v=11
-    type: module
-  - url: /local/js/custom-header.js?v1.3.2
-    type: module
-  - url: /local/js/google-home-assistant.js?v0.7.0
-    type: module
 title: " "
-views:
-  - !include views/home.yaml
-  - !include views/settings.yaml
+views: []

@@ -52,7 +52,32 @@ http:
   base_url: !secret base_url
 
 lovelace:
+  dashboards:
+    ui-home:
+      filename: ui-home.yaml
+      icon: mdi:home-variant-outline
+      mode: yaml
+      show_in_sidebar: true
+      title: Home
+    ui-settings:
+      filename: ui-settings.yaml
+      icon: mdi:settings-outline
+      mode: yaml
+      require_admin: true
+      show_in_sidebar: true
+      title: Settings
   mode: yaml
+  resources:
+    - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
+      type: css
+    - url: /local/js/lottie.min.js?v=v5.6.0
+      type: js
+    - url: /local/js/card-mod.js?v=v11.0.0
+      type: module
+    - url: /local/js/custom-header.js?v=v1.3.2
+      type: module
+    - url: /local/js/google-home-assistant.js?v=v0.7.0
+      type: module
 
 mobile_app:
 
