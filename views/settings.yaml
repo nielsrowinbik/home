@@ -9,6 +9,8 @@ cards:
       #   cards: []
       - type: entities
         entities:
+          - input_datetime.workday_alarm
+          - input_datetime.off_day_alarm
           - input_number.morning_threshold
           - input_number.day_threshold
           - input_number.afternoon_threshold

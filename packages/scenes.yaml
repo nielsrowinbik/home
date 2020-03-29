@@ -43,31 +43,24 @@ automation:
 
   - alias: Turn off Night scene
     trigger:
-      - platform: time
-        at: 06:30:00
-      - platform: time
-        at: 08:30:00
+      - platform: template
+        value_template: "{{ states('sensor.time') == state_attr('input_datetime.workday_alarm', 'timestamp') | int | timestamp_custom('%H:%M', False) }}"
+      - platform: template
+        value_template: "{{ states('sensor.time') == state_attr('input_datetime.off_day_alarm', 'timestamp') | int | timestamp_custom('%H:%M', False) }}"
+      - platform: state
+        entity_id: sensor.time_of_day
+        from: 'Night'
     condition:
-      - condition: or
-        conditions:
-          - condition: and
-            conditions:
-              - condition: time
-                after: 06:30:00
-              - condition: state
-                entity_id: binary_sensor.workday_sensor
-                state: "on"
-          - condition: and
-            conditions:
-              - condition: time
-                after: 08:30:00
-              - condition: state
-                entity_id: binary_sensor.workday_sensor
-                state: "off"
+      condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ is_state('binary_sensor.workday_sensor', 'on') and states('sensor.time') >= state_attr('input_datetime.workday_alarm', 'timestamp') | int | timestamp_custom('%H:%M') }}"
+        - condition: template
+          value_template: "{{ is_state('binary_sensor.workday_sensor', 'off') and states('sensor.time') >= state_attr('input_datetime.off_day_alarm', 'timestamp') | int | timestamp_custom('%H:%M') }}"
+        - condition: template
+          value_template: "{{ not is_state('sensor.time_of_day', 'Night') }}"
     action:
-      - service_template: "{{ 'scene' if is_state('input_select.scene', 'Night') else 'script' }}.turn_on"
-        data_template:
-          entity_id: "{{ 'scene.morning' if is_state('input_select.scene', 'Night') else 'script.scene_sync' }}"
+      - service: script.turn_off_night_scene
 
   - alias: Handle scene override
     trigger:
@@ -129,6 +122,18 @@ group:
       - scene.night
     icon: mdi:theme-light-dark
     name: Scenes
+
+input_datetime:
+  workday_alarm:
+    has_date: false
+    has_time: true
+    initial: '06:30'
+    name: Workday alarm
+  off_day_alarm:
+    has_date: false
+    has_time: true
+    initial: '08:30'
+    name: Off day alarm
 
 input_select:
   scene:
@@ -303,3 +308,17 @@ scene:
       automation.toggle_kitchen_spots_through_motion_sensor: off
       light.kitchen_worktop: off
       light.kitchen_spots: on
+
+script:
+  turn_off_night_scene:
+    alias: Turn off Night scene
+    sequence:
+      - service_template: "{{ 'scene' if is_state('sensor.time_of_day', 'Night') else 'script' }}.turn_on"
+        data_template:
+          entity_id: "{{ 'scene.morning' if is_state('sensor.time_of_day', 'Night') else 'script.scene_sync' }}"
+
+sensor:
+  - platform: time_date
+    display_options:
+      - date
+      - time
