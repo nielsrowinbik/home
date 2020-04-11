@@ -49,7 +49,7 @@ automation:
         value_template: "{{ states('sensor.time') == state_attr('input_datetime.off_day_alarm', 'timestamp') | int | timestamp_custom('%H:%M', False) }}"
       - platform: state
         entity_id: sensor.time_of_day
-        from: 'Night'
+        to: "Day"
     condition:
       condition: or
       conditions:
@@ -58,7 +58,7 @@ automation:
         - condition: template
           value_template: "{{ is_state('binary_sensor.workday_sensor', 'off') and states('sensor.time') >= state_attr('input_datetime.off_day_alarm', 'timestamp') | int | timestamp_custom('%H:%M', False) }}"
         - condition: template
-          value_template: "{{ not is_state('sensor.time_of_day', 'Night') }}"
+          value_template: "{{ is_state('sensor.time_of_day', 'Day') }}"
     action:
       - service: script.turn_off_night_scene
 
@@ -127,12 +127,12 @@ input_datetime:
   workday_alarm:
     has_date: false
     has_time: true
-    initial: '06:30'
+    initial: "06:30"
     name: Workday alarm
   off_day_alarm:
     has_date: false
     has_time: true
-    initial: '08:30'
+    initial: "08:30"
     name: Off day alarm
 
 input_select:
