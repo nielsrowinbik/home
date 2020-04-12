@@ -62,37 +62,6 @@ automation:
     action:
       - service: script.turn_off_night_scene
 
-  # - alias: Turn off Night scene
-  #   trigger:
-  #     - platform: time
-  #       at: 06:30:00
-  #     - platform: time
-  #       at: 08:30:00
-  #     - platform: state
-  #       entity_id: sensor.time_of_day
-  #       to: Day
-  #   condition:
-  #     - condition: or
-  #       conditions:
-  #         - condition: and
-  #           conditions:
-  #             - condition: time
-  #               after: 06:30:00
-  #             - condition: state
-  #               entity_id: binary_sensor.workday_sensor
-  #               state: "on"
-  #         - condition: and
-  #           conditions:
-  #             - condition: time
-  #               after: 08:30:00
-  #             - condition: state
-  #               entity_id: binary_sensor.workday_sensor
-  #               state: "off"
-  #         - condition: template
-  #           value_template: "{{ not is_state('sensor.time_of_day', 'Night') }}"
-  #   action:
-  #     - service: script.turn_off_night_scene
-
   - alias: Handle scene override
     trigger:
       - platform: state
