@@ -8,14 +8,14 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.home
-      - service_template: "{{ 'script' if not is_state('sensor.time_of_day', 'Night') else 'scene'}}.turn_on"
-        data_template:
-          entity_id: >-
-            {% if is_state('sensor.time_of_day', 'Night') %}
-              scene.{{ 'morning' if is_state('sensor.sun_direction', 'Rising') else 'evening' }}
-            {% else %}
-              script.scene_sync
-            {% endif %}
+      # - service_template: "{{ 'script' if not is_state('sensor.time_of_day', 'Night') else 'scene'}}.turn_on"
+      #   data_template:
+      #     entity_id: >-
+      #       {% if is_state('sensor.time_of_day', 'Night') %}
+      #         scene.{{ 'morning' if is_state('sensor.sun_direction', 'Rising') else 'evening' }}
+      #       {% else %}
+      #         script.scene_sync
+      #       {% endif %}
 
   - alias: Set home mode to Away
     trigger:
@@ -61,6 +61,37 @@ automation:
           value_template: "{{ is_state('sensor.time_of_day', 'Day') }}"
     action:
       - service: script.turn_off_night_scene
+
+  # - alias: Turn off Night scene
+  #   trigger:
+  #     - platform: time
+  #       at: 06:30:00
+  #     - platform: time
+  #       at: 08:30:00
+  #     - platform: state
+  #       entity_id: sensor.time_of_day
+  #       to: Day
+  #   condition:
+  #     - condition: or
+  #       conditions:
+  #         - condition: and
+  #           conditions:
+  #             - condition: time
+  #               after: 06:30:00
+  #             - condition: state
+  #               entity_id: binary_sensor.workday_sensor
+  #               state: "on"
+  #         - condition: and
+  #           conditions:
+  #             - condition: time
+  #               after: 08:30:00
+  #             - condition: state
+  #               entity_id: binary_sensor.workday_sensor
+  #               state: "off"
+  #         - condition: template
+  #           value_template: "{{ not is_state('sensor.time_of_day', 'Night') }}"
+  #   action:
+  #     - service: script.turn_off_night_scene
 
   - alias: Handle scene override
     trigger:
