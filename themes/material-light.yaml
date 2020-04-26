@@ -1,0 +1,103 @@
+# SURFACES
+surface-00dp: "#ffffff"
+surface-01dp: "#ffffff"
+surface-02dp: "#ffffff"
+surface-03dp: "#ffffff"
+surface-04dp: "#ffffff"
+surface-06dp: "#ffffff"
+surface-08dp: "#ffffff"
+surface-12dp: "#ffffff"
+surface-16dp: "#ffffff"
+surface-24dp: "#ffffff"
+
+# THEME COLORS
+primary-color: "#1a73e8"
+primary-text-color: "#3c4043"
+secondary-text-color: "#5f6368"
+text-primary-color: "#FFFFFF"
+disabled-text-color: "#717171"
+material-divider-color: rgba(0, 0, 0, 0.12)
+
+### SCAFFOLDING
+
+# Buttons
+mdc-button-raised-box-shadow: none
+mdc-button-raised-box-shadow-active: none
+mdc-button-raised-box-shadow-hover: none
+
+# Cards
+ha-card-border-radius: 8px
+ha-card-box-shadow: "0 0 0 1px var(--material-divider-color)"
+paper-card-background-color: var(--primary-background-color)
+
+# Dialogs
+more-info-header-background: var(--surface-16dp)
+more-info-header-color: var(--primary-text-color)
+paper-dialog-background-color: var(--surface-16dp)
+paper-listbox-background-color: var(--primary-background-color)
+
+# Header:
+app-header-background-color: var(--primary-background-color)
+app-header-text-color: var(--primary-text-color)
+
+# Inputs:
+paper-input-container-underline-focus_-_border-color: var(--primary-color)
+
+# Labels
+label-badge-background-color: "#F8FAF9"
+label-badge-text-color: "#4D5575"
+label-badge-red: "#C7484C"
+label-badge-green: "#6DC071"
+label-badge-blue: "#51AAD1"
+label-badge-yellow: "#D9B757"
+label-badge-gray: "#5F6267"
+
+# Main Interface Colors
+divider-color: var(--primary-background-color)
+light-primary-color: var(--primary-color)
+primary-background-color: var(--surface-02dp)
+secondary-background-color: var(--surface-16dp)
+
+# Sidebar Menu
+sidebar-icon-color: var(--app-header-text-color)
+sidebar-text-color: var(--primary-text-color)
+sidebar-background-color: var(--primary-background-color)
+sidebar-selected-background-color: var(--primary-background-color)
+sidebar-selected-icon-color: var(--primary-color)
+sidebar-selected-text-color: var(--sidebar-selected-icon-color)
+
+# Sliders
+paper-slider-knob-color: var(--primary-color)
+paper-slider-knob-start-color: var(--paper-slider-knob-color)
+paper-slider-pin-color: var(--paper-slider-knob-color)
+paper-slider-active-color: var(--paper-slider-knob-color)
+paper-slider-secondary-color: var(--light-primary-color)
+
+# States and Badges
+state-icon-color: var(--secondary-text-color)
+state-icon-active-color: var(--primary-color)
+state-icon-unavailable-color: var(--disabled-text-color)
+
+# Switches
+switch-checked-button-color: var(--primary-color)
+switch-checked-track-color: var(--primary-color)
+switch-unchecked-button-color: var(--surface-16dp);
+switch-unchecked-track-color: var(--primary-text-color)
+
+# Table
+table-row-background-color: var(--primary-background-color)
+table-row-alternative-background-color: var(--surface-01dp)
+data-table-background-color: var(--primary-background-color)
+
+# Tabs
+paper-tabs-selection-bar-color: var(--primary-color)
+
+# Toggles
+paper-toggle-button-checked-button-color: var(--switch-checked-button-color)
+paper-toggle-button-checked-bar-color: var(--switch-checked-track-color)
+paper-toggle-button-unchecked-button-color: var(--switch-unchecked-button-color)
+paper-toggle-button-unchecked-bar-color: var(--switch-unchecked-track-color)
+
+# Other
+iron-overlay-backdrop-background-color: var(--primary-background-color)
+mdc-theme-primary: var(--primary-color)
