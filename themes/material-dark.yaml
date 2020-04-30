@@ -11,7 +11,7 @@ surface-16dp: "#353535"
 surface-24dp: "#383838"
 
 # THEME COLORS
-primary-color: "#91b5f4"
+primary-color: "#87b0f3"
 primary-text-color: rgba(255, 255, 255, 0.87)
 secondary-text-color: rgba(255, 255, 255, 0.6)
 text-primary-color: rgba(255, 255, 255, 0.87)
@@ -28,6 +28,7 @@ mdc-button-raised-box-shadow-hover: none
 # Cards
 ha-card-border-radius: 8px
 ha-card-box-shadow: "0 0 0 1px var(--material-divider-color)"
+ha-card-header-font-family: "'Product Sans', Roboto, sans-serif"
 paper-card-background-color: var(--primary-background-color)
 
 # Dialogs
