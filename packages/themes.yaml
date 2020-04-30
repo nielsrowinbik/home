@@ -6,7 +6,7 @@ automation:
     action:
       service: frontend.set_theme
       data:
-        name: light
+        name: material-light
 
 script:
   reload_themes:
