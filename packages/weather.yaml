@@ -3,3 +3,7 @@ sensor:
     api_key: !secret dark_sky_api_key
     monitored_conditions:
       - cloud_cover
+
+weather:
+  - platform: buienradar
+    forecast: false

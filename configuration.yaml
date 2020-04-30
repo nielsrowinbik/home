@@ -68,13 +68,15 @@ lovelace:
   resources:
     - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
       type: css
-    - url: /local/js/lottie.min.js?v=v5.6.0
-      type: js
     - url: /local/js/card-mod.js?v=v11.0.0
       type: module
     - url: /local/js/custom-header.js?v=v1.3.2
       type: module
     - url: /local/js/google-home-assistant.js?v=v0.8.0
+      type: module
+    - url: /local/js/simple-weather-card.js?v=0.7.2
+      type: module
+    - url: /local/js/layout-card.js?v=1.2.1
       type: module
 
 mobile_app:
