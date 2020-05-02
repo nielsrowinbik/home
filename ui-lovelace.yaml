@@ -1,2 +1,197 @@
-title: " "
-views: []
+button_card_templates:
+  base:
+    aspect_ration: 1/1
+    show_state: true
+    show_icon: true
+    state:
+      - value: 'on'
+        styles: &base_state_on
+          card:
+            - background-color: hsl(41, 100%, 88%)
+          icon: 
+            - background-color: hsl(41, 93%, 50%)
+            - color: '#ffffff'
+          name:
+            - color: hsl(41, 93%, 50%)
+          state:
+            - color: hsl(41, 93%, 50%)
+    styles:
+      card: &base_styles_card
+        - background-color: '#eff0f5'
+        - box-shadow: none
+      icon:  &base_styles_icon
+        - background-color: '#e0e0ea'
+        - border-radius: 20%
+        - color: '#b3b7cf'
+        - height: 24px
+        - margin: 16px auto
+        - padding: 10px
+        - width: 24px
+      name: &base_styles_name
+        - color: '#b3b7cf'
+        - font-family: "'Product Sans', Roboto, sans-serif"
+        - font-size: 1.4rem
+        - line-height: 2rem
+      state: &base_styles_state
+        - color: '#b3b7cf'
+        - font-family: "'Product Sans', Roboto, sans-serif"
+        - line-height: 2rem
+
+  climate:
+    aspect_ration: 1/1
+    show_state: true
+    show_icon: true
+    state:
+      - value: 'heat'
+        styles:
+          card:
+            - background-color: hsl(12, 100%, 88%)
+          icon: 
+            - background-color: hsl(12, 93%, 50%)
+            - color: '#ffffff'
+          name:
+            - color: hsl(12, 93%, 50%)
+          state:
+            - color: hsl(12, 93%, 50%)
+    styles:
+      card: *base_styles_card
+      icon: *base_styles_icon
+      name: *base_styles_name
+      state: *base_styles_state
+
+  light:
+    aspect_ration: 1/1
+    show_state: true
+    show_icon: true
+    state:
+      - value: 'on'
+        styles:
+          card:
+            - background-color: '#ffebc1'
+          icon: 
+            - background-color: '#f6ac0a'
+            - border-radius: 20%
+            - color: '#ffffff'
+          name:
+            - color: '#f6ac0a'
+          state:
+            - color: '#f6ac0a'
+    styles:
+      card: *base_styles_card
+      icon: *base_styles_icon
+      name: *base_styles_name
+      state: *base_styles_state
+    tap_action:
+      action: toggle
+    hold_action:
+      action: call-service
+      service: browser_mod.popup
+      service_data:
+        title: '[[[ return entity.attributes.friendly_name ]]]'
+        deviceID: this
+        card:
+          cards:
+            - entities:
+                - entity: '[[[ return entity.entity_id ]]]'
+                  secondary_info: last-changed
+              show_header_toggle: false
+              type: entities
+          type: vertical-stack
+
+  switch:
+    aspect_ration: 1/1
+    show_state: true
+    show_icon: true
+    state:
+      - value: 'heat'
+        styles: *base_state_on
+    styles:
+      card: *base_styles_card
+      icon: *base_styles_icon
+      name: *base_styles_name
+      state: *base_styles_state
+
+custom_header:
+  # kiosk_mode: true
+  # exceptions:
+  #   - conditions:
+  #       user_agent: Mobile
+  #     config:
+  #       kiosk_mode: false
+
+title: Home
+views:
+  - panel: true
+    path: default_view
+    cards:
+      - cards:
+          - cards:
+              - content: '## Living Room'
+                style: |
+                  ha-card {
+                    box-shadow: none;
+                  }
+
+                  ha-card ha-markdown {
+                    padding: 0;
+                  }
+
+                  h2 {
+                    font-family: 'Product Sans', Roboto, sans-serif;
+                    font-size: 2.2rem;
+                    font-weight: 400;
+                  }
+                type: markdown
+              - card_options:
+                  gridcol: auto
+                  gridrow: auto
+                cards:
+                  - entity: light.living_room_pendant
+                    name: Pendant
+                    template: light
+                    type: custom:button-card
+                  - entity: light.living_room_spots
+                    name: Spots
+                    template: light
+                    type: custom:button-card
+                  - entity: climate.living_room
+                    name: Thermostat
+                    template: climate
+                    type: custom:button-card
+                gridcols: repeat(2, 1fr)
+                gridrows: auto
+                layout: grid
+                type: custom:layout-card
+            type: vertical-stack
+          - cards:
+              - content: '## Toilet'
+                style: |
+                  ha-card {
+                    box-shadow: none;
+                  }
+
+                  ha-card ha-markdown {
+                    padding: 0;
+                  }
+
+                  h2 {
+                    font-family: 'Product Sans', Roboto, sans-serif;
+                    font-size: 2.2rem;
+                    font-weight: 400;
+                  }
+                type: markdown
+              - card_options:
+                  gridcol: auto
+                  gridrow: auto
+                cards:
+                  - entity: light.toilet_spot
+                    name: Spot
+                    template: light
+                    type: custom:button-card
+                gridcols: repeat(2, 1fr)
+                gridrows: auto
+                layout: grid
+                type: custom:layout-card
+            type: vertical-stack
+        layout: horizontal
+        type: custom:layout-card

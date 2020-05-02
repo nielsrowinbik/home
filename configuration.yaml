@@ -8,6 +8,8 @@ homeassistant:
   packages: !include_dir_named packages/
   customize: !include customize.yaml
 
+browser_mod:
+
 cloud:
   google_actions:
     filter:
@@ -77,6 +79,10 @@ lovelace:
     - url: /local/js/simple-weather-card.js?v=0.7.2
       type: module
     - url: /local/js/layout-card.js?v=1.2.1
+      type: module
+    - url: /local/js/button-card.js?v=3.3.2
+      type: module
+    - url: /local/js/mini-graph-card.js?v=0.9.3
       type: module
 
 mobile_app:
