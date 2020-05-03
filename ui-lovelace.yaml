@@ -1,197 +1,148 @@
-button_card_templates:
-  base:
-    aspect_ration: 1/1
-    show_state: true
-    show_icon: true
-    state:
-      - value: 'on'
-        styles: &base_state_on
-          card:
-            - background-color: hsl(41, 100%, 88%)
-          icon: 
-            - background-color: hsl(41, 93%, 50%)
-            - color: '#ffffff'
-          name:
-            - color: hsl(41, 93%, 50%)
-          state:
-            - color: hsl(41, 93%, 50%)
-    styles:
-      card: &base_styles_card
-        - background-color: '#eff0f5'
-        - box-shadow: none
-      icon:  &base_styles_icon
-        - background-color: '#e0e0ea'
-        - border-radius: 20%
-        - color: '#b3b7cf'
-        - height: 24px
-        - margin: 16px auto
-        - padding: 10px
-        - width: 24px
-      name: &base_styles_name
-        - color: '#b3b7cf'
-        - font-family: "'Product Sans', Roboto, sans-serif"
-        - font-size: 1.4rem
-        - line-height: 2rem
-      state: &base_styles_state
-        - color: '#b3b7cf'
-        - font-family: "'Product Sans', Roboto, sans-serif"
-        - line-height: 2rem
-
-  climate:
-    aspect_ration: 1/1
-    show_state: true
-    show_icon: true
-    state:
-      - value: 'heat'
-        styles:
-          card:
-            - background-color: hsl(12, 100%, 88%)
-          icon: 
-            - background-color: hsl(12, 93%, 50%)
-            - color: '#ffffff'
-          name:
-            - color: hsl(12, 93%, 50%)
-          state:
-            - color: hsl(12, 93%, 50%)
-    styles:
-      card: *base_styles_card
-      icon: *base_styles_icon
-      name: *base_styles_name
-      state: *base_styles_state
-
-  light:
-    aspect_ration: 1/1
-    show_state: true
-    show_icon: true
-    state:
-      - value: 'on'
-        styles:
-          card:
-            - background-color: '#ffebc1'
-          icon: 
-            - background-color: '#f6ac0a'
-            - border-radius: 20%
-            - color: '#ffffff'
-          name:
-            - color: '#f6ac0a'
-          state:
-            - color: '#f6ac0a'
-    styles:
-      card: *base_styles_card
-      icon: *base_styles_icon
-      name: *base_styles_name
-      state: *base_styles_state
-    tap_action:
-      action: toggle
-    hold_action:
-      action: call-service
-      service: browser_mod.popup
-      service_data:
-        title: '[[[ return entity.attributes.friendly_name ]]]'
-        deviceID: this
-        card:
-          cards:
-            - entities:
-                - entity: '[[[ return entity.entity_id ]]]'
-                  secondary_info: last-changed
-              show_header_toggle: false
-              type: entities
-          type: vertical-stack
-
-  switch:
-    aspect_ration: 1/1
-    show_state: true
-    show_icon: true
-    state:
-      - value: 'heat'
-        styles: *base_state_on
-    styles:
-      card: *base_styles_card
-      icon: *base_styles_icon
-      name: *base_styles_name
-      state: *base_styles_state
-
-custom_header:
-  # kiosk_mode: true
-  # exceptions:
-  #   - conditions:
-  #       user_agent: Mobile
-  #     config:
-  #       kiosk_mode: false
-
 title: Home
 views:
   - panel: true
     path: default_view
     cards:
-      - cards:
-          - cards:
-              - content: '## Living Room'
-                style: |
-                  ha-card {
-                    box-shadow: none;
-                  }
+      - entities:
+          - title: Downstairs
+            entities:
+              - entity: media_player.downstairs_speaker
+                icon: mdi:speaker
+                name: Speaker
+          - title: Kitchen
+            entities: 
+              - entity: light.kitchen_spots
+                icon: mdi:lightbulb-outline
+                name: Spots
+              - entity: light.kitchen_worktop
+                icon: mdi:lightbulb-outline
+                name: Worktop
+              - entity: media_player.kitchen_speakers
+                icon: mdi:speaker
+                name: Speakers
+          - title: Living Room
+            entities: 
+              - entity: climate.living_room
+                name: Thermostat
+              - entity: light.living_room_pendant
+                icon: mdi:lightbulb-outline
+                name: Pendant
+              - entity: light.living_room_spots
+                icon: mdi:lightbulb-outline
+                name: Spots
+          - title: Toilet
+            entities: 
+              - entity: light.toilet_spot
+                icon: mdi:lightbulb-outline
+                name: Spot
+        style: |
+          :host {
+            --tile-font-family: 'Product Sans', Roboto, sans-serif;
+            --tile-height: 140px;
+            --tile-height-mobile: 140px;
+            --tile-width: 140px;
+            --tile-width-mobile: 140px;
 
-                  ha-card ha-markdown {
-                    padding: 0;
-                  }
+            --tile-title-color: #3c4043;
 
-                  h2 {
-                    font-family: 'Product Sans', Roboto, sans-serif;
-                    font-size: 2.2rem;
-                    font-weight: 400;
-                  }
-                type: markdown
-              - card_options:
-                  gridcol: auto
-                  gridrow: auto
-                cards:
-                  - entity: light.living_room_pendant
-                    name: Pendant
-                    template: light
-                    type: custom:button-card
-                  - entity: light.living_room_spots
-                    name: Spots
-                    template: light
-                    type: custom:button-card
-                  - entity: climate.living_room
-                    name: Thermostat
-                    template: climate
-                    type: custom:button-card
-                gridcols: repeat(2, 1fr)
-                gridrows: auto
-                layout: grid
-                type: custom:layout-card
-            type: vertical-stack
-          - cards:
-              - content: '## Toilet'
-                style: |
-                  ha-card {
-                    box-shadow: none;
-                  }
+            --tile-background: #eef0f4;
+            --tile-on-background: #ffebc0;
 
-                  ha-card ha-markdown {
-                    padding: 0;
-                  }
+            --tile-name-text-color: #b2b7ce;
+            --tile-on-name-text-color: #f3ac07;
 
-                  h2 {
-                    font-family: 'Product Sans', Roboto, sans-serif;
-                    font-size: 2.2rem;
-                    font-weight: 400;
-                  }
-                type: markdown
-              - card_options:
-                  gridcol: auto
-                  gridrow: auto
-                cards:
-                  - entity: light.toilet_spot
-                    name: Spot
-                    template: light
-                    type: custom:button-card
-                gridcols: repeat(2, 1fr)
-                gridrows: auto
-                layout: grid
-                type: custom:layout-card
-            type: vertical-stack
-        layout: horizontal
-        type: custom:layout-card
+            --tile-state-text-color: #b2b7ce;
+            --tile-on-state-text-color: #f3ac07;
+
+            --tile-icon-background-color: #dfe2ea;
+            --tile-icon-color: #b2b7ce;
+            --tile-on-icon-background-color: #f3ac07;
+            --tile-on-icon-color: #ffffff;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            :host {
+              --tile-title-color: #ffffff;
+              
+              --tile-background: #333844;
+              --tile-on-background: #ffffff;
+
+              --tile-name-text-color: #ffffff;
+              --tile-on-name-text-color: #333844;
+
+              --tile-state-text-color: #606777;
+              --tile-on-state-text-color: #606777;
+
+              --tile-icon-background-color: #606777;
+              --tile-icon-color: #9fa3b4;
+              --tile-on-icon-background-color: #ffebc0;
+              --tile-on-icon-color: #f3ac07;
+              
+            }
+          }
+
+          .card-title {
+            color: var(--tile-title-color);
+            font-family: var(--tile-font-family);
+            font-size: 1.8rem !important;
+            margin-bottom: 10px !important;
+            padding-bottom: 0 !important;
+          }
+
+          .card-title:not(:first-child) {
+            padding-top: 32px !important;
+          }
+
+          .button {
+            box-shadow: none !important;
+          }
+
+          .button .button-inner {
+            align-items: center;
+            justify-content: center;
+          }
+
+          .button .button-inner .icon {
+            align-items: center;
+            background-color: var(--tile-icon-background-color) !important;
+            border-radius: 20%;
+            color: var(--tile-icon-color) !important;
+            display: flex;
+            height: 48px;
+            justify-content: center;
+            margin-top: 0.4rem;
+            width: 48px;
+          }
+
+          .button.on .button-inner .icon {
+            background-color: var(--tile-on-icon-background-color) !important;
+            color: var(--tile-on-icon-color) !important;
+          }
+
+          .button .button-inner .icon ha-icon {
+            height: 24px;
+            width: 24px;
+          }
+
+          .button .button-inner .name,
+          .button .button-inner .state {
+            font-family: var(--tile-font-family);
+          }
+
+          .button .button-inner .name {
+            font-size: 1.4rem;
+            margin-top: 1.4rem;
+            text-align: center;
+          }
+
+          .button .button-inner .state {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.4rem;
+          }
+
+          .button .button-inner .state .value {
+            display: none;
+          }
+        type: "custom:homekit-card"
+        
