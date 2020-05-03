@@ -59,13 +59,20 @@ lovelace:
       mode: yaml
       show_in_sidebar: true
       title: Home
-    ui-settings:
-      filename: ui-settings.yaml
-      icon: mdi:settings-outline
+    ui-homekit:
+      filename: ui-homekit.yaml
+      icon: mdi:apple
       mode: yaml
       require_admin: true
       show_in_sidebar: true
-      title: Settings
+      title: Homekit
+    ui-assistant:
+      filename: ui-assistant.yaml
+      icon: mdi:google-assistant
+      mode: yaml
+      require_admin: true
+      show_in_sidebar: true
+      title: Assistant
   mode: yaml
   resources:
     - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500

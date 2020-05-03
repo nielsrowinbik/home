@@ -1,0 +1,148 @@
+title: Home
+views:
+  - panel: true
+    path: default_view
+    cards:
+      - entities:
+          - title: Downstairs
+            entities:
+              - entity: media_player.downstairs_speaker
+                icon: mdi:speaker
+                name: Speaker
+          - title: Kitchen
+            entities: 
+              - entity: light.kitchen_spots
+                icon: mdi:lightbulb-outline
+                name: Spots
+              - entity: light.kitchen_worktop
+                icon: mdi:lightbulb-outline
+                name: Worktop
+              - entity: media_player.kitchen_speakers
+                icon: mdi:speaker
+                name: Speakers
+          - title: Living Room
+            entities: 
+              - entity: climate.living_room
+                name: Thermostat
+              - entity: light.living_room_pendant
+                icon: mdi:lightbulb-outline
+                name: Pendant
+              - entity: light.living_room_spots
+                icon: mdi:lightbulb-outline
+                name: Spots
+          - title: Toilet
+            entities: 
+              - entity: light.toilet_spot
+                icon: mdi:lightbulb-outline
+                name: Spot
+        style: |
+          :host {
+            --tile-font-family: 'Product Sans', Roboto, sans-serif;
+            --tile-height: 140px;
+            --tile-height-mobile: 140px;
+            --tile-width: 140px;
+            --tile-width-mobile: 140px;
+
+            --tile-title-color: #3c4043;
+
+            --tile-background: #eef0f4;
+            --tile-on-background: #ffebc0;
+
+            --tile-name-text-color: #b2b7ce;
+            --tile-on-name-text-color: #f3ac07;
+
+            --tile-state-text-color: #b2b7ce;
+            --tile-on-state-text-color: #f3ac07;
+
+            --tile-icon-background-color: #dfe2ea;
+            --tile-icon-color: #b2b7ce;
+            --tile-on-icon-background-color: #f3ac07;
+            --tile-on-icon-color: #ffffff;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            :host {
+              --tile-title-color: #ffffff;
+              
+              --tile-background: #333844;
+              --tile-on-background: #ffffff;
+
+              --tile-name-text-color: #ffffff;
+              --tile-on-name-text-color: #333844;
+
+              --tile-state-text-color: #606777;
+              --tile-on-state-text-color: #606777;
+
+              --tile-icon-background-color: #606777;
+              --tile-icon-color: #9fa3b4;
+              --tile-on-icon-background-color: #ffebc0;
+              --tile-on-icon-color: #f3ac07;
+              
+            }
+          }
+
+          .card-title {
+            color: var(--tile-title-color);
+            font-family: var(--tile-font-family);
+            font-size: 1.8rem !important;
+            margin-bottom: 10px !important;
+            padding-bottom: 0 !important;
+          }
+
+          .card-title:not(:first-child) {
+            padding-top: 32px !important;
+          }
+
+          .button {
+            box-shadow: none !important;
+          }
+
+          .button .button-inner {
+            align-items: center;
+            justify-content: center;
+          }
+
+          .button .button-inner .icon {
+            align-items: center;
+            background-color: var(--tile-icon-background-color) !important;
+            border-radius: 20%;
+            color: var(--tile-icon-color) !important;
+            display: flex;
+            height: 48px;
+            justify-content: center;
+            margin-top: 0.4rem;
+            width: 48px;
+          }
+
+          .button.on .button-inner .icon {
+            background-color: var(--tile-on-icon-background-color) !important;
+            color: var(--tile-on-icon-color) !important;
+          }
+
+          .button .button-inner .icon ha-icon {
+            height: 24px;
+            width: 24px;
+          }
+
+          .button .button-inner .name,
+          .button .button-inner .state {
+            font-family: var(--tile-font-family);
+          }
+
+          .button .button-inner .name {
+            font-size: 1.4rem;
+            margin-top: 1.4rem;
+            text-align: center;
+          }
+
+          .button .button-inner .state {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.4rem;
+          }
+
+          .button .button-inner .state .value {
+            display: none;
+          }
+        type: "custom:homekit-card"
+        
