@@ -1,30 +1,43 @@
-title: Home
+title: Overview
 views:
   - cards:
       - type: vertical-stack
         cards:
           - entities:
-              - script.scene_sync
-              - input_boolean.keep_kitchen_spots_on
-              - script.turn_off_night_scene
-              - input_boolean.zigbee_permit_join
+              - entity: script.scene_sync
+                name: Sync scene
+                tap_action:
+                  action: toggle
+              - entity: input_boolean.keep_kitchen_spots_on
+                name: Keep spots on
+                tap_action:
+                  action: toggle
+              - entity: script.turn_off_night_scene
+                name: Turn off Night
+                tap_action:
+                  action: toggle
+              - entity: input_boolean.zigbee_permit_join
+                name: Zigbee Pairing
+                tap_action:
+                  action: toggle
             show_header_toggle: false
-            type: entities
+            show_state: false
+            type: glance
           - entities:
               - climate.living_room
+              - sensor.time_of_day
             show_header_toggle: false
+            title: At a Glance
             type: entities
           - entities:
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
-            show_header_toggle: false
-            type: entities
-          - entities:
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
               - input_number.early_evening_threshold
               - input_number.evening_threshold
             show_header_toggle: false
+            title: Settings
             type: entities
     path: index
