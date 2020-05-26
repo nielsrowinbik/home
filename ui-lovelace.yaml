@@ -3,26 +3,56 @@ views:
   - cards:
       - type: vertical-stack
         cards:
-          - entities:
-              - entity: script.scene_sync
-                name: Sync scene
-                tap_action:
-                  action: toggle
-              - entity: input_boolean.keep_kitchen_spots_on
-                name: Keep spots on
-                tap_action:
-                  action: toggle
-              - entity: script.turn_off_night_scene
-                name: Turn off Night
-                tap_action:
-                  action: toggle
-              - entity: input_boolean.zigbee_permit_join
-                name: Zigbee Pairing
-                tap_action:
-                  action: toggle
-            show_header_toggle: false
-            show_state: false
-            type: glance
+          - conditions:
+              - entity: input_select.scene
+                state: 'Night'
+            card: 
+              entities:
+                - entity: script.scene_sync
+                  name: Sync scene
+                  tap_action:
+                    action: toggle
+                - entity: input_boolean.keep_kitchen_spots_on
+                  name: Keep spots on
+                  tap_action:
+                    action: toggle
+                - entity: script.turn_off_night_scene
+                  name: Turn off Night
+                  tap_action:
+                    action: toggle
+                - entity: input_boolean.zigbee_permit_join
+                  name: Zigbee Pairing
+                  tap_action:
+                    action: toggle
+              show_header_toggle: false
+              show_state: false
+              type: glance
+            type: conditional
+          - conditions:
+              - entity: input_select.scene
+                state_not: 'Night'
+            card: 
+              entities:
+                - entity: script.scene_sync
+                  name: Sync scene
+                  tap_action:
+                    action: toggle
+                - entity: input_boolean.keep_kitchen_spots_on
+                  name: Keep spots on
+                  tap_action:
+                    action: toggle
+                - entity: scene.night
+                  name: Turn on Night
+                  tap_action:
+                    action: toggle
+                - entity: input_boolean.zigbee_permit_join
+                  name: Zigbee Pairing
+                  tap_action:
+                    action: toggle
+              show_header_toggle: false
+              show_state: false
+              type: glance
+            type: conditional
           - entities:
               - climate.living_room
               - sensor.time_of_day
