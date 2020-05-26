@@ -165,6 +165,7 @@ scene:
       climate.living_room:
         state: heat
         temperature: 16
+      input_boolean.keep_kitchen_spots_on: off
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
       light.kitchen_worktop: off
@@ -182,6 +183,7 @@ scene:
       climate.living_room:
         state: heat
         temperature: 16
+      input_boolean.keep_kitchen_spots_on: off
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
       light.kitchen_worktop: off
@@ -284,6 +286,7 @@ scene:
       climate.living_room:
         state: heat
         temperature: 16
+      input_boolean.keep_kitchen_spots_on: off
       light.kitchen_mood_lighting: off
       light.kitchen_spots: off
       light.kitchen_worktop: off

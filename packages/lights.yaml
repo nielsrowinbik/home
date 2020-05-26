@@ -118,7 +118,7 @@ automation:
       - service: light.turn_off
         data:
           entity_id: light.kitchen_spots
-      - service: script.scene_sync
+      - service: script.scene_selection_reactivate
 
   - alias: Toggle Living Room pendant through wall button press
     trigger:
