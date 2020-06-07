@@ -5,7 +5,7 @@ import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.media_player import (
-    MediaPlayerDevice, PLATFORM_SCHEMA)
+    MediaPlayerEntity, PLATFORM_SCHEMA)
 from homeassistant.components.media_player.const import (
     SUPPORT_VOLUME_SET,
     SUPPORT_VOLUME_MUTE, SUPPORT_TURN_ON, SUPPORT_TURN_OFF,
@@ -66,7 +66,7 @@ async def async_setup_platform(hass, config, async_add_devices, discovery_info=N
     return True
 
 
-class NADDevice(MediaPlayerDevice):
+class NADDevice(MediaPlayerEntity):
     """Device handler for the NAD protocol"""
 
     def __init__(self, name, host, reconnect_interval, min_volume, max_volume, volume_step):
