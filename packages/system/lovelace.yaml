@@ -1,0 +1,18 @@
+lovelace:
+  dashboards:
+    ui-home:
+      filename: ui-home.yaml
+      icon: mdi:home-variant-outline
+      mode: yaml
+      show_in_sidebar: true
+      title: Home
+  mode: yaml
+  resources:
+    - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
+      type: css
+    - url: /local/js/card-mod.js?v=v11.0.0
+      type: module
+    - url: /local/js/custom-header.js?v=v1.3.2
+      type: module
+    - url: /local/js/google-home-assistant.js?v=v0.8.0
+      type: module

@@ -8,14 +8,7 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.home
-      # - service_template: "{{ 'script' if not is_state('sensor.time_of_day', 'Night') else 'scene'}}.turn_on"
-      #   data_template:
-      #     entity_id: >-
-      #       {% if is_state('sensor.time_of_day', 'Night') %}
-      #         scene.{{ 'morning' if is_state('sensor.sun_direction', 'Rising') else 'evening' }}
-      #       {% else %}
-      #         script.scene_sync
-      #       {% endif %}
+          transition: 1
 
   - alias: Set home mode to Away
     trigger:
@@ -28,6 +21,7 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.away
+          transition: 1
 
   - alias: Set home mode to Vacation
     trigger:
@@ -40,6 +34,7 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.vacation
+          transition: 1
 
   - alias: Turn off Night scene
     trigger:
@@ -61,6 +56,27 @@ automation:
           value_template: "{{ is_state('sensor.time_of_day', 'Day') }}"
     action:
       - service: script.turn_off_night_scene
+      
+  - alias: Notify when current scene and time of day are out of sync
+    trigger:
+      - platform: state
+        entity_id: sensor.current_scene_and_time_of_day_mismatch
+        to: 'on'
+        for:
+          seconds: 5
+    condition:
+      - condition: state
+        entity_id: group.everyone
+        state: home
+    action:
+      - service: notify.all_devices
+        data:
+          title: Current scene doesn't match time of day
+          message: The currently active scene doesn't match the time of day
+          data:
+            actions:
+              - action: scene_sync
+                title: Fix now
 
   - alias: Handle scene override
     trigger:
@@ -73,41 +89,12 @@ automation:
         data_template:
           entity_id: "scene.{{ trigger.to_state.state | lower | replace(' ', '_') }}"
 
-  - alias: Toggle Cooking scenes through wall button press
-    trigger:
-      - platform: mqtt
-        topic: zigbee2mqtt/kitchen_switch
-    condition:
-      - condition: template
-        value_template: "{{ trigger.payload_json.click == 'right' }}"
-    action:
-      - service_template: >-
-          {% if states('input_select.scene') == 'Eating' %}
-            script.turn_on
-          {% else %}
-            scene.turn_on
-          {% endif %}
-        data_template:
-          entity_id: >-
-            {% if is_state('input_select.scene', 'Cooking') %}
-              scene.eating
-            {% elif is_state('input_select.scene', 'Eating') %}
-              script.scene_sync
-            {% else %}
-              scene.cooking
-            {% endif %}
-
-  - alias: Sync scene through wall button press
-    trigger:
-      - platform: mqtt
-        topic: zigbee2mqtt/kitchen_switch
-    condition:
-      - condition: template
-        value_template: "{{ trigger.payload_json.click == 'right_double' }}"
-    action:
-      - service: script.scene_sync
-
 binary_sensor:
+  - platform: template
+    sensors:
+      current_scene_and_time_of_day_mismatch:
+        friendly_name: Current scene and Time of Day mismatch
+        value_template: "{{ states('sensor.time_of_day') != states('sensor.current_scene') }}"
   - platform: workday
     country: NL
 
@@ -148,8 +135,6 @@ input_select:
       - Night
       - Away
       - Vacation
-      - Cooking
-      - Eating
 
 scene:
   - name: Home
@@ -255,7 +240,6 @@ scene:
         brightness: 65
         color_temp: 475
         state: on
-        transition: 1
 
   - name: Evening
     entities:
@@ -274,7 +258,6 @@ scene:
         brightness: 65
         color_temp: 475
         state: on
-        transition: 1
 
   - name: Night
     entities:
@@ -313,14 +296,28 @@ scene:
       light.kitchen_spots: on
 
 script:
+  scene_selection_reactivate:
+    alias: Reactivate primary scene
+    sequence:
+      - service: scene.turn_on
+        data_template:
+          entity_id: scene.{{ states('sensor.current_scene') | lower | replace(' ', '_') }}
+          transition: 1
   turn_off_night_scene:
     alias: Turn off Night scene
     sequence:
       - service_template: "{{ 'scene' if is_state('sensor.time_of_day', 'Night') else 'script' }}.turn_on"
         data_template:
           entity_id: "{{ 'scene.morning' if is_state('sensor.time_of_day', 'Night') else 'script.scene_sync' }}"
+          transition: 1
 
 sensor:
+  - platform: template
+    sensors:
+      current_scene:
+        friendly_name: Current scene
+        icon_template: mdi:theme-light-dark
+        value_template: "{{ states('input_select.scene') }}"
   - platform: time_date
     display_options:
       - date

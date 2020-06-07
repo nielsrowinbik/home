@@ -3,6 +3,10 @@ automation:
     trigger:
       - platform: state
         entity_id: sensor.time_of_day
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: scene_sync
     condition:
       - condition: template
         value_template: "{{ trigger.to_state.state != 'Night' }}"
@@ -16,14 +20,13 @@ script:
       - service: scene.turn_on
         data_template:
           entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
-  scene_selection_reactivate:
-    alias: Reactivate primary scene
-    sequence:
-      - service: scene.turn_on
-        data_template:
-          entity_id: scene.{{ states('input_select.scene') | lower | replace(' ', '_') }}
+          transition: 1
 
 sensor:
+  - platform: darksky
+    api_key: !secret dark_sky_api_key
+    monitored_conditions:
+      - cloud_cover
   - platform: template
     sensors:
       sun_elevation:

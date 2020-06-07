@@ -1,65 +1,74 @@
-title: Overview
+title: " "
 views:
   - cards:
       - type: vertical-stack
         cards:
           - conditions:
-              - entity: input_select.scene
-                state: 'Night'
-            card: 
+              - entity: sensor.current_scene
+                state: Evening
+            card:
               entities:
-                - entity: script.scene_sync
-                  name: Sync scene
+                - type: button
+                  action_name: Sure
+                  icon: mdi:google-assistant
+                  name: It's almost bed time. Active Night scene?
                   tap_action:
-                    action: toggle
-                - entity: input_boolean.keep_kitchen_spots_on
-                  name: Keep spots on
-                  tap_action:
-                    action: toggle
-                - entity: script.turn_off_night_scene
-                  name: Turn off Night
-                  tap_action:
-                    action: toggle
-                - entity: input_boolean.zigbee_permit_join
-                  name: Zigbee Pairing
-                  tap_action:
-                    action: toggle
-              show_header_toggle: false
-              show_state: false
-              type: glance
+                    action: call-service
+                    service: scene.turn_on
+                    service_data:
+                      entity_id: scene.night
+              type: entities
             type: conditional
           - conditions:
-              - entity: input_select.scene
-                state_not: 'Night'
-            card: 
+              - entity: sensor.current_scene
+                state: Night
+            card:
               entities:
-                - entity: script.scene_sync
-                  name: Sync scene
+                - type: button
+                  action_name: Yes
+                  icon: mdi:google-assistant
+                  name: Good morning! Are you ready to get up?
                   tap_action:
-                    action: toggle
-                - entity: input_boolean.keep_kitchen_spots_on
-                  name: Keep spots on
+                    action: call-service
+                    service: scene.turn_on
+                    service_data:
+                      entity_id: scene.morning
+              type: entities
+            type: conditional
+          - conditions:
+              - entity: sensor.current_scene_and_time_of_day_mismatch
+                state: 'on'
+            card:
+              entities:
+                - type: button
+                  action_name: Fix now
+                  icon: mdi:google-assistant
+                  name: The currently active scene doesn't match the time of day
                   tap_action:
-                    action: toggle
-                - entity: scene.night
-                  name: Turn on Night
-                  tap_action:
-                    action: toggle
-                - entity: input_boolean.zigbee_permit_join
-                  name: Zigbee Pairing
-                  tap_action:
-                    action: toggle
-              show_header_toggle: false
-              show_state: false
-              type: glance
+                    action: call-service
+                    service: script.scene_sync
+              type: entities
             type: conditional
           - entities:
-              - climate.living_room
-              - sensor.time_of_day
-            show_header_toggle: false
+              - group.everyone
+              - sensor.current_scene
+              - input_boolean.keep_kitchen_spots_on
+              - entity: climate.living_room
+                icon: mdi:thermometer
             title: At a Glance
             type: entities
+            show_header_toggle: false
+    icon: mdi:home-variant-outline
+    name: Home
+    path: home
+  - cards:
+      - type: vertical-stack
+        cards:
           - entities:
+              - input_select.presence
+              - input_select.scene
+              - type: section
+                label: Scenes
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
               - input_number.morning_threshold
@@ -67,7 +76,14 @@ views:
               - input_number.afternoon_threshold
               - input_number.early_evening_threshold
               - input_number.evening_threshold
-            show_header_toggle: false
-            title: Settings
+              - type: section
+                label: Illuminance
+              - input_number.hallway_illuminance_threshold
+              - input_number.kitchen_illuminance_threshold
+              - type: section
+                label: Zigbee
+              - input_boolean.zigbee_permit_join
             type: entities
-    path: index
+    icon: mdi:settings-outline
+    name: Settings
+    path: settings

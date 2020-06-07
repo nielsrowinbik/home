@@ -1,9 +1,3 @@
-device_tracker:
-  - platform: bluetooth_tracker
-    request_rssi: true
-    new_device_defaults:
-      track_new_devices: false
-
 group:
   everyone:
     entities:
@@ -21,6 +15,9 @@ input_select:
       - Away
       - Vacation
 
-sensor:
-  - platform: google_wifi
-    host: !secret default_gateway_ip
+notify:
+  - name: all_devices
+    platform: group
+    services:
+      # - service: mobile_app_pixel_3a
+      - service: mobile_app_pixel_4

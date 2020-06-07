@@ -1,0 +1,4 @@
+homeassistant:
+  customize:
+    person.niels:
+      entity_picture: /local/images/niels.jpg

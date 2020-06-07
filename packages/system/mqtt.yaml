@@ -1,0 +1,5 @@
+mqtt:
+  broker: localhost
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true

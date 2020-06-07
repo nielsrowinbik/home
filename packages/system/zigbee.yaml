@@ -23,12 +23,6 @@ input_boolean:
     initial: off
     icon: mdi:cellphone-wireless
 
-mqtt:
-  broker: localhost
-  username: !secret mqtt_username
-  password: !secret mqtt_password
-  discovery: true
-
 script:
   generate_network_map:
     alias: Generate Zigbee network map

@@ -62,6 +62,17 @@ automation:
         data:
           entity_id: remote.harmony_hub
           activity: Listen to Music
+          
+emulated_roku:
+  servers:
+    - name: Home Assistant
+      listen_port: 8060
+
+media_player:
+  - platform: nadtcp2
+    name: Amplifier
+    host: !secret nad_amplifier_ip
+    volume_step: 2
 
 script:
   input_sync:

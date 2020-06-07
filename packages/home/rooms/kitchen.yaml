@@ -1,0 +1,151 @@
+automation:
+  - alias: Toggle Kitchen spots through wall button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click == 'left' }}"
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.kitchen_spots
+
+  - alias: Toggle Kitchen spots through motion sensor
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: "off"
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: "on"
+    condition:
+      condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.to_state.state == 'off' }}"
+        - condition: template
+          value_template: "{{ states('sensor.kitchen_illuminance') < states('input_number.kitchen_illuminance_threshold') }}"
+    action:
+      - service_template: "light.turn_{{ trigger.to_state.state }}"
+        data:
+          entity_id: light.kitchen_spots
+
+  - alias: Turn off Kitchen spots on scene changes
+    trigger:
+      - platform: state
+        entity_id: sensor.current_scene
+    condition:
+      - condition: state
+        entity_id: binary_sensor.kitchen_motion
+        state: "off"
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen_spots
+
+  - alias: Keep Kitchen spots on through button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click in ['left_double', 'right'] }}"
+    action:
+      - service: input_boolean.toggle
+        data:
+          entity_id: input_boolean.keep_kitchen_spots_on
+          
+  - alias: Apply scene to keep Kitchen spots on
+    trigger:
+      - entity_id: input_boolean.keep_kitchen_spots_on
+        platform: state
+        to: "on"
+      - entity_id: automation.toggle_kitchen_spots_through_motion_sensor
+        platform: state
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.keep_kitchen_spots_on
+        state: "on"
+    action:
+      - service: scene.apply
+        data:
+          entities:
+            automation.toggle_kitchen_spots_through_motion_sensor: off
+            light.kitchen_spots: on
+
+  - alias: No longer keep Kitchen spots on
+    trigger:
+      - entity_id: input_boolean.keep_kitchen_spots_on
+        platform: state
+        to: "off"
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen_spots
+      - service: script.scene_selection_reactivate
+
+  - alias: Toggle Kitchen worktop light through wall button press
+    trigger:
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.click in ['right', 'right_double'] }}"
+    action:
+      - service: light.toggle
+        data:
+          entity_id: light.kitchen_worktop
+          
+  - alias: Toggle Kitchen spots when media changes state
+    trigger:
+      - entity_id: media_player.living_room_tv
+        from: playing
+        platform: state
+        to: paused
+      - entity_id: media_player.living_room_tv
+        from: paused
+        platform: state
+        to: playing
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.current_scene') in ['Afternoon', 'Early evening', 'Evening'] }}"
+    action:
+      - service_template: "light.turn_{{ 'on' if trigger.to_state.state == 'paused' else 'off' }}"
+        data:
+          entity_id: light.kitchen_spots
+
+group:
+  kitchen_lights:
+    entities:
+      - light.kitchen_mood_lighting
+      - light.kitchen_spots
+      - light.kitchen_worktop
+    icon: mdi:lightbulb-group-outline
+    name: Kitchen lights
+
+input_boolean:
+  keep_kitchen_spots_on:
+    name: Keep Kitchen spots on
+    initial: false
+
+input_number:
+  kitchen_illuminance_threshold:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    mode: box
+    name: Kitchen illuminance threshold
+    step: 1
+
+light:
+  - platform: switch
+    name: Kitchen mood lighting
+    entity_id: switch.power_outlet_1
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/kitchen_spots/set"
+    name: Kitchen spots
+    schema: json
+    state_topic: "zigbee2mqtt/kitchen_spots"
