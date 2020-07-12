@@ -8,7 +8,6 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.home
-          transition: 1
 
   - alias: Set home mode to Away
     trigger:
@@ -21,7 +20,6 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.away
-          transition: 1
 
   - alias: Set home mode to Vacation
     trigger:
@@ -34,7 +32,6 @@ automation:
       - service: scene.turn_on
         data:
           entity_id: scene.vacation
-          transition: 1
 
   - alias: Turn off Night scene
     trigger:
@@ -60,16 +57,14 @@ automation:
   - alias: Notify when current scene and time of day are out of sync
     trigger:
       - platform: state
-        entity_id: sensor.current_scene_and_time_of_day_mismatch
+        entity_id: binary_sensor.current_scene_and_time_of_day_mismatch
         to: 'on'
-        for:
-          seconds: 5
     condition:
       - condition: state
         entity_id: group.everyone
         state: home
     action:
-      - service: notify.all_devices
+      - service: notify.mobile_app_pixel_4
         data:
           title: Current scene doesn't match time of day
           message: The currently active scene doesn't match the time of day
@@ -77,6 +72,34 @@ automation:
             actions:
               - action: scene_sync
                 title: Fix now
+  
+  - alias: Sync scene when arriving home
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    condition:
+      condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.time_of_day
+          state: Night
+    action:
+      - service: script.scene_sync
+
+  - alias: Turn on correct scene when arriving home at Night
+    trigger:
+      - platform: state
+        entity_id: group.everyone
+        to: home
+    condition:
+      - condition: state
+        entity_id: sensor.time_of_day
+        state: Night
+    action:
+      - service: scene.turn_on
+        data_template:
+          entity_id: "scene.{{ 'evening' if now().hour > 12 else 'morning' }}"
 
   - alias: Handle scene override
     trigger:
@@ -94,9 +117,16 @@ binary_sensor:
     sensors:
       current_scene_and_time_of_day_mismatch:
         friendly_name: Current scene and Time of Day mismatch
+        delay_on:
+          seconds: 5
         value_template: "{{ states('sensor.time_of_day') != states('sensor.current_scene') }}"
   - platform: workday
     country: NL
+    name: Today is a workday
+  - platform: workday
+    country: NL
+    name: Tomorrow is a workday
+    days_offset: 1
 
 group:
   all_scenes:
@@ -121,6 +151,16 @@ input_datetime:
     has_time: true
     initial: "08:30"
     name: Off day alarm
+  workday_bedtime:
+    has_date: false
+    has_time: true
+    initial: "22:00"
+    name: Workday bedtime
+  off_day_bedtime:
+    has_date: false
+    has_time: true
+    initial: "23:00"
+    name: Off day bedtime
 
 input_select:
   scene:
@@ -145,6 +185,7 @@ scene:
     entities:
       input_select.presence: Away
       input_select.scene: Away
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: off
       automation.synchronise_scene_to_time_of_day: off
       automation.turn_off_night_scene: off
       climate.living_room:
@@ -163,6 +204,7 @@ scene:
     entities:
       input_select.presence: Vacation
       input_select.scene: Vacation
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: off
       automation.synchronise_scene_to_time_of_day: off
       automation.turn_off_night_scene: off
       climate.living_room:
@@ -181,6 +223,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Morning
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: on
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: off
       automation.turn_off_night_scene: off
@@ -197,6 +240,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Day
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: on
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
@@ -212,6 +256,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Afternoon
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: on
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
@@ -227,6 +272,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Early evening
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: on
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
@@ -245,6 +291,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Evening
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: on
       automation.synchronise_scene_to_time_of_day: on
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: off
@@ -263,6 +310,7 @@ scene:
     entities:
       input_select.presence: Home
       input_select.scene: Night
+      automation.notify_when_current_scene_and_time_of_day_are_out_of_sync: off
       automation.synchronise_scene_to_time_of_day: off
       automation.toggle_kitchen_spots_through_motion_sensor: on
       automation.turn_off_night_scene: on
@@ -277,24 +325,6 @@ scene:
       light.living_room_spots: off
       remote.harmony_hub: off
 
-  - name: Cooking
-    entities:
-      input_select.presence: Home
-      input_select.scene: Cooking
-      automation.synchronise_scene_to_time_of_day: off
-      automation.toggle_kitchen_spots_through_motion_sensor: off
-      light.kitchen_worktop: on
-      light.kitchen_spots: on
-
-  - name: Eating
-    entities:
-      input_select.presence: Home
-      input_select.scene: Eating
-      automation.synchronise_scene_to_time_of_day: off
-      automation.toggle_kitchen_spots_through_motion_sensor: off
-      light.kitchen_worktop: off
-      light.kitchen_spots: on
-
 script:
   scene_selection_reactivate:
     alias: Reactivate primary scene
@@ -302,14 +332,12 @@ script:
       - service: scene.turn_on
         data_template:
           entity_id: scene.{{ states('sensor.current_scene') | lower | replace(' ', '_') }}
-          transition: 1
   turn_off_night_scene:
     alias: Turn off Night scene
     sequence:
       - service_template: "{{ 'scene' if is_state('sensor.time_of_day', 'Night') else 'script' }}.turn_on"
         data_template:
           entity_id: "{{ 'scene.morning' if is_state('sensor.time_of_day', 'Night') else 'script.scene_sync' }}"
-          transition: 1
 
 sensor:
   - platform: template
