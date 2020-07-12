@@ -36,14 +36,14 @@ views:
               type: entities
             type: conditional
           - conditions:
-              - entity: sensor.current_scene_and_time_of_day_mismatch
+              - entity: binary_sensor.current_scene_and_time_of_day_mismatch
                 state: 'on'
             card:
               entities:
                 - type: button
                   action_name: Fix now
                   icon: mdi:google-assistant
-                  name: The currently active scene doesn't match the time of day
+                  name: Currently active scene doesn't match the time of day
                   tap_action:
                     action: call-service
                     service: script.scene_sync
@@ -59,8 +59,8 @@ views:
             type: entities
             show_header_toggle: false
     icon: mdi:home-variant-outline
-    name: Home
     path: home
+    title: Home
   - cards:
       - type: vertical-stack
         cards:
@@ -71,6 +71,10 @@ views:
                 label: Scenes
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
+              - input_datetime.workday_bedtime
+              - input_datetime.off_day_bedtime
+              - type: section
+                label: Time of day
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
@@ -85,5 +89,5 @@ views:
               - input_boolean.zigbee_permit_join
             type: entities
     icon: mdi:settings-outline
-    name: Settings
     path: settings
+    title: Settings
