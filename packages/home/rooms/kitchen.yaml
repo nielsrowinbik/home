@@ -1,16 +1,4 @@
 automation:
-  - alias: Toggle Kitchen spots through wall button press
-    trigger:
-      - platform: mqtt
-        topic: zigbee2mqtt/kitchen_switch
-    condition:
-      - condition: template
-        value_template: "{{ trigger.payload_json.click == 'left' }}"
-    action:
-      - service: light.toggle
-        data:
-          entity_id: light.kitchen_spots
-
   - alias: Toggle Kitchen spots through motion sensor
     trigger:
       - platform: state
@@ -39,6 +27,9 @@ automation:
       - condition: state
         entity_id: binary_sensor.kitchen_motion
         state: "off"
+      - condition: state
+        entity_id: input_boolean.keep_kitchen_spots_on
+        state: "off"
     action:
       - service: light.turn_off
         data:
@@ -50,7 +41,7 @@ automation:
         topic: zigbee2mqtt/kitchen_switch
     condition:
       - condition: template
-        value_template: "{{ trigger.payload_json.click in ['left_double', 'right'] }}"
+        value_template: "{{ trigger.payload_json.click in ['left', 'right'] }}"
     action:
       - service: input_boolean.toggle
         data:
@@ -92,7 +83,7 @@ automation:
         topic: zigbee2mqtt/kitchen_switch
     condition:
       - condition: template
-        value_template: "{{ trigger.payload_json.click in ['right', 'right_double'] }}"
+        value_template: "{{ trigger.payload_json.click in ['right'] }}"
     action:
       - service: light.toggle
         data:
