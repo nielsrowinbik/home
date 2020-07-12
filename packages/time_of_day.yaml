@@ -7,10 +7,12 @@ automation:
         event_type: mobile_app_notification_action
         event_data:
           action: scene_sync
-    condition:
-      - condition: template
-        value_template: "{{ trigger.to_state.state != 'Night' }}"
     action:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: sensor.time_of_day
+            state: Night
       - service: script.scene_sync
 
 script:
@@ -20,7 +22,6 @@ script:
       - service: scene.turn_on
         data_template:
           entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
-          transition: 1
 
 sensor:
   - platform: darksky
