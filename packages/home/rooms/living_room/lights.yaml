@@ -22,7 +22,6 @@ automation:
       - service: light.toggle
         data:
           entity_id: light.living_room_spots
-          transition: 1
 
   - alias: Set Living Room spots to full brightness through wall button press
     trigger:
@@ -37,7 +36,6 @@ automation:
           brightness: 255
           color_temp: 344
           entity_id: light.living_room_spots
-          transition: 1
 
 group:
   living_room_lights:
