@@ -55,15 +55,10 @@ script:
   turn_off_heating:
     alias: Turn off heating
     sequence:
-      - service: scene.apply
-        data:
-          entities:
-            climate.living_room: off
+      - service: climate.turn_off
+        entity_id: climate.living_room
   turn_on_heating:
     alias: Turn on heating
     sequence:
-      - service: scene.apply
-        data:
-          entities:
-            climate.living_room:
-              state: heat
+      - service: climate.turn_on
+        entity_id: climate.living_room
