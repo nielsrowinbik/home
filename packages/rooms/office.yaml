@@ -1,0 +1,143 @@
+automation:
+  - alias: Blink office lights
+    description: Blink office lights when work time is up
+    trigger:
+      # Trigger immediately at 4 PM
+      - platform: time
+        at: "16:00:00"
+    condition:
+      # Trigger only if work mode is active and the office desk light is on
+      - condition: state
+        entity_id: input_boolean.work_mode
+        state: "on"
+      - condition: state
+        entity_id: light.office_desk
+        state: "on"
+    action:
+      - service: script.blink_office_lights
+
+  - alias: Set office lights state
+    description: Turns on or off the correct office lights
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when motion is detected
+      - platform: state
+        entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+        to: "on"
+
+      # Trigger immediately when motion is no longer detected
+      - platform: state
+        entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+        to: "off"
+
+      # Trigger immediately when work mode is turned on
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to: "on"
+
+      # Trigger immediately when work mode is turned off
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to: "off"
+    action:
+      - service: script.set_office_lights_state
+
+input_boolean:
+  work_mode:
+    icon: mdi:briefcase-outline
+    name: Work mode
+
+light:
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/office_spots/set"
+    name: Office spots
+    schema: json
+    state_topic: "zigbee2mqtt/office_spots"
+
+script:
+  blink_office_lights:
+    alias: Blink office lights
+    sequence:
+      repeat:
+        count: 2
+        sequence:
+          - service: light.turn_on
+            data:
+              entity_id: light.office_desk
+              brightness: 125
+              transition: 0.5
+          - delay:
+              milliseconds: 500
+          - service: light.turn_on
+            data:
+              entity_id: light.office_desk
+              brightness: 255
+              transition: 0.5
+          - delay:
+              milliseconds: 500
+  set_office_lights_state:
+    alias: Set office lights state
+    sequence:
+      - choose:
+          # IF work mode is enabled
+          - conditions:
+              - condition: state
+                entity_id: input_boolean.work_mode
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.office_desk:
+                      brightness: 255
+                      state: on
+                    light.office_spots:
+                      brightness: 255
+                      state: on
+                    light.office_worktop:
+                      brightness: 255
+                      state: on
+                  transition: 0.5
+
+          # IF motion is detected
+          - conditions:
+              - condition: state
+                entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+                state: "on"
+            sequence:
+              - choose:
+                  # IF "Night" scene is active
+                  - conditions:
+                      - condition: state
+                        entity_id: sensor.current_scene
+                        state: Night
+                    sequence:
+                      - service: scene.apply
+                        data:
+                          entities:
+                            light.office_desk:
+                              brightness: 1
+                              state: on
+                          transition: 0.5
+                # ELSE (any other scene is active)
+                default:
+                  - service: scene.apply
+                    data:
+                      entities:
+                        light.office_spots:
+                          brightness: 255
+                          state: on
+                      transition: 0.5
+
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                light.office_desk: off
+                light.office_spots: off
+                light.office_worktop: off
+              transition: 1

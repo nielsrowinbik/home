@@ -3,61 +3,71 @@ views:
   - cards:
       - type: vertical-stack
         cards:
-          - conditions:
-              - entity: sensor.current_scene
-                state: Evening
-            card:
-              entities:
-                - type: button
-                  action_name: Sure
-                  icon: mdi:google-assistant
-                  name: It's almost bed time. Active Night scene?
-                  tap_action:
-                    action: call-service
-                    service: scene.turn_on
-                    service_data:
-                      entity_id: scene.night
+          - card:
+              show_header_toggle: false
+              title: At a Glance
               type: entities
-            type: conditional
-          - conditions:
-              - entity: sensor.current_scene
-                state: Night
-            card:
-              entities:
-                - type: button
-                  action_name: Yes
-                  icon: mdi:google-assistant
-                  name: Good morning! Are you ready to get up?
-                  tap_action:
-                    action: call-service
-                    service: scene.turn_on
-                    service_data:
-                      entity_id: scene.morning
-              type: entities
-            type: conditional
-          - conditions:
-              - entity: binary_sensor.current_scene_and_time_of_day_mismatch
-                state: 'on'
-            card:
-              entities:
-                - type: button
-                  action_name: Fix now
-                  icon: mdi:google-assistant
-                  name: Currently active scene doesn't match the time of day
-                  tap_action:
-                    action: call-service
-                    service: script.scene_sync
-              type: entities
-            type: conditional
-          - entities:
-              - group.everyone
-              - sensor.current_scene
-              - input_boolean.keep_kitchen_spots_on
-              - entity: climate.living_room
+            entities:
+              - icon: mdi:home-variant-outline
+                name: Home state
+                secondary: >-
+                  {% if is_state('input_boolean.guest_mode', 'on') %}
+                    Guest mode is on. Current scene is {{ states('sensor.current_scene') }}
+                  {% elif is_state('sensor.current_scene', 'Away') %}
+
+                  {% else %}
+                    Current scene is {{ states('sensor.current_scene') }}
+                  {% endif %}
+                state: "{{ 'Occupied' if is_state('group.everyone', 'home') or is_state('input_boolean.guest_mode', 'on') else 'Empty' }}"
+                type: custom:template-entity-row
+              - icon: mdi:alarm
+                name: Next alarm
+                state: >-
+                  {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
+                    {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('Today at %H:%M', true) }}
+                  {% elif state_attr('input_datetime.next_alarm', 'day') == now().day + 1 %}
+                    {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('Tomorrow at %H:%M', true) }}
+                  {% else %}
+                    {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('%A at %H:%M', true) }}
+                  {% endif %}
+                type: custom:template-entity-row
+              - active: "{{ is_state_attr('climate.living_room', 'hvac_action', 'heat') }}"
                 icon: mdi:thermometer
-            title: At a Glance
-            type: entities
-            show_header_toggle: false
+                name: Living Room temperature
+                secondary: >-
+                  {% if is_state('climate.living_room', 'off') %}
+                    Heating is turned off
+                  {% elif is_state_attr('climate.living_room', 'hvac_action', 'idle') %}
+                    Will heat if temperature drops below {{ state_attr('climate.living_room', 'temperature') }}°
+                  {% else %}
+                    Heating to {{ state_attr('climate.living_room', 'current_temperature') }}°
+                  {% endif %}
+                state: "{{ state_attr('climate.living_room', 'current_temperature') }}°"
+                type: custom:template-entity-row
+            filter:
+              exclude:
+                - entity_id: input_boolean.guest_mode
+                - entity_id: input_boolean.vacation_mode
+                - entity_id: "/\\w+\\d$/"
+              include:
+                - domain: input_boolean
+                  entity_id: "/\\w*mode$/"
+                  state: "on"
+                - domain: light
+                  state: "on"
+            type: custom:auto-entities
+          - card:
+              show_header_toggle: false
+              title: Quick access
+              type: entities
+            filter:
+              exclude:
+                - entity_id: input_boolean.guest_mode
+                - entity_id: input_boolean.vacation_mode
+              include:
+                - entity_id: "/\\w*mode$/"
+                  state: "off"
+            type: custom:auto-entities
     icon: mdi:home-variant-outline
     path: home
     title: Home
@@ -65,14 +75,10 @@ views:
       - type: vertical-stack
         cards:
           - entities:
-              - input_select.presence
-              - input_select.scene
-              - type: section
-                label: Scenes
+              - input_boolean.guest_mode
+              - input_boolean.vacation_mode
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
-              - input_datetime.workday_bedtime
-              - input_datetime.off_day_bedtime
               - type: section
                 label: Time of day
               - input_number.morning_threshold
@@ -87,7 +93,9 @@ views:
               - type: section
                 label: Zigbee
               - input_boolean.zigbee_permit_join
+            show_header_toggle: false
+            title: Settings
             type: entities
-    icon: mdi:settings-outline
+    icon: mdi:cog-outline
     path: settings
     title: Settings

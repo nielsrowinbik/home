@@ -1,0 +1,92 @@
+automation:
+  - alias: Set bathroom lights state
+    description: Turns on the bathroom lights when it's occupied and off when it's not
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+
+      # Trigger immediately when the toilet is occupied
+      - platform: state
+        entity_id: binary_sensor.bathroom_occupied
+        to: "on"
+
+      # Trigger a minute after the toilet is no longer occupied
+      - platform: state
+        entity_id: binary_sensor.bathroom_occupied
+        to: "off"
+        for:
+          minutes: 1
+    action:
+      - service: script.set_bathroom_lights_state
+
+binary_sensor:
+  - platform: template
+    sensors:
+      bathroom_occupied:
+        device_class: occupancy
+        friendly_name: Bathroom occupied
+        value_template: "{{ is_state('group.bathroom_occupied', 'on') }}"
+
+group:
+  bathroom_occupied:
+    name: Bathroom occupied
+    entities:
+      - binary_sensor.bathroom_motion
+      # - binary_sensor.shower_in_use
+
+light:
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/bathroom_spots/set"
+    name: Bathroom spots
+    schema: json
+    state_topic: "zigbee2mqtt/bathroom_spots"
+
+script:
+  set_bathroom_lights_state:
+    alias: Set bathroom lights state
+    sequence:
+      - choose:
+          # IF the bathroom is occupied
+          - conditions:
+              - condition: state
+                entity_id: binary_sensor.bathroom_occupied
+                state: "on"
+            sequence:
+              - choose:
+                  # IF "Night" scene is active
+                  - conditions:
+                      - condition: state
+                        entity_id: sensor.current_scene
+                        state: Night
+                    sequence:
+                      - service: scene.apply
+                        data:
+                          entities:
+                            light.bathroom_spots:
+                              brightness: 1
+                              state: on
+                          transition: 0.5
+
+                # ELSE (any other scene is active)
+                default:
+                  - service: scene.apply
+                    data:
+                      entities:
+                        light.bathroom_spots:
+                          brightness: 255
+                          state: on
+                      transition: 0.5
+
+        # ELSE (off by default)
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                light.bathroom_spots: off
+              transition: 0.5

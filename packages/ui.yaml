@@ -1,0 +1,37 @@
+automation:
+  - alias: Set theme
+    description: Set the correct themes when Home Assistant starts
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+    action:
+      - service: script.set_theme
+
+frontend:
+  themes: !include_dir_named ../themes/
+
+lovelace:
+  mode: yaml
+  resources:
+    - url: /local/js/auto-entities.js
+      type: module
+    - url: /local/js/template-entity-row.js
+      type: module
+
+script:
+  reload_themes:
+    alias: Reload themes
+    sequence:
+      - service: frontend.reload_themes
+  set_theme:
+    alias: Set theme
+    sequence:
+      - service: frontend.set_theme
+        data:
+          mode: light
+          name: light
+      - service: frontend.set_theme
+        data:
+          mode: dark
+          name: dark

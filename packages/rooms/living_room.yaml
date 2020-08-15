@@ -1,0 +1,443 @@
+automation:
+  - alias: Media controls through Harmony Hub remote
+    description: Allows controlling of media playback through the Harmony Hub's remote. Works by using the Emulated Roku component.
+    trigger:
+      # Trigger immediately when we receive an event from the emulated Roku
+      - platform: event
+        event_type: roku_command
+        event_data:
+          source_name: Home Assistant
+          type: keypress
+    condition:
+      # Only continue if the current activity is one in which media controls actually make sense
+      - condition: template
+        value_template: "{{ states('sensor.current_activity') in ['Watch Chromecast', 'Listen to Music'] }}"
+    action:
+      - service_template: >-
+          {% set services = {
+            "BackSpace": "media_player.media_stop",
+            "Down": "media_player.volume_down",
+            "Fwd": "media_player.media_next_track",
+            "Home": "media_player.volume_mute",
+            "Info": "media_player.media_pause",
+            "Play": "media_player.media_play",
+            "Rev": "media_player.media_previous_track",
+            "Up": "media_player.volume_up",
+          } %}
+          {{ services[trigger.event.data.key] }}
+        data_template:
+          entity_id: >-
+            {% set entities = {
+              "Listen to Music": "media_player.amplifier",
+              "Watch Chromecast": "media_player.living_room_tv"
+            } %}
+
+  - alias: Set correct Harmony activity
+    description: Turns on the 'Listen to Music' activity when playback starts on the amplifier
+    mode: restart
+    trigger:
+      # Trigger immediately when the amplifier source changes to 'Wireless'
+      - platform: state
+        entity_id: sensor.current_source
+        to: "Wireless"
+    action:
+      - service: remote.turn_on
+        data:
+          entity_id: remote.harmony_hub
+          activity: Listen to Music
+
+  - alias: Set correct input on amplifier
+    description: Sets the correct input on the amplifier when a Harmony activity is activated
+    mode: restart
+    trigger:
+      # Trigger immediately on every Harmony Hub state change
+      - platform: state
+        entity_id: sensor.current_activity
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state.state != 'PowerOff' }}"
+    action:
+      # Delay of 6 seconds if the amplifier is turning on (because it needs some time before being able
+      # to respond to instructions), otherwise switch immediately
+      - delay:
+          seconds: "{{ 6 if trigger.from_state.state == 'PowerOff' else 0 }}"
+      - service: script.set_correct_input_on_amplifier
+
+  - alias: Set living room climate state
+    description: Sets the thermostat to the correct temperature and turns it off if a door or window is open
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+
+      # Trigger after kitchen door has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when kitchen door closes
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "off"
+
+      # Trigger after living room window has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when living room window closes
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "off"
+    action:
+      - service: script.set_living_room_climate_state
+
+  - alias: Set living room lights state
+    description: Sets the living room lights to their correct setting
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+
+      # Trigger immediately when bright mode is turned on
+      - platform: state
+        entity_id: input_boolean.living_room_bright_mode
+        to: "on"
+
+      # Trigger immediately when bright mode is turned off
+      - platform: state
+        entity_id: input_boolean.living_room_bright_mode
+        to: "off"
+    action:
+      - service: script.turn_on
+        entity_id: script.set_living_room_lights_state
+
+  - alias: Set living room subwoofer state
+    description: Make sure the subwoofer is on when the amplifier is
+    mode: restart
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when the amplifier turns on
+      - platform: state
+        entity_id: media_player.amplifier
+        to: "on"
+
+      # Trigger immediately when the amplifier turns off
+      - platform: state
+        entity_id: media_player.amplifier
+        to: "off"
+    action:
+      - service: script.set_living_room_subwoofer_state
+
+  - alias: Toggle Living Room bright mode
+    mode: queued
+    trigger:
+      # Trigger immediately when the Living Room wall switch's right button is pressed
+      - platform: template
+        value_template: "{{ is_state_attr('sensor.living_room_switch', 'click', 'right') }}"
+    action:
+      - service: input_boolean.toggle
+        entity_id: input_boolean.living_room_bright_mode
+
+emulated_roku:
+  servers:
+    - name: Home Assistant
+      listen_port: 8060
+
+input_boolean:
+  living_room_bright_mode:
+    icon: mdi:brightness-7
+    name: Bright mode (Living Room)
+
+light:
+  - platform: mqtt
+    brightness: true
+    color_temp: true
+    command_topic: "zigbee2mqtt/living_room_spots/set"
+    name: Living room spots
+    schema: json
+    state_topic: "zigbee2mqtt/living_room_spots"
+  - platform: switch
+    name: Living Room pendant
+    entity_id: switch.power_outlet_2
+
+media_player:
+  - platform: nadtcp2
+    name: Amplifier
+    host: !secret nad_amplifier_ip
+    volume_step: 2
+
+script:
+  set_correct_input_on_amplifier:
+    alias: Set correct input on amplifier
+    sequence:
+      - choose:
+          # IF "Listen to Music" is the current activity
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_activity
+                state: Listen to Music
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    media_player.amplifier:
+                      source: Wireless
+                      state: on
+
+          # IF "Listen to Vinyl" is the current activity
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_activity
+                state: Listen to Vinyl
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    media_player.amplifier:
+                      source: Phono
+                      state: on
+
+          # IF "PowerOff" is the current activity
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_activity
+                state: Listen to Vinyl
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    media_player.amplifier: off
+
+        # ELSE (any other activity is active)
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                media_player.amplifier:
+                  source: Opt2
+                  state: on
+
+  set_living_room_climate_state:
+    alias: Set living room climate state
+    sequence:
+      - choose:
+          # IF the kitchen backdoor or living room window are open
+          - conditions:
+              condition: or
+              conditions:
+                - condition: state
+                  entity_id: binary_sensor.kitchen_door
+                  state: "on"
+                - condition: state
+                  entity_id: binary_sensor.living_room_window
+                  state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    climate.living_room: off
+
+          # IF "Night" or "Away" scene is active
+          - conditions:
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: "Night"
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: "Away"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    climate.living_room:
+                      state: heat
+                      temperature: 16
+
+        # ELSE (any other scene than "Night" is active)
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                climate.living_room:
+                  state: heat
+                  temperature: 19
+
+  set_living_room_lights_state:
+    alias: Set living room lights state
+    sequence:
+      - choose:
+          # IF bright mode is active
+          - conditions:
+              - condition: state
+                entity_id: input_boolean.living_room_bright_mode
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_spots:
+                      brightness: 255
+                      state: on
+                  transition: 0.5
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_spots:
+                      color_temp: 344
+                      state: on
+                  transition: 0.5
+
+          # IF "Morning" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Morning
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: on
+                    light.living_room_spots:
+                      brightness: 125
+                      state: on
+                  transition: 0.5
+
+          # IF "Day" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Day
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: off
+                    light.living_room_spots: off
+                  transition: 0.5
+
+          # IF "Afternoon" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Afternoon
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: on
+                    light.living_room_spots: off
+                  transition: 0.5
+
+          # IF "Early evening" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Early evening
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: on
+                    light.living_room_spots: off
+                  transition: 0.5
+
+          # IF Evening" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Evening
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: on
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_spots:
+                      brightness: 125
+                      state: on
+                  transition: 2
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_spots:
+                      color_temp: 475
+                      state: on
+                  transition: 2
+
+          # IF "Night" or "Away" scene is active
+          - conditions:
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Night
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Away
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.living_room_pendant: off
+                    light.living_room_spots: off
+                  transition: 0.5
+
+  set_living_room_subwoofer_state:
+    alias: Set living room subwoofer state
+    sequence:
+      - choose:
+          # IF amplifier is turned on
+          - conditions:
+              - condition: state
+                entity_id: media_player.amplifier
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    switch.power_outlet_3: on
+
+          # IF amplifier is turned off
+          - conditions:
+              - condition: state
+                entity_id: media_player.amplifier
+                state: "off"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    switch.power_outlet_3: off
+
+sensor:
+  - platform: template
+    sensors:
+      current_activity:
+        friendly_name: Current activity
+        icon_template: mdi:theme-light-dark
+        value_template: "{{ state_attr('remote.harmony_hub', 'current_activity') }}"
+      current_source:
+        friendly_name: Current source
+        icon_template: mdi:import
+        value_template: "{{ state_attr('media_player.amplifier', 'source') }}"

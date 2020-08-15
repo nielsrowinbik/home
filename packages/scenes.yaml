@@ -1,0 +1,10 @@
+scene:
+  - name: Cooking
+    entities:
+      input_boolean.cooking_mode: on
+  - name: Night
+    entities:
+      input_boolean.night_mode: on
+  - name: Work
+    entities:
+      input_boolean.work_mode: on

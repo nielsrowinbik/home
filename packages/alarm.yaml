@@ -1,0 +1,101 @@
+automation:
+  - alias: Set next alarm
+    trigger:
+      # Trigger immediately when the alarm goes off
+      - platform: template
+        value_template: >-
+          {{ 
+              states('sensor.date') == state_attr('input_datetime.next_alarm', 'timestamp') | int | timestamp_custom('%Y-%m-%d', True)
+              and
+              states('sensor.time') == state_attr('input_datetime.next_alarm', 'timestamp') | int | timestamp_custom('%H:%M', True)
+          }}
+
+      # Trigger immediately when vacation mode changes
+      - platform: state
+        entity_id: input_boolean.vacation_mode
+
+      # Trigger immediately when workday alarm time is changed
+      - platform: state
+        entity_id: input_datetime.workday_alarm
+
+      # Trigger immediately when off day alarm time is changed
+      - platform: state
+        entity_id: input_datetime.off_day_alarm
+
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+    action:
+      - service: script.set_next_alarm
+
+binary_sensor:
+  - platform: template
+    sensors:
+      today_is_a_workday:
+        friendly_name: Today is a workday
+        value_template: "{{ is_state('binary_sensor.today_is_a_national_workday', 'on') if is_state('input_boolean.vacation_mode', 'off') else false }}"
+      tomorrow_is_a_workday:
+        friendly_name: Tomorrow is a workday
+        value_template: "{{ is_state('binary_sensor.tomorrow_is_a_national_workday', 'on') if is_state('input_boolean.vacation_mode', 'off') else false }}"
+  - platform: workday
+    country: NL
+    name: Today is a national workday
+  - platform: workday
+    country: NL
+    days_offset: 1
+    name: Tomorrow is a national workday
+
+script:
+  set_next_alarm:
+    alias: Set next alarm
+    sequence:
+      - service: input_datetime.set_datetime
+        data_template:
+          date: >-
+            {% set alarm_time_today = (states('input_datetime.workday_alarm') if is_state('binary_sensor.today_is_a_workday', 'on') else states('input_datetime.off_day_alarm')).rsplit(':', 1)[0] %}
+            {% set current_time = states('sensor.time') %}
+            {% set next_alarm_is_tomorrow = strptime(current_time, '%H:%M') >= strptime(alarm_time_today, '%H:%M') %}
+
+            {% if next_alarm_is_tomorrow %}
+              {{ (strptime(states('sensor.date'), '%Y-%m-%d') | as_timestamp + 24 * 3600) | timestamp_custom('%Y-%m-%d', True) }}
+            {% else %}
+              {{ states('sensor.date') }}
+            {% endif %}
+          entity_id: input_datetime.next_alarm
+          time: >-
+            {% set alarm_time_today = (states('input_datetime.workday_alarm') if is_state('binary_sensor.today_is_a_workday', 'on') else states('input_datetime.off_day_alarm')).rsplit(':', 1)[0] %}
+            {% set current_time = states('sensor.time') %}
+            {% set next_alarm_is_tomorrow = strptime(current_time, '%H:%M') >= strptime(alarm_time_today, '%H:%M') %}
+
+            {% if next_alarm_is_tomorrow %}
+              {{ (states('input_datetime.workday_alarm') if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else states('input_datetime.off_day_alarm')).rsplit(':', 1)[0] }}
+            {% else %}
+              {{ alarm_time_today }}
+            {% endif %}
+
+sensor:
+  - platform: time_date
+    display_options:
+      - date
+      - time
+
+input_boolean:
+  vacation_mode:
+    icon: mdi:palm-tree
+    name: Vacation mode
+
+input_datetime:
+  next_alarm:
+    has_date: true
+    has_time: true
+    name: Next alarm
+  off_day_alarm:
+    has_date: false
+    has_time: true
+    initial: "08:30"
+    name: Off day alarm
+  workday_alarm:
+    has_date: false
+    has_time: true
+    initial: "06:30"
+    name: Workday alarm

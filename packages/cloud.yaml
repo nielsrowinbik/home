@@ -15,4 +15,3 @@ cloud:
         - climate
         - light
         - scene
-        - script

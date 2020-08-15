@@ -1,8 +1,0 @@
-config:
-discovery:
-mobile_app:
-person:
-ssdp:
-sun:
-system_health:
-zeroconf:

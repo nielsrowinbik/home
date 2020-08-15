@@ -1,4 +1,0 @@
-homeassistant:
-  customize:
-    person.laura:
-      entity_picture: /local/laura.jpg

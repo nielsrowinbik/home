@@ -1,97 +1,37 @@
 automation:
-  - alias: Synchronise scene to time of day
+  - alias: Turn off night mode
+    description: Turns off night mode immediately following the first movement of the day in either the toilet or kitchen
     trigger:
+      # Trigger immediately when motion is detected in the toilet
       - platform: state
-        entity_id: sensor.time_of_day
-      - platform: event
-        event_type: mobile_app_notification_action
-        event_data:
-          action: scene_sync
+        entity_id: binary_sensor.toilet_motion
+        to: "on"
+
+      # Trigger immediately when motion is detected in the kitchen
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: "on"
+    condition:
+      # Only trigger if current time is past today's alarm
+      - condition: template
+        value_template: >-
+          {% set alarm_time_today = (states('input_datetime.workday_alarm') if is_state('binary_sensor.today_is_a_workday', 'on') else states('input_datetime.off_day_alarm')).rsplit(':', 1)[0] %}
+          {% set current_time = states('sensor.time') %}
+
+          {{ current_time > alarm_time_today }}
+
+      # Only trigger if night mode is actually still on
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: "on"
     action:
-      - condition: not
-        conditions:
-          - condition: state
-            entity_id: sensor.time_of_day
-            state: Night
-      - service: script.scene_sync
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.night_mode
 
-script:
-  scene_sync:
-    alias: Sync scene to time of day
-    sequence:
-      - service: scene.turn_on
-        data_template:
-          entity_id: scene.{{ states('sensor.time_of_day') | lower | replace(' ', '_') }}
-
-sensor:
-  - platform: darksky
-    api_key: !secret dark_sky_api_key
-    monitored_conditions:
-      - cloud_cover
-  - platform: template
-    sensors:
-      sun_elevation:
-        friendly_name: Sun elevation
-        icon_template: mdi:white-balance-sunny
-        unit_of_measurement: "°"
-        value_template: "{{ state_attr('sun.sun', 'elevation')|float|round(1) }}"
-      sun_elevation_corrected:
-        icon_template: mdi:white-balance-sunny
-        friendly_name: Sun elevation (corrected for cloud coverage)
-        value_template: >-
-          {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
-          {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
-          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
-          {{ "%.2f"|format(elevation - ((coverage * maxDecrease) * elevation)|abs) }}
-        unit_of_measurement: "°"
-      sun_direction:
-        friendly_name: Sun direction
-        icon_template: >-
-          {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
-            mdi:weather-sunset-up
-          {% else %}
-            mdi:weather-sunset-down
-          {% endif %}
-        value_template: >-
-          {% if as_timestamp(state_attr('sun.sun', 'next_noon')) - as_timestamp(state_attr('sun.sun', 'next_midnight')) < 0 %}
-            Rising
-          {% else %}
-            Setting
-          {% endif %}
-      time_of_day:
-        friendly_name: Time of day
-        icon_template: mdi:calendar-clock
-        value_template: >-
-          {% set direction = states('sensor.sun_direction') %}
-          {% set elevation = states('sensor.sun_elevation_corrected')|float %}
-          
-          {% set morning_threshold = states('input_number.morning_threshold')|float %}
-          {% set day_threshold = states('input_number.day_threshold')|float %}
-          {% set afternoon_threshold = states('input_number.afternoon_threshold')|float %}
-          {% set early_evening_threshold = states('input_number.early_evening_threshold')|float %}
-          {% set evening_threshold = states('input_number.evening_threshold')|float %}
-
-          {% if direction == 'Rising' %}
-            {% if elevation > day_threshold %}
-              Day
-            {% elif elevation > morning_threshold %}
-              Morning
-            {% else %}
-              Night
-            {% endif %}
-          {% elif direction == 'Setting' %}
-            {% if elevation < evening_threshold %}
-              Evening
-            {% elif elevation < early_evening_threshold %}
-              Early evening
-            {% elif elevation < afternoon_threshold %}
-              Afternoon
-            {% else %}
-              Day
-            {% endif %}
-          {% else %}
-            Day
-          {% endif %}
+input_boolean:
+  night_mode:
+    icon: mdi:weather-night
+    name: Night mode
 
 input_number:
   max_sun_elevation_decrease:
@@ -142,3 +82,68 @@ input_number:
     name: Evening threshold
     step: 0.5
     unit_of_measurement: "°"
+
+sensor:
+  - platform: darksky
+    api_key: !secret dark_sky_api_key
+    monitored_conditions:
+      - cloud_cover
+  - platform: template
+    sensors:
+      current_scene:
+        friendly_name: Current scene
+        icon_template: mdi:theme-light-dark
+        value_template: >-
+          {% if is_state('group.everyone', 'not_home') and not is_state('input_boolean.guest_mode', 'on') %}
+            Away
+          {% elif is_state('input_boolean.night_mode', 'on') %}
+            Night
+          {% else %}
+            {{ states('sensor.time_of_day') }}
+          {% endif %}
+      sun_elevation:
+        friendly_name: Sun elevation (corrected for cloud coverage)
+        icon_template: mdi:white-balance-sunny
+        value_template: >-
+          {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
+          {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
+          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
+
+          {{ "%.2f"|format(elevation - ((coverage * maxDecrease) * elevation)|abs) }}
+        unit_of_measurement: "°"
+      time_of_day:
+        friendly_name: Time of day
+        icon_template: mdi:calendar-clock
+        value_template: >-
+          {% set rising = is_state_attr('sun.sun', 'rising', true) %}
+          {% set elevation = states('sensor.sun_elevation')|float %}
+
+          {% set morning_threshold = states('input_number.morning_threshold')|float %}
+          {% set day_threshold = states('input_number.day_threshold')|float %}
+          {% set afternoon_threshold = states('input_number.afternoon_threshold')|float %}
+          {% set early_evening_threshold = states('input_number.early_evening_threshold')|float %}
+          {% set evening_threshold = states('input_number.evening_threshold')|float %}
+
+          {% if rising %}
+            {% if elevation > day_threshold %}
+              Day
+            {% elif elevation > morning_threshold %}
+              Morning
+            {% else %}
+              Night
+            {% endif %}
+          {% elif not rising %}
+            {% if elevation < evening_threshold %}
+              Evening
+            {% elif elevation < early_evening_threshold %}
+              Early evening
+            {% elif elevation < afternoon_threshold %}
+              Afternoon
+            {% else %}
+              Day
+            {% endif %}
+          {% else %}
+            Day
+          {% endif %}
+
+sun:

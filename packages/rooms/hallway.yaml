@@ -1,0 +1,86 @@
+automation:
+  - alias: Set hallway lights state
+    description: Turns on the hallway lights when motion is detected and it is suffuciently dark, and off when motion is no longer detected
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+
+      # Trigger immediately when motion is detected
+      - platform: state
+        entity_id: binary_sensor.hallway_motion
+        to: "on"
+
+      # Trigger immediately when motion is no longer detected
+      - platform: state
+        entity_id: binary_sensor.hallway_motion
+        to: "off"
+    action:
+      - service: script.set_hallway_lights_state
+
+input_number:
+  hallway_illuminance_threshold:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    mode: box
+    name: Hallway illuminance threshold
+    step: 1
+
+light:
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/hallway_spots/set"
+    name: Hallway spots
+    schema: json
+    state_topic: "zigbee2mqtt/hallway_spots"
+
+script:
+  set_hallway_lights_state:
+    alias: Set hallway lights state
+    sequence:
+      - choose:
+          # IF motion is detected and it is sufficiently dark
+          - conditions:
+              - condition: state
+                entity_id: binary_sensor.hallway_motion
+                state: "on"
+              - condition: template
+                value_template: "{{ states('sensor.hallway_illuminance') | float <= states('input_number.hallway_illuminance_threshold') | float  }}"
+            sequence:
+              - choose:
+                  # IF "Night" scene is active
+                  - conditions:
+                      - condition: state
+                        entity_id: sensor.current_scene
+                        state: Night
+                    sequence:
+                      - service: scene.apply
+                        data:
+                          entities:
+                            light.hallway_spots:
+                              brightness: 1
+                              state: on
+                          transition: 0.5
+
+                # ELSE (any other scene is active)
+                default:
+                  - service: scene.apply
+                    data:
+                      entities:
+                        light.hallway_spots:
+                          brightness: 255
+                          state: on
+                      transition: 0.5
+
+        # ELSE (off by default)
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                light.hallway_spots: off
+              transition: 0.5

@@ -1,0 +1,207 @@
+automation:
+  - alias: Set kitchen lights state
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+
+      # Trigger immediately when motion is detected
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: "on"
+
+      # Trigger immediately when motion is no longer detected
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: "off"
+
+      # Trigger immediately when the illuminance threshold is changed
+      - platform: state
+        entity_id: input_number.kitchen_illuminance_threshold
+
+      # Trigger immediately when bright mode is turned on
+      - platform: state
+        entity_id: input_boolean.kitchen_bright_mode
+        to: "on"
+
+      # Trigger immediately when bright mode is turned off
+      - platform: state
+        entity_id: input_boolean.kitchen_bright_mode
+        to: "off"
+
+      # Trigger immediately when cooking mode is turned on
+      - platform: state
+        entity_id: input_boolean.cooking_mode
+        to: "on"
+
+      # Trigger immediately when cooking mode is turned off
+      - platform: state
+        entity_id: input_boolean.cooking_mode
+        to: "off"
+    action:
+      - service: script.set_kitchen_lights_state
+
+  - alias: Toggle cooking mode
+    trigger:
+      # Trigger immediately when the kitchen wall switch's right button is pressed
+      - platform: template
+        value_template: "{{ is_state_attr('sensor.kitchen_switch', 'click', 'right') }}"
+    action:
+      - service: input_boolean.toggle
+        entity_id: input_boolean.cooking_mode
+
+  - alias: Toggle kitchen bright mode
+    trigger:
+      # Trigger immediately when the kitchen wall switch's left button is pressed
+      - platform: template
+        value_template: "{{ is_state_attr('sensor.kitchen_switch', 'click', 'left') }}"
+    action:
+      - service: input_boolean.toggle
+        entity_id: input_boolean.kitchen_bright_mode
+
+input_boolean:
+  cooking_mode:
+    icon: mdi:chef-hat
+    name: Cooking mode
+  kitchen_bright_mode:
+    icon: mdi:brightness-7
+    name: Bright mode (Kitchen)
+
+input_number:
+  kitchen_illuminance_threshold:
+    icon: mdi:tune
+    max: 100
+    min: 0
+    mode: box
+    name: Kitchen illuminance threshold
+    step: 1
+
+light:
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/kitchen_spots/set"
+    name: Kitchen spots
+    schema: json
+    state_topic: "zigbee2mqtt/kitchen_spots"
+  - platform: switch
+    name: Kitchen mood lighting
+    entity_id: switch.power_outlet_1
+
+script:
+  set_kitchen_lights_state:
+    alias: Set kitchen lights state
+    sequence:
+      - choose:
+          # IF cooking mode is active
+          - conditions:
+              - condition: state
+                entity_id: input_boolean.cooking_mode
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.kitchen_spots:
+                      brightness: 255
+                      state: on
+                    light.kitchen_worktop:
+                      brightness: 255
+                      state: on
+                  transition: 0.5
+
+          # IF bright mode is active
+          - conditions:
+              - condition: state
+                entity_id: input_boolean.kitchen_bright_mode
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.kitchen_spots:
+                      brightness: 255
+                      state: on
+                  transition: 0.5
+
+          # IF motion is detected and it is sufficiently dark
+          - conditions:
+              - condition: state
+                entity_id: binary_sensor.kitchen_motion
+                state: "on"
+              - condition: template
+                value_template: "{{ states('sensor.kitchen_illuminance') | float <= states('input_number.kitchen_illuminance_threshold') | float }}"
+            sequence:
+              - choose:
+                  # IF "Night" scene is active
+                  - conditions:
+                      - condition: state
+                        entity_id: sensor.current_scene
+                        state: Night
+                    sequence:
+                      - service: scene.apply
+                        data:
+                          entities:
+                            light.kitchen_spots:
+                              brightness: 1
+                              state: on
+                          transition: 0.5
+                default:
+                  - service: scene.apply
+                    data:
+                      entities:
+                        light.kitchen_spots:
+                          brightness: 255
+                          state: on
+                      transition: 0.5
+
+          # IF "Morning" scene is active
+          - conditions:
+              - condition: state
+                entity_id: sensor.current_scene
+                state: Morning
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.kitchen_mood_lighting: off
+                    light.kitchen_spots:
+                      brightness: 255
+                      state: on
+                    light.kitchen_worktop: off
+                  transition: 0.5
+
+          # IF "Afternoon", "Early evening" or "Evening" scene is active
+          - conditions:
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Afternoon
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Early evening
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Evening
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    light.kitchen_mood_lighting: on
+                    light.kitchen_spots: off
+                    light.kitchen_worktop: off
+                  transition: 0.5
+
+        # ELSE (all lights off by default)
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                light.kitchen_mood_lighting: off
+                light.kitchen_spots: off
+                light.kitchen_worktop: off
+              transition: 0.5
