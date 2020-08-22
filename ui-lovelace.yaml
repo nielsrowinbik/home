@@ -1,3 +1,5 @@
+custom_header:
+# compact_mode: true
 title: " "
 views:
   - cards:
@@ -22,6 +24,12 @@ views:
                 type: custom:template-entity-row
               - icon: mdi:alarm
                 name: Next alarm
+                secondary: >-
+                  {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
+                    Today is {{ 'a workday' if is_state('binary_sensor.today_is_a_workday', 'on') else 'an off day' }}
+                  {% else %}
+                    Tomorrow is {{ 'a workday' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'an off day' }}
+                  {% endif %}
                 state: >-
                   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('Today at %H:%M', true) }}
