@@ -22,6 +22,19 @@ views:
                   {% endif %}
                 state: "{{ 'Occupied' if is_state('group.everyone', 'home') or is_state('input_boolean.guest_mode', 'on') else 'Empty' }}"
                 type: custom:template-entity-row
+              - active: "{{ is_state_attr('climate.living_room', 'hvac_action', 'heat') }}"
+                icon: mdi:thermometer
+                name: Living Room temperature
+                secondary: >-
+                  {% if is_state('climate.living_room', 'off') %}
+                    Heating is turned off
+                  {% elif is_state_attr('climate.living_room', 'hvac_action', 'idle') %}
+                    Will heat if temperature drops below {{ state_attr('climate.living_room', 'temperature') }}°
+                  {% else %}
+                    Heating to {{ state_attr('climate.living_room', 'current_temperature') }}°
+                  {% endif %}
+                state: "{{ state_attr('climate.living_room', 'current_temperature') }}°"
+                type: custom:template-entity-row
               - icon: mdi:alarm
                 name: Next alarm
                 secondary: >-
@@ -38,19 +51,6 @@ views:
                   {% else %}
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('%A at %H:%M', true) }}
                   {% endif %}
-                type: custom:template-entity-row
-              - active: "{{ is_state_attr('climate.living_room', 'hvac_action', 'heat') }}"
-                icon: mdi:thermometer
-                name: Living Room temperature
-                secondary: >-
-                  {% if is_state('climate.living_room', 'off') %}
-                    Heating is turned off
-                  {% elif is_state_attr('climate.living_room', 'hvac_action', 'idle') %}
-                    Will heat if temperature drops below {{ state_attr('climate.living_room', 'temperature') }}°
-                  {% else %}
-                    Heating to {{ state_attr('climate.living_room', 'current_temperature') }}°
-                  {% endif %}
-                state: "{{ state_attr('climate.living_room', 'current_temperature') }}°"
                 type: custom:template-entity-row
             filter:
               exclude:
