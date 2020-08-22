@@ -31,6 +31,7 @@ automation:
               "Listen to Music": "media_player.amplifier",
               "Watch Chromecast": "media_player.living_room_tv"
             } %}
+            {{ entities[states('sensor.current_activity')] }}
 
   - alias: Set correct Harmony activity
     description: Turns on the 'Listen to Music' activity when playback starts on the amplifier
