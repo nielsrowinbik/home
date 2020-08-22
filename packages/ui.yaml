@@ -16,6 +16,8 @@ lovelace:
   resources:
     - url: /local/js/auto-entities.js
       type: module
+    - url: /local/js/custom-header.js
+      type: module
     - url: /local/js/template-entity-row.js
       type: module
 
