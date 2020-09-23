@@ -17,6 +17,7 @@ secondary-text-color: "#5f6368"
 text-primary-color: "#FFFFFF"
 disabled-text-color: "#717171"
 material-divider-color: rgba(0, 0, 0, 0.12)
+switch-unchecked-button-color: var(--surface-00dp)
 
 ### SCAFFOLDING
 
@@ -80,11 +81,14 @@ state-icon-color: var(--secondary-text-color)
 state-icon-active-color: var(--primary-color)
 state-icon-unavailable-color: var(--disabled-text-color)
 
-# Switches
+# Switches and Toggles
 switch-checked-button-color: var(--primary-color)
 switch-checked-track-color: var(--primary-color)
-switch-unchecked-button-color: var(--surface-16dp);
 switch-unchecked-track-color: var(--primary-text-color)
+paper-toggle-button-checked-button-color: var(--switch-checked-button-color)
+paper-toggle-button-checked-bar-color: var(--switch-checked-track-color)
+paper-toggle-button-unchecked-button-color: var(--switch-unchecked-button-color)
+paper-toggle-button-unchecked-bar-color: var(--switch-unchecked-track-color)
 
 # Table
 table-row-background-color: var(--primary-background-color)
@@ -93,12 +97,6 @@ data-table-background-color: var(--primary-background-color)
 
 # Tabs
 paper-tabs-selection-bar-color: var(--primary-color)
-
-# Toggles
-paper-toggle-button-checked-button-color: var(--switch-checked-button-color)
-paper-toggle-button-checked-bar-color: var(--switch-checked-track-color)
-paper-toggle-button-unchecked-button-color: var(--switch-unchecked-button-color)
-paper-toggle-button-unchecked-bar-color: var(--switch-unchecked-track-color)
 
 # Other
 iron-overlay-backdrop-background-color: var(--primary-background-color)
