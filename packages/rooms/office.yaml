@@ -2,9 +2,12 @@ automation:
   - alias: Blink office lights
     description: Blink office lights when work time is up
     trigger:
-      # Trigger immediately at 4 PM
-      - platform: time
-        at: "16:00:00"
+      # Trigger 8 hours after work mode was turned on
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to: "on"
+        for:
+          hours: 8
     condition:
       # Trigger only if work mode is active and the office desk light is on
       - condition: state
@@ -25,12 +28,12 @@ automation:
 
       # Trigger immediately when motion is detected
       - platform: state
-        entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+        entity_id: binary_sensor.office_motion
         to: "on"
 
       # Trigger immediately when motion is no longer detected
       - platform: state
-        entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+        entity_id: binary_sensor.office_motion
         to: "off"
 
       # Trigger immediately when work mode is turned on
@@ -106,7 +109,7 @@ script:
           # IF motion is detected
           - conditions:
               - condition: state
-                entity_id: binary_sensor.hallway_motion # TODO: change back to binary_sensor.office_motion
+                entity_id: binary_sensor.office_motion
                 state: "on"
             sequence:
               - choose:
