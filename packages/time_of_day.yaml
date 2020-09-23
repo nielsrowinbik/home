@@ -118,7 +118,6 @@ sensor:
           {% set rising = is_state_attr('sun.sun', 'rising', true) %}
           {% set elevation = states('sensor.sun_elevation')|float %}
 
-          {% set morning_threshold = states('input_number.morning_threshold')|float %}
           {% set day_threshold = states('input_number.day_threshold')|float %}
           {% set afternoon_threshold = states('input_number.afternoon_threshold')|float %}
           {% set early_evening_threshold = states('input_number.early_evening_threshold')|float %}
@@ -127,8 +126,6 @@ sensor:
           {% if rising %}
             {% if elevation > day_threshold %}
               Day
-            {% elif elevation > morning_threshold %}
-              Morning
             {% else %}
               Night
             {% endif %}
