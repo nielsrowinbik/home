@@ -1,15 +1,22 @@
 custom_header:
-# compact_mode: true
+  compact_mode: true
+  exceptions:
+    - conditions:
+        user_agent: Mobile
+      config:
+        active_tab_css: "color: var(--primary-color) !important;"
+        all_tabs_css: "width: calc(50vw - 7px) !important; padding: 0px !important;"
+        chevrons: false
+        tab_conatiner_css: "margin: 0 !important; box-shadow: var(--ha-card-box-shadow) !important"
+        tab_indicator_color: transparent
+        split_mode: true
+        shadow: false
 title: " "
 views:
   - cards:
       - type: vertical-stack
         cards:
-          - card:
-              show_header_toggle: false
-              title: At a Glance
-              type: entities
-            entities:
+          - entities:
               - icon: mdi:home-variant-outline
                 name: Home state
                 secondary: >-
@@ -24,7 +31,7 @@ views:
                 type: custom:template-entity-row
               - active: "{{ is_state_attr('climate.living_room', 'hvac_action', 'heat') }}"
                 icon: mdi:thermometer
-                name: Living Room temperature
+                name: Upstairs temperature
                 secondary: >-
                   {% if is_state('climate.living_room', 'off') %}
                     Heating is turned off
@@ -37,12 +44,12 @@ views:
                 type: custom:template-entity-row
               - icon: mdi:alarm
                 name: Next alarm
-                secondary: >-
-                  {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
-                    Today is {{ 'a workday' if is_state('binary_sensor.today_is_a_workday', 'on') else 'an off day' }}
-                  {% else %}
-                    Tomorrow is {{ 'a workday' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'an off day' }}
-                  {% endif %}
+                # secondary: >-
+                #   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
+                #     Today is {{ 'a workday' if is_state('binary_sensor.today_is_a_workday', 'on') else 'an off day' }}
+                #   {% else %}
+                #     Tomorrow is {{ 'a workday' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'an off day' }}
+                #   {% endif %}
                 state: >-
                   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('Today at %H:%M', true) }}
@@ -52,29 +59,54 @@ views:
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('%A at %H:%M', true) }}
                   {% endif %}
                 type: custom:template-entity-row
-            filter:
-              exclude:
-                - entity_id: input_boolean.guest_mode
-                - entity_id: input_boolean.vacation_mode
-                - entity_id: "/\\w+\\d$/"
-              include:
-                - domain: input_boolean
-                  entity_id: "/\\w*mode$/"
-                  state: "on"
-                - domain: light
-                  state: "on"
-            type: custom:auto-entities
+            type: entities
+            show_header_toggle: false
+            title: At a Glance
+          - entities:
+              - entity: input_boolean.kitchen_bright_mode
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Day
+                row:
+                  entity: input_boolean.living_room_bright_mode
+                type: conditional
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Morning
+                  - entity: sensor.current_scene
+                    state_not: Night
+                row:
+                  entity: input_boolean.cooking_mode
+                type: conditional
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Morning
+                  - entity: sensor.current_scene
+                    state_not: Day
+                row:
+                  entity: input_boolean.night_mode
+                type: conditional
+              - conditions:
+                  - entity: binary_sensor.today_is_a_workday
+                    state: "on"
+                  - entity: sensor.current_scene
+                    state_not: Night
+                row:
+                  entity: input_boolean.work_mode
+                type: conditional
+            show_header_toggle: false
+            title: Quick access
+            type: entities
           - card:
-              show_header_toggle: false
-              title: Quick access
+              title: Lights
               type: entities
             filter:
               exclude:
-                - entity_id: input_boolean.guest_mode
-                - entity_id: input_boolean.vacation_mode
+                - entity_id: "/[\\s\\S]*\\d$/"
               include:
-                - entity_id: "/\\w*mode$/"
-                  state: "off"
+                - domain: light
+                  state: "on"
+            show_empty: false
             type: custom:auto-entities
     icon: mdi:home-variant-outline
     path: home
