@@ -2,13 +2,8 @@ automation:
   - alias: Set next alarm
     trigger:
       # Trigger immediately when the alarm goes off
-      - platform: template
-        value_template: >-
-          {{ 
-              states('sensor.date') == state_attr('input_datetime.next_alarm', 'timestamp') | int | timestamp_custom('%Y-%m-%d', True)
-              and
-              states('sensor.time') == state_attr('input_datetime.next_alarm', 'timestamp') | int | timestamp_custom('%H:%M', True)
-          }}
+      - platform: time
+        at: input_datetime.next_alarm
 
       # Trigger immediately when vacation mode changes
       - platform: state
