@@ -2,29 +2,23 @@ automation:
   - alias: Turn off night mode
     description: Turns off night mode immediately following the first movement of the day in either the toilet or kitchen
     trigger:
-      # Trigger immediately when motion is detected in the toilet
-      - platform: state
-        entity_id: binary_sensor.toilet_motion
-        to: "on"
-
-      # Trigger immediately when motion is detected in the kitchen
-      - platform: state
-        entity_id: binary_sensor.kitchen_motion
-        to: "on"
+      # Trigger immediately when the alarm goes off
+      - platform: time
+        at: input_datetime.next_alarm
     condition:
-      # Only trigger if current time is past today's alarm
-      - condition: template
-        value_template: >-
-          {% set alarm_time_today = (states('input_datetime.workday_alarm') if is_state('binary_sensor.today_is_a_workday', 'on') else states('input_datetime.off_day_alarm')).rsplit(':', 1)[0] %}
-          {% set current_time = states('sensor.time') %}
-
-          {{ current_time > alarm_time_today }}
-
       # Only trigger if night mode is actually still on
       - condition: state
         entity_id: input_boolean.night_mode
         state: "on"
     action:
+      # Wait for first movement in the toilet, but only delay turning off Night mode by 1 hour
+      - wait_for_trigger:
+          - platform: state
+            entity_id: binary_sensor.toilet_motion
+            to: "on"
+        timeout:
+          hours: 1
+        continue_on_timeout: true
       - service: input_boolean.turn_off
         entity_id: input_boolean.night_mode
 
@@ -82,6 +76,14 @@ input_number:
     name: Evening threshold
     step: 0.5
     unit_of_measurement: "°"
+  night_threshold:
+    icon: mdi:tune
+    max: 10
+    min: -10
+    mode: box
+    name: Night threshold
+    step: 0.5
+    unit_of_measurement: "°"
 
 sensor:
   - platform: darksky
@@ -98,6 +100,10 @@ sensor:
             Away
           {% elif is_state('input_boolean.night_mode', 'on') %}
             Night
+          {% elif is_state('sensor.time_of_day', 'Night') and is_state_attr('sun.sun', 'rising', true) %}
+            Morning
+          {% elif is_state('sensor.time_of_day', 'Night') and is_state_attr('sun.sun', 'rising', false) %}
+            Evening
           {% else %}
             {{ states('sensor.time_of_day') }}
           {% endif %}
@@ -118,19 +124,25 @@ sensor:
           {% set rising = is_state_attr('sun.sun', 'rising', true) %}
           {% set elevation = states('sensor.sun_elevation')|float %}
 
+          {% set morning_threshold = states('input_number.morning_threshold')|float %}
           {% set day_threshold = states('input_number.day_threshold')|float %}
           {% set afternoon_threshold = states('input_number.afternoon_threshold')|float %}
           {% set early_evening_threshold = states('input_number.early_evening_threshold')|float %}
           {% set evening_threshold = states('input_number.evening_threshold')|float %}
+          {% set night_threshold = states('input_number.night_threshold')|float %}
 
           {% if rising %}
             {% if elevation > day_threshold %}
               Day
+            {% elif elevation > morning_threshold %}
+              Morning
             {% else %}
               Night
             {% endif %}
           {% elif not rising %}
-            {% if elevation < evening_threshold %}
+            {% if elevation < night_threshold %}
+              Night
+            {% elif elevation < evening_threshold %}
               Evening
             {% elif elevation < early_evening_threshold %}
               Early evening
