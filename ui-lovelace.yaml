@@ -126,6 +126,7 @@ views:
               - input_number.afternoon_threshold
               - input_number.early_evening_threshold
               - input_number.evening_threshold
+              - input_number.night_threshold
               - type: section
                 label: Illuminance
               - input_number.hallway_illuminance_threshold
