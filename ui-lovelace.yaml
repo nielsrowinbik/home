@@ -44,12 +44,6 @@ views:
                 type: custom:template-entity-row
               - icon: mdi:alarm
                 name: Next alarm
-                # secondary: >-
-                #   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
-                #     Today is {{ 'a workday' if is_state('binary_sensor.today_is_a_workday', 'on') else 'an off day' }}
-                #   {% else %}
-                #     Tomorrow is {{ 'a workday' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'an off day' }}
-                #   {% endif %}
                 state: >-
                   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('Today at %H:%M', true) }}
@@ -86,28 +80,13 @@ views:
                 row:
                   entity: input_boolean.night_mode
                 type: conditional
-              - conditions:
-                  - entity: binary_sensor.today_is_a_workday
-                    state: "on"
-                  - entity: sensor.current_scene
-                    state_not: Night
+              - conditions: []
                 row:
                   entity: input_boolean.work_mode
                 type: conditional
             show_header_toggle: false
             title: Quick access
             type: entities
-          - card:
-              title: Lights
-              type: entities
-            filter:
-              exclude:
-                - entity_id: "/[\\s\\S]*\\d$/"
-              include:
-                - domain: light
-                  state: "on"
-            show_empty: false
-            type: custom:auto-entities
     icon: mdi:home-variant-outline
     path: home
     title: Home
