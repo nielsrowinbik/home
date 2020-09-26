@@ -21,6 +21,7 @@ automation:
       - platform: homeassistant
         event: start
     action:
+      - delay: 1
       - service: script.set_next_alarm
 
 binary_sensor:
