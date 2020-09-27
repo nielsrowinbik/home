@@ -64,9 +64,13 @@ light:
 script:
   blink_office_lights:
     alias: Blink office lights
+    fields:
+      repeat:
+        description: How often the office lights will blink
+        example: 2
     sequence:
       repeat:
-        count: 2
+        count: "{{ repeat or 2 }}"
         sequence:
           - service: light.turn_on
             data:
