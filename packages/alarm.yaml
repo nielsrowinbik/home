@@ -1,10 +1,6 @@
 automation:
   - alias: Set next alarm
     trigger:
-      # Trigger immediately when the alarm goes off
-      - platform: time
-        at: input_datetime.next_alarm
-
       # Trigger immediately when vacation mode changes
       - platform: state
         entity_id: input_boolean.vacation_mode
@@ -21,7 +17,29 @@ automation:
       - platform: homeassistant
         event: start
     action:
-      - delay: 1
+      - service: script.set_next_alarm
+
+  - alias: Turn off night mode
+    description: Turns off night mode immediately following the first movement of the day in either the toilet or kitchen
+    trigger:
+      # Trigger immediately when the alarm goes off
+      - platform: time
+        at: input_datetime.next_alarm
+    action:
+      # Wait for first movement in the toilet, but only delay turning off Night mode by 1 hour
+      - wait_for_trigger:
+          - platform: state
+            entity_id: binary_sensor.toilet_motion
+            to: "on"
+          - platform: state
+            entity_id: binary_sensor.kitchen_motion
+            to: "on"
+        timeout:
+          hours: 2
+      # Turn off Night mode (this doesn't do anything if it's already been turned off for some reason)
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.night_mode
+      # Set the next alarm
       - service: script.set_next_alarm
 
 binary_sensor:

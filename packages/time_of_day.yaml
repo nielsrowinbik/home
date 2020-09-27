@@ -1,27 +1,3 @@
-automation:
-  - alias: Turn off night mode
-    description: Turns off night mode immediately following the first movement of the day in either the toilet or kitchen
-    trigger:
-      # Trigger immediately when the alarm goes off
-      - platform: time
-        at: input_datetime.next_alarm
-    condition:
-      # Only trigger if night mode is actually still on
-      - condition: state
-        entity_id: input_boolean.night_mode
-        state: "on"
-    action:
-      # Wait for first movement in the toilet, but only delay turning off Night mode by 1 hour
-      - wait_for_trigger:
-          - platform: state
-            entity_id: binary_sensor.toilet_motion
-            to: "on"
-        timeout:
-          hours: 1
-        continue_on_timeout: true
-      - service: input_boolean.turn_off
-        entity_id: input_boolean.night_mode
-
 input_boolean:
   night_mode:
     icon: mdi:weather-night
