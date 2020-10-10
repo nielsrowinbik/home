@@ -75,6 +75,7 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
       # Trigger after kitchen door has been open for 30 seconds
       - platform: state
@@ -104,7 +105,7 @@ automation:
 
   - alias: Set living room lights state
     description: Sets the living room lights to their correct setting
-    mode: queued
+    mode: restart
     trigger:
       # Trigger immediately when Home Assistant starts
       - platform: homeassistant
@@ -113,16 +114,14 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when bright mode is turned on
+      # Trigger immediately when bright mode is toggled
       - platform: state
         entity_id: input_boolean.living_room_bright_mode
-        to: "on"
-
-      # Trigger immediately when bright mode is turned off
-      - platform: state
-        entity_id: input_boolean.living_room_bright_mode
-        to: "off"
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.turn_on
         entity_id: script.set_living_room_lights_state
@@ -135,15 +134,12 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when the amplifier turns on
+      # Trigger immediately when the amplifier turns on or off
       - platform: state
         entity_id: media_player.amplifier
-        to: "on"
-
-      # Trigger immediately when the amplifier turns off
-      - platform: state
-        entity_id: media_player.amplifier
-        to: "off"
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.set_living_room_subwoofer_state
 
@@ -297,14 +293,15 @@ script:
                 data:
                   entities:
                     light.living_room_spots:
-                      brightness: 255
+                      color_temp: 380
                       state: on
                   transition: 0.5
+              - delay: 0.5
               - service: scene.apply
                 data:
                   entities:
                     light.living_room_spots:
-                      color_temp: 344
+                      brightness: 255
                       state: on
                   transition: 0.5
 
@@ -334,7 +331,7 @@ script:
                   entities:
                     light.living_room_pendant: off
                     light.living_room_spots: off
-                  transition: 0.5
+                  transition: 1
 
           # IF "Afternoon" scene is active
           - conditions:
@@ -376,14 +373,15 @@ script:
                 data:
                   entities:
                     light.living_room_spots:
-                      brightness: 125
+                      color_temp: 475
                       state: on
                   transition: 2
+              - delay: 2
               - service: scene.apply
                 data:
                   entities:
                     light.living_room_spots:
-                      color_temp: 475
+                      brightness: 125
                       state: on
                   transition: 2
 
@@ -403,7 +401,7 @@ script:
                   entities:
                     light.living_room_pendant: off
                     light.living_room_spots: off
-                  transition: 0.5
+                  transition: 1
 
   set_living_room_subwoofer_state:
     alias: Set living room subwoofer state

@@ -9,13 +9,14 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when the toilet is occupied
+      # Trigger immediately when the bathroom is occupied
       - platform: state
         entity_id: binary_sensor.bathroom_occupied
         to: "on"
 
-      # Trigger a minute after the toilet is no longer occupied
+      # Trigger a minute after the bathroom is no longer occupied
       - platform: state
         entity_id: binary_sensor.bathroom_occupied
         to: "off"
@@ -50,6 +51,7 @@ light:
 script:
   set_bathroom_lights_state:
     alias: Set bathroom lights state
+    mode: restart
     sequence:
       - choose:
           # IF the bathroom is occupied

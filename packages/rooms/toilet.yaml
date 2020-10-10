@@ -10,16 +10,14 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when the toilet door is opened
+      # Trigger immediately when the toilet door is opened or closed
       - platform: state
         entity_id: binary_sensor.toilet_door
-        to: "on"
-
-      # Trigger immediately when the toilet door is closed
-      - platform: state
-        entity_id: binary_sensor.toilet_door
-        to: "off"
+        to:
+          - "on"
+          - "off"
 
       # Trigger immediately when motion is detected
       - platform: state
@@ -38,6 +36,7 @@ automation:
 script:
   set_toilet_lights_state:
     alias: Set toilet lights state
+    mode: restart
     sequence:
       - choose:
           # IF Motion is detected or the door is open

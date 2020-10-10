@@ -26,25 +26,24 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when motion is detected
+      # Trigger immediately when current scene changes
       - platform: state
-        entity_id: binary_sensor.office_motion
-        to: "on"
+        entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when motion is no longer detected
-      - platform: state
-        entity_id: binary_sensor.office_motion
-        to: "off"
-
-      # Trigger immediately when work mode is turned on
+      # Trigger immediately when work mode is toggled
       - platform: state
         entity_id: input_boolean.work_mode
-        to: "on"
+        to:
+          - "on"
+          - "off"
 
-      # Trigger immediately when work mode is turned off
+      # Trigger immediately when motion detection changes
       - platform: state
-        entity_id: input_boolean.work_mode
-        to: "off"
+        entity_id: binary_sensor.office_motion
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.set_office_lights_state
 
@@ -88,6 +87,7 @@ script:
               milliseconds: 500
   set_office_lights_state:
     alias: Set office lights state
+    mode: restart
     sequence:
       - choose:
           # IF work mode is enabled
@@ -135,9 +135,11 @@ script:
                   - service: scene.apply
                     data:
                       entities:
+                        light.office_desk: off
                         light.office_spots:
                           brightness: 255
                           state: on
+                        light.office_worktop: off
                       transition: 0.5
 
         default:

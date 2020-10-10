@@ -8,40 +8,33 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when motion is detected
+      # Trigger immediately when motion detection changes
       - platform: state
         entity_id: binary_sensor.kitchen_motion
-        to: "on"
-
-      # Trigger immediately when motion is no longer detected
-      - platform: state
-        entity_id: binary_sensor.kitchen_motion
-        to: "off"
+        to:
+          - "on"
+          - "off"
 
       # Trigger immediately when the illuminance threshold is changed
       - platform: state
         entity_id: input_number.kitchen_illuminance_threshold
+        to: "*"
 
-      # Trigger immediately when bright mode is turned on
+      # Trigger immediately when bright mode is toggled
       - platform: state
         entity_id: input_boolean.kitchen_bright_mode
-        to: "on"
+        to:
+          - "on"
+          - "off"
 
-      # Trigger immediately when bright mode is turned off
-      - platform: state
-        entity_id: input_boolean.kitchen_bright_mode
-        to: "off"
-
-      # Trigger immediately when cooking mode is turned on
+      # Trigger immediately when cooking mode is toggled
       - platform: state
         entity_id: input_boolean.cooking_mode
-        to: "on"
-
-      # Trigger immediately when cooking mode is turned off
-      - platform: state
-        entity_id: input_boolean.cooking_mode
-        to: "off"
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.set_kitchen_lights_state
 
@@ -94,6 +87,7 @@ light:
 script:
   set_kitchen_lights_state:
     alias: Set kitchen lights state
+    mode: restart
     sequence:
       - choose:
           # IF cooking mode is active

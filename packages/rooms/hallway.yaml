@@ -9,16 +9,19 @@ automation:
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
+        to: "*"
 
-      # Trigger immediately when motion is detected
+      # Trigger immediately when motion detection changes
       - platform: state
         entity_id: binary_sensor.hallway_motion
-        to: "on"
+        to:
+          - "on"
+          - "off"
 
-      # Trigger immediately when motion is no longer detected
+      # Trigger immediately when the illuminance threshold is changed
       - platform: state
-        entity_id: binary_sensor.hallway_motion
-        to: "off"
+        entity_id: input_number.hallway_illuminance_threshold
+        to: "*"
     action:
       - service: script.set_hallway_lights_state
 
@@ -42,6 +45,7 @@ light:
 script:
   set_hallway_lights_state:
     alias: Set hallway lights state
+    mode: restart
     sequence:
       - choose:
           # IF motion is detected and it is sufficiently dark
