@@ -26,6 +26,12 @@ automation:
       - platform: time
         at: input_datetime.next_alarm
     action:
+      # Turn on a light, so the cat can be fed
+      - service: scene.apply
+        data:
+          entities:
+            light.living_room_pendant: on
+          transition: 0.5
       # Wait for first movement in the toilet, but only delay turning off Night mode by 1 hour
       - wait_for_trigger:
           - platform: state
