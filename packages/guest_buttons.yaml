@@ -1,0 +1,56 @@
+## TODO: Rename toilet_switch to something else. This switch won't be located in the toilet anymore.
+
+automation:
+  - alias: Toggle Work mode through button press
+    description: Turn on and off Work mode through repurposed toilet switch
+    trigger:
+      # Trigger immediately when the repurposed toilet switch is pressed once
+      - platform: mqtt
+        topic: zigbee2mqtt/toilet_switch/action
+        payload: single
+    action:
+      - service: input_boolean.toggle
+        data:
+          entity_id: input_boolean.work_mode
+
+  - alias: Turn on Night mode through button hold
+    description: Turn on Night mode through repurposed toilet switch
+    trigger:
+      # Trigger immediately when the repurposed toilet switch is held
+      - platform: mqtt
+        topic: zigbee2mqtt/toilet_switch/action
+        payload: hold
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.night_mode
+
+  - alias: Toggle guest button automations with Guest mode
+    description: Make sure the guest button automations are only enabled when Guest mode is
+    trigger:
+      # Trigger immediately when Guest mode is toggled
+      - platform: state
+        entity_id: input_boolean.guest_mode
+        to:
+          - "on"
+          - "off"
+    action:
+      - choose:
+          # IF guest mode is active
+          - conditions:
+              - condition: state
+                entity_id: input_boolean.guest_mode
+                state: "on"
+            sequence:
+              - service: scene.apply
+                data:
+                  entities:
+                    automation.toggle_work_mode_through_button_press: on
+                    automation.turn_on_night_mode_through_button_hold: on
+        # ELSE
+        default:
+          - service: scene.apply
+            data:
+              entities:
+                automation.toggle_work_mode_through_button_press: off
+                automation.turn_on_night_mode_through_button_hold: off
