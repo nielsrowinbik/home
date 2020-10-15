@@ -41,18 +41,25 @@ automation:
   - alias: Toggle cooking mode
     trigger:
       # Trigger immediately when the kitchen wall switch's right button is pressed
-      - platform: template
-        value_template: "{{ is_state_attr('sensor.kitchen_switch', 'click', 'right') }}"
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch/action
+        payload: single_right
     action:
       - service: input_boolean.toggle
         entity_id: input_boolean.cooking_mode
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.kitchen_bright_mode
 
   - alias: Toggle kitchen bright mode
     trigger:
       # Trigger immediately when the kitchen wall switch's left button is pressed
-      - platform: template
-        value_template: "{{ is_state_attr('sensor.kitchen_switch', 'click', 'left') }}"
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch/action
+        payload: single_left
     action:
+      - condition: state
+        entity_id: input_boolean.cooking_mode
+        state: "off"
       - service: input_boolean.toggle
         entity_id: input_boolean.kitchen_bright_mode
 
