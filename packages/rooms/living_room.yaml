@@ -216,7 +216,7 @@ script:
           - conditions:
               - condition: state
                 entity_id: sensor.current_activity
-                state: Listen to Vinyl
+                state: PowerOff
             sequence:
               - service: scene.apply
                 data:
