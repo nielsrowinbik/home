@@ -27,6 +27,64 @@ automation:
     action:
       - service: script.set_office_lights_state
 
+  - alias: Toggle Work mode depending on phone charging type
+    description: Toggle working mode when phone begins or stops charging wirelessly during certain times of day
+    trigger:
+      # Trigger immediately when the phone begins charging wirelessly
+      - platform: state
+        entity_id: sensor.pixel_4_charger_type
+        from: none
+        to: wireless
+
+      # Trigger immediately when the phone stops charging wirelessly
+      - platform: state
+        entity_id: sensor.pixel_4_charger_type
+        from: wireless
+        to: none
+    condition:
+      # Only trigger on workdays
+      - condition: state
+        entity_id: binary_sensor.today_is_a_workday
+        state: "on"
+    action:
+      - choose:
+          # IF charging begins during Morning or Day, turn on Work mode
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'wireless' }}"
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Morning
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Day
+            sequence:
+              - service: input_boolean.turn_on
+                data:
+                  entity_id: input_boolean.work_mode
+
+          # IF charging stops during Afternoon, Early evening, or Evening, turn off Work mode
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'none' }}"
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Afternoon
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Early evening
+                  - condition: state
+                    entity_id: sensor.current_scene
+                    state: Evening
+            sequence:
+              - service: input_boolean.turn_off
+                data:
+                  entity_id: input_boolean.work_mode
+
 input_boolean:
   work_mode:
     icon: mdi:briefcase-outline
