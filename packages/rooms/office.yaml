@@ -1,24 +1,4 @@
 automation:
-  - alias: Blink office lights
-    description: Blink office lights when work time is up
-    trigger:
-      # Trigger 8 hours after work mode was turned on
-      - platform: state
-        entity_id: input_boolean.work_mode
-        to: "on"
-        for:
-          hours: 8
-    condition:
-      # Trigger only if work mode is active and the office desk light is on
-      - condition: state
-        entity_id: input_boolean.work_mode
-        state: "on"
-      - condition: state
-        entity_id: light.office_desk
-        state: "on"
-    action:
-      - service: script.blink_office_lights
-
   - alias: Set office lights state
     description: Turns on or off the correct office lights
     trigger:
@@ -61,30 +41,6 @@ light:
     state_topic: "zigbee2mqtt/office_spots"
 
 script:
-  blink_office_lights:
-    alias: Blink office lights
-    fields:
-      repeat:
-        description: How often the office lights will blink
-        example: 2
-    sequence:
-      repeat:
-        count: "{{ repeat or 2 }}"
-        sequence:
-          - service: light.turn_on
-            data:
-              entity_id: light.office_desk
-              brightness: 125
-              transition: 0.5
-          - delay:
-              milliseconds: 500
-          - service: light.turn_on
-            data:
-              entity_id: light.office_desk
-              brightness: 255
-              transition: 0.5
-          - delay:
-              milliseconds: 500
   set_office_lights_state:
     alias: Set office lights state
     mode: restart
