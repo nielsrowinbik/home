@@ -1,18 +1,22 @@
 automation:
   - alias: Set toilet lights state
-    description: Turns on the toilet lights when it's occupied and off when it's not
-    mode: restart
+    mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes
+      # Trigger immediately when current scene changes to Night
       - platform: state
         entity_id: sensor.current_scene
-        to: "*"
+        to: Night
 
-      # Trigger immediately when the toilet door is opened or closed
+      # Trigger immediately when current scene changes from Night
+      - platform: state
+        entity_id: sensor.current_scene
+        from: Night
+
+      # Trigger immediately when the door opens or closes
       - platform: state
         entity_id: binary_sensor.toilet_door
         to:
@@ -31,54 +35,19 @@ automation:
         for:
           minutes: 1
     action:
-      - service: script.set_toilet_lights_state
+      - service: light.turn_on
+        data:
+          entity_id: light.toilet_spot
+          brightness: >-
+            {% set isDoorOpen = is_state('binary_sensor.toilet_door', 'on') %}
+            {% set isMotion = is_state('binary_sensor.toilet_motion', 'on') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-script:
-  set_toilet_lights_state:
-    alias: Set toilet lights state
-    mode: restart
-    sequence:
-      - choose:
-          # IF Motion is detected or the door is open
-          - conditions:
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id: binary_sensor.toilet_door
-                    state: "on"
-                  - condition: state
-                    entity_id: binary_sensor.toilet_motion
-                    state: "on"
-            sequence:
-              - choose:
-                  # IF "Night" scene is active
-                  - conditions:
-                      - condition: state
-                        entity_id: sensor.current_scene
-                        state: "Night"
-                    sequence:
-                      - service: scene.apply
-                        data:
-                          entities:
-                            light.toilet_spot:
-                              brightness: 1
-                              state: on
-                          transition: 0.5
-
-                # ELSE (any other scene is active)
-                default:
-                  - service: scene.apply
-                    data:
-                      entities:
-                        light.toilet_spot:
-                          brightness: 255
-                          state: on
-                      transition: 0.5
-
-        # ELSE (lights off by default)
-        default:
-          - service: scene.apply
-            data:
-              entities:
-                light.toilet_spot: off
-              transition: 1
+            {% if isDoorOpen or (isMotion and not isNight) %}
+              255
+            {% elif isMotion and isNight %}
+              1
+            {% else %}
+              0
+            {% endif %}
+          transition: 0.5
