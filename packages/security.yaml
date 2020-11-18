@@ -6,7 +6,7 @@ automation:
         to: "on"
     condition:
       - condition: state
-        entity_id: sensor.current_state
+        entity_id: sensor.current_scene
         state: Away
     action:
       - service: notify.all_devices
@@ -24,7 +24,7 @@ automation:
         to: "on"
     condition:
       - condition: state
-        entity_id: sensor.current_state
+        entity_id: sensor.current_scene
         state: Away
     action:
       - service: notify.all_devices
@@ -42,7 +42,7 @@ automation:
         to: "on"
     condition:
       - condition: state
-        entity_id: sensor.current_state
+        entity_id: sensor.current_scene
         state: Away
     action:
       - service: notify.all_devices
