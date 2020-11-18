@@ -1,15 +1,27 @@
 automation:
   - alias: Set hallway lights state
-    description: Turns on the hallway lights when motion is detected and it is suffuciently dark, and off when motion is no longer detected
+    mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes
+      # Trigger immediately when current scene changes to Night
       - platform: state
         entity_id: sensor.current_scene
-        to: "*"
+        to: Night
+
+      # Trigger immediately when current scene changes from Night
+      - platform: state
+        entity_id: sensor.current_scene
+        from: Night
+
+      # Trigger immediately when the door opens or closes
+      - platform: state
+        entity_id: binary_sensor.hallway_door
+        to:
+          - "on"
+          - "off"
 
       # Trigger immediately when motion detection changes
       - platform: state
@@ -23,7 +35,22 @@ automation:
         entity_id: input_number.hallway_illuminance_threshold
         to: "*"
     action:
-      - service: script.set_hallway_lights_state
+      - service: light.turn_on
+        data:
+          entity_id: light.hallway_spots
+          brightness: >-
+            {% set isDoorOpen = is_state('binary_sensor.hallway_door', 'on') %}
+            {% set isMotion = is_state('binary_sensor.hallway_motion', 'on') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+            {% if isDoorOpen or (isMotion and not isNight) %}
+              255
+            {% elif isMotion and isNight %}
+              1
+            {% else %}
+              0
+            {% endif %}
+          transition: 0.5
 
 input_number:
   hallway_illuminance_threshold:
@@ -41,50 +68,3 @@ light:
     name: Hallway spots
     schema: json
     state_topic: "zigbee2mqtt/hallway_spots"
-
-script:
-  set_hallway_lights_state:
-    alias: Set hallway lights state
-    mode: restart
-    sequence:
-      - choose:
-          # IF motion is detected and it is sufficiently dark
-          - conditions:
-              - condition: state
-                entity_id: binary_sensor.hallway_motion
-                state: "on"
-              - condition: template
-                value_template: "{{ states('sensor.hallway_illuminance') | float <= states('input_number.hallway_illuminance_threshold') | float  }}"
-            sequence:
-              - choose:
-                  # IF "Night" scene is active
-                  - conditions:
-                      - condition: state
-                        entity_id: sensor.current_scene
-                        state: Night
-                    sequence:
-                      - service: scene.apply
-                        data:
-                          entities:
-                            light.hallway_spots:
-                              brightness: 1
-                              state: on
-                          transition: 0.5
-
-                # ELSE (any other scene is active)
-                default:
-                  - service: scene.apply
-                    data:
-                      entities:
-                        light.hallway_spots:
-                          brightness: 255
-                          state: on
-                      transition: 0.5
-
-        # ELSE (off by default)
-        default:
-          - service: scene.apply
-            data:
-              entities:
-                light.hallway_spots: off
-              transition: 0.5
