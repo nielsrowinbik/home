@@ -1,5 +1,5 @@
 automation:
-  - alias: Set hallway lights state
+  - alias: Set light.hallway_spots
     mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
