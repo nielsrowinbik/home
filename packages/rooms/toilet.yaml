@@ -1,5 +1,5 @@
 automation:
-  - alias: Set toilet lights state
+  - alias: Set light.toilet_spot
     mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
