@@ -43,9 +43,9 @@ automation:
             {% set isMotion = is_state('binary_sensor.toilet_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {% if isDoorOpen or (isMotion and not isNight) %}
+            {% if (isDoorOpen or isMotion) and not isNight %}
               255
-            {% elif isMotion and isNight %}
+            {% elif (isDoorOpen or isMotion) and isNight %}
               1
             {% else %}
               0
