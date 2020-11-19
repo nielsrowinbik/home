@@ -107,6 +107,75 @@ automation:
           seconds: "{{ 6 if trigger.from_state.state == 'PowerOff' else 0 }}"
       - service: script.set_correct_input_on_amplifier
 
+  - alias: Set light.living_room_pendant
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+        to: "*"
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_pendant
+          brightness: >-
+            {% set isAway = is_state('sensor.current_scene', 'Away') %}
+            {% set isDay = is_state('sensor.current_scene', 'Day') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+            {{ 0 if isAway or isDark or isNight else 255 }}
+
+  - alias: Set light.living_room_spots
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+        to: "*"
+
+      # Trigger immediately when bright mode is toggled
+      - platform: state
+        entity_id: input_boolean.living_room_bright_mode
+        to:
+          - "on"
+          - "off"
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_spots
+          brightness: >-
+            {% set isAway = is_state('sensor.current_scene', 'Away') %}
+            {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
+            {% set isEvening = is_state('sensor.current_scene', 'Evening') %}
+            {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
+
+            {% if isBright %}
+              255
+            {% elif isMorning or isEvening %}
+              125
+            {% else %}
+              0
+            {% endif %}
+          transition: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
+      - delay:
+          seconds: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_spots
+          color_temp: >-
+            {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
+
+            {{ 380 if isBright else 475 }}
+          transition: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
+
   - alias: Set living room climate state
     description: Sets the thermostat to the correct temperature and turns it off if a door or window is open
     mode: queued
@@ -146,29 +215,6 @@ automation:
     action:
       - service: script.set_living_room_climate_state
 
-  - alias: Set living room lights state
-    description: Sets the living room lights to their correct setting
-    mode: restart
-    trigger:
-      # Trigger immediately when Home Assistant starts
-      - platform: homeassistant
-        event: start
-
-      # Trigger immediately when current scene changes
-      - platform: state
-        entity_id: sensor.current_scene
-        to: "*"
-
-      # Trigger immediately when bright mode is toggled
-      - platform: state
-        entity_id: input_boolean.living_room_bright_mode
-        to:
-          - "on"
-          - "off"
-    action:
-      - service: script.turn_on
-        entity_id: script.set_living_room_lights_state
-
   - alias: Set living room subwoofer state
     description: Make sure the subwoofer is on when the amplifier is
     mode: restart
@@ -185,16 +231,6 @@ automation:
           - "off"
     action:
       - service: script.set_living_room_subwoofer_state
-
-  - alias: Toggle Living Room bright mode
-    mode: queued
-    trigger:
-      # Trigger immediately when the Living Room wall switch's right button is pressed
-      - platform: template
-        value_template: "{{ is_state_attr('sensor.living_room_switch', 'click', 'right') }}"
-    action:
-      - service: input_boolean.toggle
-        entity_id: input_boolean.living_room_bright_mode
 
 emulated_roku:
   servers:
@@ -350,130 +386,6 @@ script:
                 climate.living_room:
                   state: heat
                   temperature: 19
-
-  set_living_room_lights_state:
-    alias: Set living room lights state
-    sequence:
-      - choose:
-          # IF bright mode is active
-          - conditions:
-              - condition: state
-                entity_id: input_boolean.living_room_bright_mode
-                state: "on"
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_spots:
-                      color_temp: 380
-                      state: on
-                  transition: 0.5
-              - delay: 0.5
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_spots:
-                      brightness: 255
-                      state: on
-                  transition: 0.5
-
-          # IF "Morning" scene is active
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Morning
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: on
-                    light.living_room_spots:
-                      brightness: 125
-                      state: on
-                  transition: 0.5
-
-          # IF "Day" scene is active
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Day
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: off
-                    light.living_room_spots: off
-                  transition: 1
-
-          # IF "Afternoon" scene is active
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Afternoon
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: on
-                    light.living_room_spots: off
-                  transition: 0.5
-
-          # IF "Early evening" scene is active
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Early evening
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: on
-                    light.living_room_spots: off
-                  transition: 0.5
-
-          # IF Evening" scene is active
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Evening
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: on
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_spots:
-                      color_temp: 475
-                      state: on
-                  transition: 2
-              - delay: 2
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_spots:
-                      brightness: 125
-                      state: on
-                  transition: 2
-
-          # IF "Night" or "Away" scene is active
-          - conditions:
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Night
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Away
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    light.living_room_pendant: off
-                    light.living_room_spots: off
-                  transition: 1
 
   set_living_room_subwoofer_state:
     alias: Set living room subwoofer state
