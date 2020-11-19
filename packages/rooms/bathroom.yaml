@@ -1,15 +1,20 @@
 automation:
-  - alias: Set bathroom lights state
-    description: Turns on the bathroom lights when it's occupied and off when it's not
+  - alias: Set light.bathroom_spots
+    mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes
+      # Trigger immediately when current scene changes to Night
       - platform: state
         entity_id: sensor.current_scene
-        to: "*"
+        to: Night
+
+      # Trigger immediately when current scene changes from Night
+      - platform: state
+        entity_id: sensor.current_scene
+        from: Night
 
       # Trigger immediately when the bathroom is occupied
       - platform: state
@@ -23,37 +28,21 @@ automation:
         for:
           minutes: 1
     action:
-      - service: script.set_bathroom_lights_state
-
-  - alias: Notify when humidity in Bathroom reaches high levels
-    description: Send a notification suggesting to turn on the dehumidifier in this area when the humidity is more than 80%
-    trigger:
-      # Trigger immediately when the humidity goes above 79%
-      - platform: numeric_state
-        entity_id: sensor.bathroom_humidity
-        above: 79
-    action:
-      - service: notify.all_devices
+      - service: light.turn_on
         data:
-          title: "High humidity in Bathroom"
-          message: "Consider turning on the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
+          entity_id: light.bathroom_spots
+          brightness: >-
+            {% set isOccupied = is_state('binary_sensor.bathroom_occupied', 'on') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-  - alias: Notify when humidity in Bathroom reaches normal levels
-    description: Send a notification suggesting to turn off the dehumidifier in this area when the humidity is back down to 60%
-    trigger:
-      # Trigger immediately when the humidity drops below 61%
-      - platform: numeric_state
-        entity_id: sensor.bathroom_humidity
-        below: 61
-    action:
-      - service: notify.all_devices
-        data:
-          title: "Humidity returned to normal in Bathroom"
-          message: "Consider turning off the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
+            {% if isOccupied and not isNight %}
+              255
+            {% elif isOccupied and isNight %}
+              1
+            {% else %}
+              0
+            {% endif %}
+          transition: 0.5
 
 binary_sensor:
   - platform: template
@@ -77,48 +66,3 @@ light:
     name: Bathroom spots
     schema: json
     state_topic: "zigbee2mqtt/bathroom_spots"
-
-script:
-  set_bathroom_lights_state:
-    alias: Set bathroom lights state
-    mode: restart
-    sequence:
-      - choose:
-          # IF the bathroom is occupied
-          - conditions:
-              - condition: state
-                entity_id: binary_sensor.bathroom_occupied
-                state: "on"
-            sequence:
-              - choose:
-                  # IF "Night" scene is active
-                  - conditions:
-                      - condition: state
-                        entity_id: sensor.current_scene
-                        state: Night
-                    sequence:
-                      - service: scene.apply
-                        data:
-                          entities:
-                            light.bathroom_spots:
-                              brightness: 1
-                              state: on
-                          transition: 0.5
-
-                # ELSE (any other scene is active)
-                default:
-                  - service: scene.apply
-                    data:
-                      entities:
-                        light.bathroom_spots:
-                          brightness: 255
-                          state: on
-                      transition: 0.5
-
-        # ELSE (off by default)
-        default:
-          - service: scene.apply
-            data:
-              entities:
-                light.bathroom_spots: off
-              transition: 0.5
