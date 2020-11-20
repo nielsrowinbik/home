@@ -32,10 +32,22 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
+      # Trigger immediately when current scene changes to a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
         to:
+          - Morning
+          - Day
+          - Night
+
+      # Trigger immediately when current scene changes from a state we're interested in
+      - platform: state
+        entity_id: sensor.current_scene
+        from:
           - Morning
           - Day
           - Night
@@ -46,11 +58,6 @@ automation:
         to:
           - "on"
           - "off"
-
-      # Trigger immediately when the illuminance threshold is changed
-      - platform: state
-        entity_id: input_number.kitchen_illuminance_threshold
-        to: "*"
 
       # Trigger immediately when bright mode is toggled
       - platform: state
@@ -70,12 +77,12 @@ automation:
         data:
           entity_id: light.kitchen_spots
           brightness: >-
-            {% set isMotion = is_state('binary_sensor.kitchen_motion', 'on') %}
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
-            {% set isDark = is_state('binary_sensor.kitchen_motion', 'on') %}
+            {% set isDark = is_state('binary_sensor.kitchen_sufficiently_lit', 'off') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
+            {% set isMotion = is_state('binary_sensor.kitchen_motion', 'on') %}
 
             {% if isNight and isMotion %}
               1
@@ -133,6 +140,14 @@ automation:
         state: "off"
       - service: input_boolean.toggle
         entity_id: input_boolean.kitchen_bright_mode
+
+binary_sensor:
+  - platform: template
+    sensors:
+      kitchen_sufficiently_lit:
+        device_class: light
+        friendly_name: Kitchen is sufficiently lit
+        value_template: "{{ state_attr('binary_sensor.kitchen_motion', 'illuminance') | float > states('input_number.kitchen_illuminance_threshold') | float }}"
 
 input_boolean:
   cooking_mode:
