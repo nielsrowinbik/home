@@ -41,36 +41,6 @@ automation:
             } %}
             {{ entities[state_attr('remote.harmony_hub', 'current_activity')] }}
 
-  - alias: Notify when humidity in Living Room reaches high levels
-    description: Send a notification suggesting to turn on the dehumidifier in this area when the humidity is more than 80%
-    trigger:
-      # Trigger immediately when the humidity goes above 79%
-      - platform: numeric_state
-        entity_id: sensor.living_room_humidity
-        above: 79
-    action:
-      - service: notify.all_devices
-        data:
-          title: "High humidity in Living Room"
-          message: "Consider turning on the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
-
-  - alias: Notify when humidity in Living Room reaches normal levels
-    description: Send a notification suggesting to turn off the dehumidifier in this area when the humidity is back down to 60%
-    trigger:
-      # Trigger immediately when the humidity drops below 61%
-      - platform: numeric_state
-        entity_id: sensor.living_room_humidity
-        below: 61
-    action:
-      - service: notify.all_devices
-        data:
-          title: "Humidity returned to normal in Living Room"
-          message: "Consider turning off the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
-
   - alias: Set correct Harmony activity
     description: Sets the correct Harmony Hub activity depending on a number of inputs
     mode: restart
