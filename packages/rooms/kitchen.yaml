@@ -6,6 +6,10 @@ automation:
       - platform: homeassistant
         event: start
 
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
@@ -19,7 +23,7 @@ automation:
             {% set isDay = is_state('sensor.current_scene', 'Day') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 0 if isAway or isDark or isNight else 255 }}
+            {{ 0 if isAway or isDay or isNight else 255 }}
 
   - alias: Set light.kitchen_spots
     mode: queued

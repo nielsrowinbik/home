@@ -114,6 +114,10 @@ automation:
       - platform: homeassistant
         event: start
 
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
@@ -127,7 +131,7 @@ automation:
             {% set isDay = is_state('sensor.current_scene', 'Day') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 0 if isAway or isDark or isNight else 255 }}
+            {{ 0 if isAway or isDay or isNight else 255 }}
 
   - alias: Set light.living_room_spots
     mode: queued
@@ -164,12 +168,6 @@ automation:
             {% else %}
               0
             {% endif %}
-          transition: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
-      - delay:
-          seconds: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
-      - service: light.turn_on
-        data:
-          entity_id: light.living_room_spots
           color_temp: >-
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
 
