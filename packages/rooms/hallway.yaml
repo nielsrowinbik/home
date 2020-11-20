@@ -6,12 +6,12 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes to Night
+      # Trigger immediately when current scene changes to a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
         to: Night
 
-      # Trigger immediately when current scene changes from Night
+      # Trigger immediately when current scene changes from a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
         from: Night
@@ -29,16 +29,12 @@ automation:
         to:
           - "on"
           - "off"
-
-      # Trigger immediately when the illuminance threshold is changed
-      - platform: state
-        entity_id: input_number.hallway_illuminance_threshold
-        to: "*"
     action:
       - service: light.turn_on
         data:
           entity_id: light.hallway_spots
           brightness: >-
+            {% set isDark = is_state('binary_sensor.hallway_sufficiently_lit', 'off') %}
             {% set isDoorOpen = is_state('binary_sensor.hallway_door', 'on') %}
             {% set isMotion = is_state('binary_sensor.hallway_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
@@ -51,6 +47,14 @@ automation:
               0
             {% endif %}
           transition: 0.5
+
+binary_sensor:
+  - platform: template
+    sensors:
+      hallway_sufficiently_lit:
+        device_class: light
+        friendly_name: Hallway is sufficiently lit
+        value_template: "{{ state_attr('binary_sensor.hallway_motion', 'illuminance') | float > states('input_number.hallway_illuminance_threshold') | float }}"
 
 input_number:
   hallway_illuminance_threshold:
