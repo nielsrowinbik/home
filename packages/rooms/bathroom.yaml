@@ -6,12 +6,12 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when current scene changes to Night
+      # Trigger immediately when current scene changes to a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
         to: Night
 
-      # Trigger immediately when current scene changes from Night
+      # Trigger immediately when current scene changes from a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
         from: Night
