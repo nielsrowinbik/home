@@ -24,6 +24,13 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when motion detection changes
+      - platform: state
+        entity_id: binary_sensor.staircase_motion
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.set_office_lights_state
 
@@ -126,9 +133,14 @@ script:
 
           # IF motion is detected
           - conditions:
-              - condition: state
-                entity_id: binary_sensor.office_motion
-                state: "on"
+              condition: or
+              conditions:
+                - condition: state
+                  entity_id: binary_sensor.office_motion
+                  state: "on"
+                - condition: state
+                  entity_id: binary_sensor.staircase_motion
+                  state: "on"
             sequence:
               - choose:
                   # IF "Night" scene is active
