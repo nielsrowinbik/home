@@ -1,81 +1,67 @@
 automation:
-  - alias: Media controls through Harmony Hub remote
-    description: Allows controlling of media playback through the Harmony Hub's remote. Works by using the Emulated Roku component.
+  - alias: Set correct Harmony activity
+    description: Sets the correct Harmony Hub activity
+    mode: restart
     trigger:
-      # Trigger immediately when we receive an event from the emulated Roku
-      - platform: event
-        event_type: roku_command
-        event_data:
-          source_name: Home Assistant
-          type: keypress
-    condition:
-      # Only continue if the current activity is one in which media controls actually make sense
-      - condition: or
+      # Trigger immediately when the amplifier is ready
+      - platform: state
+        entity_id: binary_sensor.amplifier_ready
+        from: "off"
+        to: "on"
+    action:
+      # only continue if the Harmony Hub does not currently have an active activity
+      # and it's not starting an activity
+      - condition: and
         conditions:
           - condition: state
             entity_id: remote.harmony_hub
             attribute: current_activity
-            state: Watch Chromecast
+            state: PowerOff
           - condition: state
             entity_id: remote.harmony_hub
-            attribute: current_activity
-            state: Listen to Music
-    action:
-      - service_template: >-
-          {% set services = {
-            "BackSpace": "media_player.media_stop",
-            "Down": "media_player.volume_down",
-            "Fwd": "media_player.media_next_track",
-            "Home": "media_player.volume_mute",
-            "Info": "media_player.media_pause",
-            "Play": "media_player.media_play",
-            "Rev": "media_player.media_previous_track",
-            "Up": "media_player.volume_up",
-          } %}
-          {{ services[trigger.event.data.key] }}
-        data_template:
-          entity_id: >-
-            {% set entities = {
-              "Listen to Music": "media_player.amplifier",
-              "Watch Chromecast": "media_player.living_room_tv"
+            attribute: activity_starting
+            state: "null"
+
+      # Set the correct Harmony Hub activity
+      - service: remote.turn_on
+        data:
+          entity_id: remote.harmony_hub
+          activity: >-
+            {% set currentSource = state_attr('media_player.amplifier', 'source') %}
+            {% set sourceActivityMap = {
+              "Opt2": "Play a Game",
+              "Opt2": "Watch TV",
+              "Wireless": "Listen to Music",
+              "Phono": "Listen to Vinyl"
             } %}
-            {{ entities[state_attr('remote.harmony_hub', 'current_activity')] }}
 
-  - alias: Set correct Harmony activity
-    description: Sets the correct Harmony Hub activity depending on a number of inputs
-    mode: restart
-    trigger:
-      # Trigger immediately when current scene changes
-      - platform: state
-        entity_id: sensor.current_scene
-        to: "*"
-
-      # Trigger immediately when the amplifier source changes to 'Wireless'
-      - platform: state
-        entity_id: media_player.amplifier
-        attribute: source
-        to: "Wireless"
-    action:
-      - service: script.set_correct_harmony_activity
+            {{ sourceActivityMap[currentSource] }}
 
   - alias: Set correct input on amplifier
     description: Sets the correct input on the amplifier when a Harmony activity is activated
     mode: restart
     trigger:
-      # Trigger immediately on every Harmony Hub state change
-      - platform: state
-        entity_id: remote.harmony_hub
-        attribute: current_activity
-        to: "*"
-    condition:
-      - condition: template
-        value_template: "{{ trigger.to_state.state != 'PowerOff' }}"
+      # Trigger when the currently active activity is in the list of possible activities (meaning we switched to on or to a differen activity)
+      - platform: template
+        value_template: "{{ state_attr('remote.harmony_hub', 'activity_starting') in state_attr('remote.harmony_hub', 'activity_list') }}"
     action:
-      # Delay of 6 seconds if the amplifier is turning on (because it needs some time before being able
-      # to respond to instructions), otherwise switch immediately
-      - delay:
-          seconds: "{{ 6 if trigger.from_state.state == 'PowerOff' else 0 }}"
-      - service: script.set_correct_input_on_amplifier
+      # Wait until the amplifier is marked as ready
+      - wait_template: "{{ is_state('binary_sensor.amplifier_ready', 'on') }}"
+
+      # Switch to the correct input
+      - service: media_player.select_source
+        data:
+          entity_id: media_player.amplifier
+          source: >-
+            {% set currentActivity = state_attr('remote.harmony_hub', 'current_activity') %}
+            {% set activitySourceMap = {
+              "Play a Game": "Opt2",
+              "Watch TV": "Opt2",
+              "Listen to Music": "Wireless",
+              "Listen to Vinyl": "Phono"
+            } %}
+
+            {{ activitySourceMap[currentActivity] }}
 
   - alias: Set light.living_room_pendant
     mode: queued
@@ -152,6 +138,10 @@ automation:
       - platform: homeassistant
         event: start
 
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
       # Trigger immediately when current scene changes
       - platform: state
         entity_id: sensor.current_scene
@@ -181,15 +171,31 @@ automation:
         entity_id: binary_sensor.living_room_window
         to: "off"
     action:
-      - service: script.set_living_room_climate_state
+      - service: >-
+          {% set shouldTurnOff = is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') %}
 
-  - alias: Set living room subwoofer state
-    description: Make sure the subwoofer is on when the amplifier is
-    mode: restart
+          climate.turn_{{ 'off' if shouldTurnOff else 'on' }}
+        data:
+          entity_id: climate.living_room
+      - service: climate.set_temperature
+        data:
+          entity_id: climate.living_room
+          temperature: >-
+            {% set isAway = is_state('sensor.current_scene', 'Away') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+            {{ 16 if isAway or isNight else 19 }}
+
+  - alias: Set switch.power_outlet_3
+    mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
       - platform: homeassistant
         event: start
+
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
 
       # Trigger immediately when the amplifier turns on or off
       - platform: state
@@ -198,12 +204,18 @@ automation:
           - "on"
           - "off"
     action:
-      - service: script.set_living_room_subwoofer_state
+      - service: "switch.turn_{{ states('media_player.amplifier') }}"
+        data:
+          entity_id: switch.power_outlet_3
 
-emulated_roku:
-  servers:
-    - name: Home Assistant
-      listen_port: 8060
+binary_sensor:
+  - platform: template
+    sensors:
+      amplifier_ready:
+        friendly_name: Amplifier ready
+        delay_on:
+          seconds: 7
+        value_template: "{{ is_state('media_player.amplifier', 'on') }}"
 
 input_boolean:
   living_room_bright_mode:
@@ -227,156 +239,3 @@ media_player:
     name: Amplifier
     host: !secret nad_amplifier_ip
     volume_step: 2
-
-script:
-  set_correct_harmony_activity:
-    alias: Set correct Harmony activity on Harmony Hub
-    sequence:
-      - choose:
-          # IF no one is home
-          - conditions:
-              - condition: state
-                entity_id: sensor.current_scene
-                state: Away
-            sequence:
-              - service: remote.turn_off
-                data:
-                  entity_id: remote.harmony_hub
-
-          # IF "Wireless" is the current source
-          - conditions:
-              - condition: state
-                entity_id: media_player.amplifier
-                attribute: source
-                state: Wireless
-            sequence:
-              - service: remote.turn_on
-                data:
-                  activity: Listen to Music
-                  entity_id: remote.harmony_hub
-
-  set_correct_input_on_amplifier:
-    alias: Set correct input on amplifier
-    sequence:
-      - choose:
-          # IF "Listen to Music" is the current activity
-          - conditions:
-              - condition: state
-                entity_id: remote.harmony_hub
-                attribute: current_activity
-                state: Listen to Music
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    media_player.amplifier:
-                      source: Wireless
-                      state: on
-
-          # IF "Listen to Vinyl" is the current activity
-          - conditions:
-              - condition: state
-                entity_id: remote.harmony_hub
-                attribute: current_activity
-                state: Listen to Vinyl
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    media_player.amplifier:
-                      source: Phono
-                      state: on
-
-          # IF "PowerOff" is the current activity
-          - conditions:
-              - condition: state
-                entity_id: remote.harmony_hub
-                attribute: current_activity
-                state: PowerOff
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    media_player.amplifier: off
-
-        # ELSE (any other activity is active)
-        default:
-          - service: scene.apply
-            data:
-              entities:
-                media_player.amplifier:
-                  source: Opt2
-                  state: on
-
-  set_living_room_climate_state:
-    alias: Set living room climate state
-    sequence:
-      - choose:
-          # IF the kitchen backdoor or living room window are open
-          - conditions:
-              condition: or
-              conditions:
-                - condition: state
-                  entity_id: binary_sensor.kitchen_door
-                  state: "on"
-                - condition: state
-                  entity_id: binary_sensor.living_room_window
-                  state: "on"
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    climate.living_room: off
-
-          # IF "Night" or "Away" scene is active
-          - conditions:
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: "Night"
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: "Away"
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    climate.living_room:
-                      state: heat
-                      temperature: 16
-
-        # ELSE (any other scene than "Night" is active)
-        default:
-          - service: scene.apply
-            data:
-              entities:
-                climate.living_room:
-                  state: heat
-                  temperature: 19
-
-  set_living_room_subwoofer_state:
-    alias: Set living room subwoofer state
-    sequence:
-      - choose:
-          # IF amplifier is turned on
-          - conditions:
-              - condition: state
-                entity_id: media_player.amplifier
-                state: "on"
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    switch.power_outlet_3: on
-
-          # IF amplifier is turned off
-          - conditions:
-              - condition: state
-                entity_id: media_player.amplifier
-                state: "off"
-            sequence:
-              - service: scene.apply
-                data:
-                  entities:
-                    switch.power_outlet_3: off
