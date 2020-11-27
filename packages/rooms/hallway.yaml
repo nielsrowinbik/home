@@ -6,6 +6,10 @@ automation:
       - platform: homeassistant
         event: start
 
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
       # Trigger immediately when current scene changes to a state we're interested in
       - platform: state
         entity_id: sensor.current_scene
