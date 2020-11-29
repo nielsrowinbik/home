@@ -56,6 +56,23 @@ binary_sensor:
         friendly_name: Bathroom occupied
         value_template: "{{ is_state('group.bathroom_occupied', 'on') }}"
 
+climate:
+  - platform: mqtt
+    name: Bathroom
+    modes:
+      - "off"
+      - auto
+    current_temperature_template: "{{ value_json.temperature }}"
+    current_temperature_topic: zigbee2mqtt/bathroom_temperature_pressure_and_humidity_sensor
+    json_attributes_topic: zigbee2mqtt/bathroom_temperature_pressure_and_humidity_sensor
+    json_attributes_template: >-
+      {% set attributes = {
+        "current_humidity": value_json.humidity,
+        "current_pressure": value_json.pressure
+      } %}
+
+      {{ attributes | to_json }}
+
 group:
   bathroom_occupied:
     name: Bathroom occupied

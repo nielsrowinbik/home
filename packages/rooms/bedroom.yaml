@@ -28,3 +28,20 @@ automation:
           message: "Consider turning off the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
           data:
             channel: Suggestions
+
+climate:
+  - platform: mqtt
+    name: Bedroom
+    modes:
+      - "off"
+      - auto
+    current_temperature_template: "{{ value_json.temperature }}"
+    current_temperature_topic: zigbee2mqtt/bedroom_temperature_pressure_and_humidity_sensor
+    json_attributes_topic: zigbee2mqtt/bedroom_temperature_pressure_and_humidity_sensor
+    json_attributes_template: >-
+      {% set attributes = {
+        "current_humidity": value_json.humidity,
+        "current_pressure": value_json.pressure
+      } %}
+
+      {{ attributes | to_json }}

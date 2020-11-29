@@ -149,6 +149,23 @@ binary_sensor:
         friendly_name: Kitchen is sufficiently lit
         value_template: "{{ state_attr('binary_sensor.kitchen_motion', 'illuminance') | float > states('input_number.kitchen_illuminance_threshold') | float }}"
 
+climate:
+  - platform: mqtt
+    name: Kitchen
+    modes:
+      - "off"
+      - auto
+    current_temperature_template: "{{ value_json.temperature }}"
+    current_temperature_topic: zigbee2mqtt/kitchen_temperature_pressure_and_humidity_sensor
+    json_attributes_topic: zigbee2mqtt/kitchen_temperature_pressure_and_humidity_sensor
+    json_attributes_template: >-
+      {% set attributes = {
+        "current_humidity": value_json.humidity,
+        "current_pressure": value_json.pressure
+      } %}
+
+      {{ attributes | to_json }}
+
 input_boolean:
   cooking_mode:
     icon: mdi:chef-hat

@@ -1,4 +1,16 @@
 automation:
+  - alias: Set light.office_desk
+    trigger: []
+    action: []
+
+  - alias: Set light.office_spots
+    trigger: []
+    action: []
+
+  - alias: Set light.office_worktop
+    trigger: []
+    action: []
+
   - alias: Set office lights state
     description: Turns on or off the correct office lights
     trigger:
@@ -91,6 +103,23 @@ automation:
               - service: input_boolean.turn_off
                 data:
                   entity_id: input_boolean.work_mode
+
+climate:
+  - platform: mqtt
+    name: Office
+    modes:
+      - "off"
+      - auto
+    current_temperature_template: "{{ value_json.temperature }}"
+    current_temperature_topic: zigbee2mqtt/office_temperature_pressure_and_humidity_sensor
+    json_attributes_topic: zigbee2mqtt/office_temperature_pressure_and_humidity_sensor
+    json_attributes_template: >-
+      {% set attributes = {
+        "current_humidity": value_json.humidity,
+        "current_pressure": value_json.pressure
+      } %}
+
+      {{ attributes | to_json }}
 
 input_boolean:
   work_mode:
