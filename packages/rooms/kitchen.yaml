@@ -84,10 +84,10 @@ automation:
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
             {% set isMotion = is_state('binary_sensor.kitchen_motion', 'on') %}
 
-            {% if isNight and isMotion %}
-              1
-            {% elif isMorning or isBright or isCooking or (isDark and isMotion) %}
+            {% if isMorning or isBright or isCooking or (isDark and isMotion) %}
               255
+            {% elif isNight and isMotion %}
+              1
             {% else %}
               0
             {% endif %}
