@@ -100,6 +100,10 @@ automation:
       - platform: homeassistant
         event: start
 
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
       # Trigger immediately when cooking mode is toggled
       - platform: state
         entity_id: input_boolean.cooking_mode
