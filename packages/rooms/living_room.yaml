@@ -1,6 +1,6 @@
 automation:
   - alias: Set correct Harmony activity
-    description: Sets the correct Harmony Hub activity
+    description: Sets the correct Harmony Hub activity when one of the media devices turns on on its own
     mode: restart
     trigger:
       # Trigger immediately when the amplifier is ready
@@ -41,7 +41,7 @@ automation:
     description: Sets the correct input on the amplifier when a Harmony activity is activated
     mode: restart
     trigger:
-      # Trigger when the currently active activity is in the list of possible activities (meaning we switched to on or to a differen activity)
+      # Trigger when the currently active activity is in the list of possible activities (meaning we switched to on or to a different activity)
       - platform: template
         value_template: "{{ state_attr('remote.harmony_hub', 'activity_starting') in state_attr('remote.harmony_hub', 'activity_list') }}"
     action:
@@ -225,6 +225,9 @@ input_boolean:
   living_room_bright_mode:
     icon: mdi:brightness-7
     name: Bright mode (Living Room)
+  movie_mode:
+    icon: mdi:filmstrip
+    name: Movie mode
 
 light:
   - platform: mqtt

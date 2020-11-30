@@ -142,6 +142,18 @@ views:
                     state_not: Morning
                   - entity: sensor.current_scene
                     state_not: Day
+                  - entity: sensor.current_scene
+                    state_not: Night
+                row:
+                  entity: input_boolean.movie_mode
+                type: conditional
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Away
+                  - entity: sensor.current_scene
+                    state_not: Morning
+                  - entity: sensor.current_scene
+                    state_not: Day
                 row:
                   entity: input_boolean.night_mode
                 type: conditional
