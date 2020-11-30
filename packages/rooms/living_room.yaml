@@ -28,14 +28,18 @@ automation:
           entity_id: remote.harmony_hub
           activity: >-
             {% set currentSource = state_attr('media_player.amplifier', 'source') %}
-            {% set sourceActivityMap = {
-              "Opt2": "Play a Game",
-              "Opt2": "Watch TV",
-              "Wireless": "Listen to Music",
-              "Phono": "Listen to Vinyl"
-            } %}
+            {% set xBoxIsOn = is_state('media_player.xbox_one', 'on') %}
 
-            {{ sourceActivityMap[currentSource] }}
+            {% if currentSource == 'Wireless' %}
+              Listen to Music
+            {% elif currentSource == 'Phono' %}
+              Listen to Vinyl
+            {% elif currentSource == 'Opt2' and xBoxIsOn %}
+              Play a Game
+            {% elif currentSource == 'Opt2' and not xBoxIsOn %}
+              Watch TV
+            {% else %}
+            {% endif %}
 
   - alias: Set correct input on amplifier
     description: Sets the correct input on the amplifier when a Harmony activity is activated
