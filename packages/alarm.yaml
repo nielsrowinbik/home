@@ -17,10 +17,12 @@ automation:
       - platform: homeassistant
         event: start
 
-      # Trigger immediately when Night mode is turned off
+      # Trigger immediately when Night mode changes
       - platform: state
         entity_id: input_boolean.night_mode
-        to: "off"
+        to:
+          - "on"
+          - "off"
     action:
       - service: script.set_next_alarm
 
