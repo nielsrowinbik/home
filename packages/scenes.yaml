@@ -2,6 +2,9 @@ scene:
   - name: Cooking
     entities:
       input_boolean.cooking_mode: on
+  - name: Morning
+    entities:
+      input_boolean.night_mode: off
   - name: Night
     entities:
       input_boolean.night_mode: on
