@@ -16,7 +16,8 @@ views:
                   {% endif %}
                 state: "{{ 'Occupied' if is_state('group.everyone', 'home') or is_state('input_boolean.guest_mode', 'on') else 'Empty' }}"
                 type: custom:template-entity-row
-              - icon: mdi:alarm
+              - entity: script.set_next_alarm
+                icon: mdi:alarm
                 name: Next alarm
                 state: >-
                   {% if state_attr('input_datetime.next_alarm', 'day') == now().day %}
@@ -27,46 +28,106 @@ views:
                     {{ states('input_datetime.next_alarm') | as_timestamp | timestamp_custom('%A at %H:%M', true) }}
                   {% endif %}
                 type: custom:template-entity-row
-              - active: "{{ is_state_attr('climate.living_room', 'hvac_action', 'heat') }}"
+              - entity: climate.living_room
                 icon: mdi:thermometer
                 name: Upstairs temperature
                 secondary: >-
                   {% if is_state('climate.living_room', 'off') %}
                     Heating is turned off
                   {% elif is_state_attr('climate.living_room', 'hvac_action', 'idle') %}
-                    Will heat if temperature drops below {{ state_attr('climate.living_room', 'temperature') }}°
+                    Will keep Living Room at around {{ state_attr('climate.living_room', 'temperature') }}°
                   {% else %}
                     Heating to {{ state_attr('climate.living_room', 'temperature') }}°
                   {% endif %}
-                state: "{{ state_attr('climate.living_room', 'current_temperature') }}°"
+                state: >-
+                  {% set kitchen = state_attr('climate.kitchen', 'current_temperature') | float %}
+                  {% set livingRoom = state_attr('climate.living_room', 'current_temperature') | float %}
+
+                  {{ ([kitchen, livingRoom] | sum / 2) | round(1) }}°
+                type: custom:template-entity-row
+              - icon: >-
+                  {% set kitchen = state_attr('climate.kitchen', 'current_humidity') | float %}
+                  {% set livingRoom = state_attr('climate.living_room', 'current_humidity') | float %}
+
+                  {% set average = ([kitchen, livingRoom] | sum / 2) | round(1) %}
+
+                  mdi:water-percent{{ '' if average >= 60 and average <= 70 else '-alert'  }}
+                name: Upstairs humidity
+                secondary: >-
+                  {% set kitchen = state_attr('climate.kitchen', 'current_humidity') | float %}
+                  {% set livingRoom = state_attr('climate.living_room', 'current_humidity') | float %}
+
+                  {% set average = ([kitchen, livingRoom] | sum / 2) | round(1) %}
+
+                  {% if average < 60 %}
+                    Consider humidifying
+                  {% elif average > 70 %}
+                    Consider dehumidyfing
+                  {% else %}
+                  {% endif %}
+                state: >-
+                  {% set kitchen = state_attr('climate.kitchen', 'current_humidity') | float %}
+                  {% set livingRoom = state_attr('climate.living_room', 'current_humidity') | float %}
+
+                  {{ ([kitchen, livingRoom] | sum / 2) | round(1) }}%
                 type: custom:template-entity-row
               - icon: mdi:thermometer
                 name: Downstairs temperature
-                secondary: >-
-                  {% set bedroom = states('sensor.bedroom_humidity') | float %}
-                  {% set bathroom = states('sensor.bathroom_humidity') | float %}
-                  {% set office = states('sensor.office_humidity') | float %}
-
-                  Average humidity is {{ ([bedroom, bathroom, office] | sum / 3) | round }}%
                 state: >-
-                  {% set bedroom = states('sensor.bedroom_temperature') | float %}
-                  {% set bathroom = states('sensor.bathroom_temperature') | float %}
-                  {% set office = states('sensor.office_temperature') | float %}
+                  {% set bedroom = state_attr('climate.bedroom', 'current_temperature') | float %}
+                  {% set bathroom = state_attr('climate.bathroom', 'current_temperature') | float %}
+                  {% set office = state_attr('climate.office', 'current_temperature') | float %}
 
                   {{ ([bedroom, bathroom, office] | sum / 3) | round(1) }}°
+                type: custom:template-entity-row
+              - icon: >-
+                  {% set bedroom = state_attr('climate.bedroom', 'current_humidity') | float %}
+                  {% set bathroom = state_attr('climate.bathroom', 'current_humidity') | float %}
+                  {% set office = state_attr('climate.office', 'current_humidity') | float %}
+
+                  {% set average = ([bedroom, bathroom, office] | sum / 3) | round(1) %}
+
+                  mdi:water-percent{{ '' if average >= 60 and average <= 70 else '-alert'  }}
+                name: Downstairs humidity
+                secondary: >-
+                  {% set bedroom = state_attr('climate.bedroom', 'current_humidity') | float %}
+                  {% set bathroom = state_attr('climate.bathroom', 'current_humidity') | float %}
+                  {% set office = state_attr('climate.office', 'current_humidity') | float %}
+
+                  {% set average = ([bedroom, bathroom, office] | sum / 3) | round(1) %}
+
+                  {% if average < 60 %}
+                    Consider humidifying
+                  {% elif average > 70 %}
+                    Consider dehumidyfing
+                  {% else %}
+                  {% endif %}
+                state: >-
+                  {% set bedroom = state_attr('climate.bedroom', 'current_humidity') | float %}
+                  {% set bathroom = state_attr('climate.bathroom', 'current_humidity') | float %}
+                  {% set office = state_attr('climate.office', 'current_humidity') | float %}
+
+                  {{ ([bedroom, bathroom, office] | sum / 3) | round(1) }}%
                 type: custom:template-entity-row
             type: entities
             show_header_toggle: false
             title: At a Glance
           - entities:
-              - entity: input_boolean.kitchen_bright_mode
               - conditions:
                   - entity: sensor.current_scene
-                    state_not: Day
+                    state_not: Away
+                row:
+                  entity: input_boolean.kitchen_bright_mode
+                type: conditional
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Away
                 row:
                   entity: input_boolean.living_room_bright_mode
                 type: conditional
               - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Away
                   - entity: sensor.current_scene
                     state_not: Morning
                   - entity: sensor.current_scene
@@ -76,13 +137,17 @@ views:
                 type: conditional
               - conditions:
                   - entity: sensor.current_scene
+                    state_not: Away
+                  - entity: sensor.current_scene
                     state_not: Morning
                   - entity: sensor.current_scene
                     state_not: Day
                 row:
                   entity: input_boolean.night_mode
                 type: conditional
-              - conditions: []
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Away
                 row:
                   entity: input_boolean.work_mode
                 type: conditional
@@ -102,6 +167,10 @@ views:
               - input_datetime.off_day_alarm
               - type: section
                 label: Time of day
+              - entity: sensor.sun_elevation
+                name: Current sun elevation
+              - entity: sensor.time_of_day
+                name: Current time of day
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
@@ -112,15 +181,6 @@ views:
                 label: Illuminance
               - input_number.hallway_illuminance_threshold
               - input_number.kitchen_illuminance_threshold
-              - type: section
-                label: Lights
-              - script.set_kitchen_lights_state
-              - script.set_living_room_lights_state
-              - script.set_office_lights_state
-              - script.set_toilet_lights_state
-              - type: section
-                label: Zigbee
-              - input_boolean.zigbee_permit_join
             show_header_toggle: false
             title: Settings
             type: entities
