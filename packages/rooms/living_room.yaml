@@ -246,6 +246,10 @@ light:
     entity_id: switch.power_outlet_2
 
 media_player:
+  - platform: androidtv
+    name: Living Room Android TV
+    host: !secret living_room_tv_ip
+
   - platform: nadtcp2
     name: Amplifier
     host: !secret nad_amplifier_ip
