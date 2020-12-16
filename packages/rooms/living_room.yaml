@@ -135,8 +135,8 @@ automation:
           color_temp: >-
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
 
-            {{ 380 if isBright else 475 }}
-          transition: "{{ 0.5 if is_state('light.living_room_spots', 'off') else 2 }}"
+            {{ 350 if isBright else 475 }}
+          transition: "{{ 0.5 if is_state('input_boolean.living_room_bright_mode', 'on') else 2 }}"
 
   - alias: Set living room climate state
     description: Sets the thermostat to the correct temperature and turns it off if a door or window is open

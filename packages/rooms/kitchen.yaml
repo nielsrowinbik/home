@@ -91,6 +91,12 @@ automation:
             {% else %}
               0
             {% endif %}
+          color_temp: >-
+            {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
+            {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+            {{ 475 if isNight else 350 }}
           transition: 0.5
 
   - alias: Set light.kitchen_worktop
@@ -190,6 +196,7 @@ input_number:
 light:
   - platform: mqtt
     brightness: true
+    color_temp: true
     command_topic: "zigbee2mqtt/kitchen_spots/set"
     name: Kitchen spots
     schema: json
