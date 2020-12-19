@@ -27,13 +27,27 @@ automation:
           - "on"
           - "off"
 
-      # Trigger immediately when motion detection changes
+      # Trigger immediately when motion is no longer detected in the hallway
       - platform: state
         entity_id: binary_sensor.hallway_motion
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when motion is no longer detected in the staircase
+      - platform: state
+        entity_id: binary_sensor.staircase_motion
+        to:
+          - "off"
+
+      # Trigger immediately when motion is no longer detected in the toilet
+      - platform: state
+        entity_id: binary_sensor.toilet_motion
+        to:
+          - "off"
     action:
+      - delay:
+          seconds: 1.5
       - service: light.turn_on
         data:
           entity_id: light.hallway_spots
@@ -42,11 +56,11 @@ automation:
             {% set isDoorOpen = is_state('binary_sensor.hallway_door', 'on') %}
             {% set isMotion = is_state('binary_sensor.hallway_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
+            {% set isStaircaseMotion = is_state('binary_sensor.staircase_motion', 'on') %}
+            {% set isToiletMotion = is_state('binary_sensor.toilet_motion', 'on') %}
 
-            {% if isDoorOpen or (isMotion and not isNight) %}
+            {% if isDoorOpen or (isMotion and not isNight and not isStaircaseMotion and not isToiletMotion) %}
               255
-            {% elif isMotion and isNight %}
-              1
             {% else %}
               0
             {% endif %}
