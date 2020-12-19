@@ -82,6 +82,13 @@ automation:
       - platform: state
         entity_id: sensor.current_scene
         to: "*"
+
+      # Trigger immediately when movie mode is toggled
+      - platform: state
+        entity_id: input_boolean.movie_mode
+        to:
+          - "on"
+          - "off"
     action:
       - service: light.turn_on
         data:
@@ -89,9 +96,10 @@ automation:
           brightness: >-
             {% set isAway = is_state('sensor.current_scene', 'Away') %}
             {% set isDay = is_state('sensor.current_scene', 'Day') %}
+            {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 0 if isAway or isDay or isNight else 255 }}
+            {{ 0 if isAway or isDay or isMovie or isNight else 255 }}
 
   - alias: Set light.living_room_spots
     mode: queued
@@ -115,6 +123,13 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when movie mode is toggled
+      - platform: state
+        entity_id: input_boolean.movie_mode
+        to:
+          - "on"
+          - "off"
     action:
       - service: light.turn_on
         data:
@@ -123,11 +138,15 @@ automation:
             {% set isAway = is_state('sensor.current_scene', 'Away') %}
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
             {% set isEvening = is_state('sensor.current_scene', 'Evening') %}
+            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
+            {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
 
             {% if isBright %}
               255
-            {% elif isMorning or isEvening %}
+            {% elif isMovie and not isMediaPaused %}
+              30
+            {% elif isMorning or isEvening or (isMovie and isMediaPaused) %}
               125
             {% else %}
               0
