@@ -126,6 +126,28 @@ automation:
             {{ 255 if isCooking else 0 }}
           transition: 0.5
 
+  - alias: Set switch.water_fountain
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
+      # Trigger immediately when night mode is toggled
+      - platform: state
+        entity_id: input_boolean.night_mode
+        to:
+          - "on"
+          - "off"
+    action:
+      - service: "switch.turn_{{ 'off' if is_state('input_boolean.night_mode', 'on') else 'on' }}"
+        data:
+          entity_id: switch.water_fountain
+
   - alias: Toggle cooking mode
     trigger:
       # Trigger immediately when the kitchen wall switch's right button is pressed
