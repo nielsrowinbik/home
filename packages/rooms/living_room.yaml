@@ -273,3 +273,8 @@ media_player:
     name: Amplifier
     host: !secret nad_amplifier_ip
     volume_step: 2
+
+remote:
+  - platform: harmony
+    name: Living Room Harmony Hub
+    host: !secret living_room_harmony_hub_ip
