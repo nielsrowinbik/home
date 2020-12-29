@@ -143,6 +143,13 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when the water fountain is toggled (to make sure it stays on/off when it's supposed to)
+      - platform: state
+        entity_id: switch.water_fountain
+        to:
+          - "on"
+          - "off"
     action:
       - service: "switch.turn_{{ 'off' if is_state('input_boolean.night_mode', 'on') else 'on' }}"
         data:
