@@ -122,6 +122,13 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when Living Room TV playback changes
+      - platform: state
+        entity_id: media_player.living_room_android_tv
+        to:
+          - paused
+          - playing
     action:
       - service: light.turn_on
         data:
