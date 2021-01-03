@@ -66,6 +66,13 @@ automation:
           - "on"
           - "off"
 
+      # Trigger immediately when cozy mode is toggled
+      - platform: state
+        entity_id: input_boolean.cozy_mode
+        to:
+          - "on"
+          - "off"
+
       # Trigger immediately when cooking mode is toggled
       - platform: state
         entity_id: input_boolean.cooking_mode
@@ -93,6 +100,7 @@ automation:
           brightness: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
+            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isDark = is_state('binary_sensor.kitchen_sufficiently_lit', 'off') %}
             {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
@@ -100,9 +108,9 @@ automation:
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {% if isMorning or isBright or isCooking or (isDark and isMotion) or (isMotion and isMovie and isMediaPaused) %}
+            {% if isBright or isCooking or isMorning or (isDark and isMotion and not isCozy) or (isMotion and isMovie and isMediaPaused) %}
               255
-            {% elif isMovie and ((isMotion and not isMediaPaused) or isMediaPaused) %}
+            {% elif isCozy or (isMovie and (isMediaPaused or isMotion)) %}
               125
             {% elif isMovie and not isMediaPaused %}
               30
@@ -114,12 +122,18 @@ automation:
           color_temp: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
-            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') %}
+            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 475 if isNight or isMovie else 350 }}
-          transition: "{{ 2 if is_state('input_boolean.movie_mode', 'on') else 0.5 }}"
+            {{ 475 if (isNight or isMovie or isCozy) and not (isBright or isCooking) else 350 }}
+          transition: >-
+            {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
+            {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
+            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
+            {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
+
+            {{ 2 if (isCozy or isMovie) and not (isBright or isCooking) else 0.5 }}
 
   - alias: Set light.kitchen_worktop
     mode: queued
@@ -228,6 +242,9 @@ climate:
       {{ attributes | to_json }}
 
 input_boolean:
+  cozy_mode:
+    icon: mdi:candle
+    name: Cozy mode
   cooking_mode:
     icon: mdi:chef-hat
     name: Cooking mode
