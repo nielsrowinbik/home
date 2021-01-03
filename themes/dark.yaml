@@ -18,6 +18,9 @@ text-primary-color: rgba(255, 255, 255, 0.87)
 disabled-text-color: rgba(255, 255, 255, 0.3)
 material-divider-color: rgba(255, 255, 255, 0.12)
 switch-unchecked-button-color: var(--secondary-text-color)
+primary-background-color: var(--surface-02dp)
+ha-card-box-shadow: "0 0 0 1px var(--material-divider-color)"
+shadow-elevation-2dp_-_box-shadow: "0 0 0 1px var(--material-divider-color)"
 
 ### SCAFFOLDING
 
@@ -29,9 +32,7 @@ mdc-button-raised-box-shadow-hover: none
 # Cards
 card-background-color: var(--primary-background-color)
 ha-card-border-radius: 8px
-ha-card-box-shadow: "0 0 0 1px var(--material-divider-color)"
 ha-card-header-font-family: "'Product Sans', Roboto, sans-serif"
-shadow-elevation-2dp_-_box-shadow: "0 0 0 1px var(--material-divider-color)"
 
 # Dialogs
 more-info-header-background: var(--surface-16dp)
@@ -58,7 +59,6 @@ label-badge-gray: "#5F6267"
 # Main Interface Colors
 divider-color: var(--primary-background-color)
 light-primary-color: var(--primary-color)
-primary-background-color: var(--surface-02dp)
 secondary-background-color: var(--surface-16dp)
 
 # Sidebar Menu

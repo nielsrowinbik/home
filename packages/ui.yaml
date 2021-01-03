@@ -14,7 +14,13 @@ frontend:
 lovelace:
   mode: yaml
   resources:
-    - url: /local/js/auto-entities.js
+    - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
+      type: css
+    - url: /local/js/auto-entities.js?v=21.11.2020
+      type: module
+    - url: /local/js/mini-media-player.js
+      type: module
+    - url: /local/js/paper-buttons-row.js
       type: module
     - url: /local/js/template-entity-row.js
       type: module

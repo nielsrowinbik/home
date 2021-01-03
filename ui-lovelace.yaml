@@ -3,6 +3,9 @@ views:
   - cards:
       - type: vertical-stack
         cards:
+          - content: >-
+              # Good afternoon, {{ user.split(' ')[0] }}!
+            type: markdown
           - entities:
               - icon: mdi:home-variant-outline
                 name: Home state
@@ -145,6 +148,18 @@ views:
                   - entity: sensor.current_scene
                     state_not: Night
                 row:
+                  entity: input_boolean.cozy_mode
+                type: conditional
+              - conditions:
+                  - entity: sensor.current_scene
+                    state_not: Away
+                  - entity: sensor.current_scene
+                    state_not: Morning
+                  - entity: sensor.current_scene
+                    state_not: Day
+                  - entity: sensor.current_scene
+                    state_not: Night
+                row:
                   entity: input_boolean.movie_mode
                 type: conditional
               - conditions:
@@ -166,9 +181,32 @@ views:
             show_header_toggle: false
             title: Quick access
             type: entities
-    icon: mdi:home-variant-outline
+    # icon: mdi:home-variant-outline
     path: home
-    title: Home
+    title: Overview
+  - cards:
+      - card:
+          type: vertical-stack
+        card_param: cards
+        filter:
+          include:
+            - domain: media_player
+              options:
+                artwork: material
+                hide:
+                  progress: true
+                  power: true
+                  source: true
+                  volume: true
+                type: custom:mini-media-player
+              or:
+                - state: playing
+                - state: paused
+        sort:
+          method: last_updated
+        type: custom:auto-entities
+    path: media
+    title: Media
   - cards:
       - type: vertical-stack
         cards:
@@ -183,6 +221,36 @@ views:
                 name: Current sun elevation
               - entity: sensor.time_of_day
                 name: Current time of day
+              - base_config:
+                  tap_action:
+                    action: call-service
+                    service: script.set_threshold
+                buttons:
+                  - name: Set Morning
+                    tap_action:
+                      service_data:
+                        entity: input_number.morning_threshold
+                  - name: Set Day
+                    tap_action:
+                      service_data:
+                        entity: input_number.day_threshold
+                  - name: Set Afternoon
+                    tap_action:
+                      service_data:
+                        entity: input_number.afternoon_threshold
+                  - name: Set Early evening
+                    tap_action:
+                      service_data:
+                        entity: input_number.early_evening_threshold
+                  - name: Set Evening
+                    tap_action:
+                      service_data:
+                        entity: input_number.evening_threshold
+                  - name: Set Night
+                    tap_action:
+                      service_data:
+                        entity: input_number.night_threshold
+                type: custom:paper-buttons-row
               - input_number.morning_threshold
               - input_number.day_threshold
               - input_number.afternoon_threshold
@@ -190,12 +258,25 @@ views:
               - input_number.evening_threshold
               - input_number.night_threshold
               - type: section
-                label: Illuminance
+                label: Hallway illuminance
+              - icon: mdi:brightness-6
+                entity: binary_sensor.hallway_motion
+                name: Current hallway illuminance
+                secondary: Lights will {{ 'not' if is_state('binary_sensor.hallway_sufficiently_lit', 'on') else '' }} turn on when triggered
+                state: "{{ state_attr('binary_sensor.hallway_motion', 'illuminance') }}"
+                type: custom:template-entity-row
               - input_number.hallway_illuminance_threshold
+              - type: section
+                label: Kitchen illuminance
+              - icon: mdi:brightness-6
+                entity: binary_sensor.kitchen_motion
+                name: Current kitchen illuminance
+                secondary: Lights will {{ 'not' if is_state('binary_sensor.kitchen_sufficiently_lit', 'on') else '' }} turn on when triggered
+                state: "{{ state_attr('binary_sensor.kitchen_motion', 'illuminance') }}"
+                type: custom:template-entity-row
               - input_number.kitchen_illuminance_threshold
             show_header_toggle: false
             title: Settings
             type: entities
-    icon: mdi:cog-outline
     path: settings
     title: Settings
