@@ -38,7 +38,6 @@ automation:
         data:
           entity_id: light.hallway_spots
           brightness: >-
-            {% set isDark = is_state('binary_sensor.hallway_sufficiently_lit', 'off') %}
             {% set isDoorOpen = is_state('binary_sensor.hallway_door', 'on') %}
             {% set isMotion = is_state('binary_sensor.hallway_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
@@ -49,35 +48,6 @@ automation:
               0
             {% endif %}
           transition: 0.5
-      - wait_for_trigger:
-          - platform: state
-            entity_id: binary_sensor.staircase_motion
-            to: "on"
-          - platform: state
-            entity_id: binary_sensor.toilet_door
-            to: "on"
-        continue_on_timeout: false
-        timeout: 3
-      - service: light.turn_off
-        data:
-          entity_id: light.hallway_spots
-
-binary_sensor:
-  - platform: template
-    sensors:
-      hallway_sufficiently_lit:
-        device_class: light
-        friendly_name: Hallway is sufficiently lit
-        value_template: "{{ state_attr('binary_sensor.hallway_motion', 'illuminance') | float > states('input_number.hallway_illuminance_threshold') | float }}"
-
-input_number:
-  hallway_illuminance_threshold:
-    icon: mdi:tune
-    max: 100
-    min: 0
-    mode: box
-    name: Hallway illuminance threshold
-    step: 1
 
 light:
   - platform: mqtt
