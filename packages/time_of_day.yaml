@@ -18,7 +18,7 @@ input_number:
     min: -10
     mode: box
     name: Morning threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
   day_threshold:
     icon: mdi:tune
@@ -26,7 +26,7 @@ input_number:
     min: -10
     mode: box
     name: Day threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
   afternoon_threshold:
     icon: mdi:tune
@@ -34,7 +34,7 @@ input_number:
     min: -10
     mode: box
     name: Afternoon threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
   early_evening_threshold:
     icon: mdi:tune
@@ -42,7 +42,7 @@ input_number:
     min: -10
     mode: box
     name: Early evening threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
   evening_threshold:
     icon: mdi:tune
@@ -50,7 +50,7 @@ input_number:
     min: -10
     mode: box
     name: Evening threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
   night_threshold:
     icon: mdi:tune
@@ -58,8 +58,22 @@ input_number:
     min: -10
     mode: box
     name: Night threshold
-    step: 0.5
+    step: 0.1
     unit_of_measurement: "°"
+
+script:
+  set_threshold:
+    alias: Set a time of day threshold
+    fields:
+      entity:
+        description: For which entity should we update the value?
+        example: input_number.morning_threshold
+    sequence:
+      - service: input_number.set_value
+        data:
+          entity_id: "{{ entity }}"
+          value: "{{ states('sensor.sun_elevation')|round(1) }}"
+    mode: queued
 
 sensor:
   - platform: darksky
