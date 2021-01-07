@@ -1,8 +1,3 @@
-history:
-  exclude:
-    domains:
-      - script
-
 logbook:
   exclude:
     entities:
@@ -13,3 +8,11 @@ recorder:
   exclude:
     domains:
       - automation
+      - script
+      - weather
+    entities:
+      - binary_sensor.today_is_a_national_workday
+      - binary_sensor.today_is_a_workday
+      - binary_sensor.tomorrow_is_a_national_workday
+      - binary_sensor.tomorrow_is_a_workday
+      - sensor.time

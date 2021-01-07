@@ -24,5 +24,3 @@ notify:
     services:
       # - service: mobile_app_pixel_3a
       - service: mobile_app_pixel_4
-
-person:

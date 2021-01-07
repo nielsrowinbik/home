@@ -38,8 +38,8 @@ script:
       - service: frontend.set_theme
         data:
           mode: light
-          name: light
+          name: soft-light
       - service: frontend.set_theme
         data:
           mode: dark
-          name: dark
+          name: soft-dark

@@ -1,34 +1,3 @@
-automation:
-  - alias: Notify when humidity in Bedroom reaches high levels
-    description: Send a notification suggesting to turn on the dehumidifier in this area when the humidity is more than 80%
-    trigger:
-      # Trigger immediately when the humidity goes above 79%
-      - platform: numeric_state
-        entity_id: sensor.bedroom_humidity
-        above: 79
-    action:
-      - service: notify.all_devices
-        data:
-          title: "High humidity in Bedroom"
-          message: "Consider turning on the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
-
-  - alias: Notify when humidity in Bedroom reaches normal levels
-    description: Send a notification suggesting to turn off the dehumidifier in this area when the humidity is back down to 60%
-    trigger:
-      # Trigger immediately when the humidity drops below 61%
-      - platform: numeric_state
-        entity_id: sensor.bedroom_humidity
-        below: 61
-    action:
-      - service: notify.all_devices
-        data:
-          title: "Humidity returned to normal in Bedroom"
-          message: "Consider turning off the dehumidifier{{ ' when you get home' if is_state('sensor.current_scene', 'Away') else '' }}"
-          data:
-            channel: Suggestions
-
 climate:
   - platform: mqtt
     name: Bedroom
@@ -45,3 +14,23 @@ climate:
       } %}
 
       {{ attributes | to_json }}
+
+light:
+  - platform: mqtt
+    brightness: true
+    command_topic: zigbee2mqtt/bedroom_spots/set
+    name: Bedroom spots
+    schema: json
+    state_topic: zigbee2mqtt/bedroom_spots
+
+sensor:
+  - platform: mqtt
+    name: Bedroom humidity
+    state_topic: zigbee2mqtt/bedroom_temperature_pressure_and_humidity_sensor
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.humidity }}"
+  - platform: mqtt
+    name: Bedroom temperature
+    state_topic: zigbee2mqtt/bedroom_temperature_pressure_and_humidity_sensor
+    unit_of_measurement: "°C"
+    value_template: "{{ value_json.temperature }}"
