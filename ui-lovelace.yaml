@@ -6,6 +6,12 @@ views:
           - content: >-
               # Good afternoon, {{ user.split(' ')[0] }}!
             type: markdown
+          - backdrop: true
+            entity: weather.home
+            name: " "
+            primary_info: false
+            secondary_info: false
+            type: custom:simple-weather-card
           - entities:
               - icon: mdi:home-variant-outline
                 name: Home state

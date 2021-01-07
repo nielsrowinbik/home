@@ -1,5 +1,5 @@
 mqtt:
-  broker: localhost
-  username: !secret mqtt_username
+  broker: !secret mqtt_hostname
+  discovery: false
   password: !secret mqtt_password
-  discovery: true
+  username: !secret mqtt_username

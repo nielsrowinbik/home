@@ -22,6 +22,8 @@ lovelace:
       type: module
     - url: /local/js/paper-buttons-row.js
       type: module
+    - url: /local/js/simple-weather-card.js?v=0.8.1
+      type: module
     - url: /local/js/template-entity-row.js
       type: module
 

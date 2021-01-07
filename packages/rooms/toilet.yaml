@@ -55,3 +55,12 @@ automation:
               0
             {% endif %}
           transition: 0.5
+
+light:
+  - platform: mqtt
+    brightness: true
+    color_temp: true
+    command_topic: "zigbee2mqtt/toilet_spot/set"
+    name: Toilet spot
+    schema: json
+    state_topic: "zigbee2mqtt/toilet_spot"

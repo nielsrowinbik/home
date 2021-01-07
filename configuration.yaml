@@ -1,3 +1,5 @@
+default_config:
+
 homeassistant:
   name: Niels and Laura's Home
   latitude: !secret location_lat
