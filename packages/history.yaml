@@ -1,6 +1,13 @@
+history:
+  exclude:
+    domains:
+      - input_datetime
+      - input_number
+
 logbook:
   exclude:
     entities:
+      - sensor.date
       - sensor.time
 
 recorder:
@@ -9,10 +16,12 @@ recorder:
     domains:
       - automation
       - script
+      - sun
       - weather
     entities:
       - binary_sensor.today_is_a_national_workday
       - binary_sensor.today_is_a_workday
       - binary_sensor.tomorrow_is_a_national_workday
       - binary_sensor.tomorrow_is_a_workday
+      - sensor.date
       - sensor.time
