@@ -19,8 +19,10 @@ disabled-text-color: rgba(255, 255, 255, 0.3)
 material-divider-color: rgba(255, 255, 255, 0.12)
 switch-unchecked-button-color: var(--secondary-text-color)
 primary-background-color: var(--surface-02dp)
+card-background-color: var(--primary-background-color)
 ha-card-box-shadow: "0 0 0 1px var(--material-divider-color)"
 shadow-elevation-2dp_-_box-shadow: "0 0 0 1px var(--material-divider-color)"
+ha-card-border-radius: 8px
 
 ### SCAFFOLDING
 
@@ -30,8 +32,6 @@ mdc-button-raised-box-shadow-active: none
 mdc-button-raised-box-shadow-hover: none
 
 # Cards
-card-background-color: var(--primary-background-color)
-ha-card-border-radius: 8px
 ha-card-header-font-family: "'Product Sans', Roboto, sans-serif"
 
 # Dialogs
