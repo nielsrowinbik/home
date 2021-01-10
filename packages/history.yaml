@@ -11,6 +11,7 @@ logbook:
       - sensor.time
 
 recorder:
+  db_max_retries: 20
   db_url: !secret db_url
   exclude:
     domains:
