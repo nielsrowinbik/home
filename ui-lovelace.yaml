@@ -90,10 +90,9 @@ views:
               - type: section
                 label: Kitchen illuminance
               - icon: mdi:brightness-6
-                entity: binary_sensor.kitchen_motion
+                entity: sensor.kitchen_illuminance
                 name: Current kitchen illuminance
                 secondary: Lights will {{ 'not' if is_state('binary_sensor.kitchen_sufficiently_lit', 'on') else '' }} turn on when triggered
-                state: "{{ states('sensor.kitchen_illuminance') }}"
                 type: custom:template-entity-row
               - input_number.kitchen_illuminance_threshold
             show_header_toggle: false
