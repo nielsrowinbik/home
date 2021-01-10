@@ -288,9 +288,6 @@ light:
     name: Kitchen spots
     schema: json
     state_topic: "zigbee2mqtt/kitchen_spots"
-  - platform: switch
-    name: Kitchen mood lighting
-    entity_id: switch.power_outlet_1
 
 sensor:
   - platform: mqtt
