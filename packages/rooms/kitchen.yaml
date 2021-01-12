@@ -199,7 +199,7 @@ automation:
           {% set isDoorOpen = is_state('binary_sensor.living_room_door', 'on') %}
           {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-          switch.turn_{{ 'on' if isDoorOpen or (!isAway and !isNight) else 'off' }}
+          switch.turn_{{ 'on' if isDoorOpen or (not isAway and not isNight) else 'off' }}
         data:
           entity_id: switch.water_fountain
 
