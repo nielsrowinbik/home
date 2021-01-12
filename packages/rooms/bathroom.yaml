@@ -49,6 +49,13 @@ automation:
           transition: 0.5
 
 binary_sensor:
+  - platform: mqtt
+    device_class: motion
+    name: Bathroom motion
+    payload_off: false
+    payload_on: true
+    state_topic: zigbee2mqtt/bathroom_motion_sensor
+    value_template: "{{ value_json.occupancy }}"
   - platform: template
     sensors:
       bathroom_occupied:
