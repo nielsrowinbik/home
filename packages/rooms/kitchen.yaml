@@ -186,8 +186,20 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when the living room door is opened of closed
+      - platform: state
+        entity_id: binary_sensor.living_room_door
+        to:
+          - "on"
+          - "off"
     action:
-      - service: "switch.turn_{{ 'off' if is_state('input_boolean.night_mode', 'on') else 'on' }}"
+      - service: >-
+          {% set isAway = is_state('sensor.current_scene', 'Away') %}
+          {% set isDoorOpen = is_state('binary_sensor.living_room_door', 'on') %}
+          {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+          switch.turn_{{ 'on' if isDoorOpen or (!isAway and !isNight) else 'off' }}
         data:
           entity_id: switch.water_fountain
 

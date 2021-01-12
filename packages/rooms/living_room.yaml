@@ -236,6 +236,13 @@ automation:
 
 binary_sensor:
   - platform: mqtt
+    device_class: door
+    name: Living Room door
+    payload_off: true
+    payload_on: false
+    state_topic: zigbee2mqtt/living_room_door_sensor
+    value_template: "{{ value_json.contact }}"
+  - platform: mqtt
     device_class: window
     name: Living Room window
     payload_off: true
