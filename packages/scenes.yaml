@@ -2,6 +2,20 @@ scene:
   - name: Cooking
     entities:
       input_boolean.cooking_mode: on
+  - name: Kitchen bright
+    entities:
+      input_boolean.cooking_mode: off
+      input_boolean.kitchen_bright_mode: on
+  - name: Kitchen normal
+    entities:
+      input_boolean.cooking_mode: off
+      input_boolean.kitchen_bright_mode: off
+  - name: Living Room bright
+    entities:
+      input_boolean.living_room_bright_mode: on
+  - name: Living Room normal
+    entities:
+      input_boolean.living_room_bright_mode: off
   - name: Morning
     entities:
       input_boolean.night_mode: off
