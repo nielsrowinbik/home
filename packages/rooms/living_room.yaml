@@ -212,7 +212,7 @@ automation:
 
             {{ 16 if isAway or isNight else 19 }}
 
-  - alias: Set switch.power_outlet_3
+  - alias: Set switch.subwoofer
     mode: queued
     trigger:
       # Trigger immediately when Home Assistant starts
@@ -232,7 +232,7 @@ automation:
     action:
       - service: "switch.turn_{{ states('media_player.amplifier') }}"
         data:
-          entity_id: switch.power_outlet_3
+          entity_id: switch.subwoofer
 
 binary_sensor:
   - platform: mqtt
@@ -289,6 +289,6 @@ remote:
 switch:
   - platform: mqtt 
     command_topic: zigbee2mqtt/power_outlet_3/set
-    name: Power outlet 3
+    name: Subwoofer
     state_topic: zigbee2mqtt/power_outlet_3
     value_template: "{{ value_json.state }}"
