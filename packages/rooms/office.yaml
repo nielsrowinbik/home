@@ -236,6 +236,14 @@ climate:
 
       {{ attributes | to_json }}
 
+group:
+  office_lights:
+    name: Office lights
+    entities:
+      - light.office_desk
+      - light.office_spots
+      - light.office_worktop
+
 input_boolean:
   work_mode:
     icon: mdi:briefcase-outline
