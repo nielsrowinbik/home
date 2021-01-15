@@ -267,6 +267,14 @@ climate:
 
       {{ attributes | to_json }}
 
+group:
+  kitchen_lights:
+    name: Kitchen lights
+    entities:
+      - light.kitchen_mood_lighting
+      - light.kitchen_spots
+      - light.kitchen_worktop
+
 input_boolean:
   cozy_mode:
     icon: mdi:candle
@@ -300,6 +308,12 @@ light:
     name: Kitchen spots
     schema: json
     state_topic: "zigbee2mqtt/kitchen_spots"
+  - platform: mqtt
+    brightness: true
+    command_topic: "zigbee2mqtt/kitchen_worktop_light/set"
+    name: Kitchen worktop
+    schema: json
+    state_topic: "zigbee2mqtt/kitchen_worktop_light"
 
 sensor:
   - platform: mqtt
