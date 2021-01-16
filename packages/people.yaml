@@ -13,16 +13,4 @@ homeassistant:
     person.niels:
       entity_picture: /local/images/niels.jpg
 
-input_boolean:
-  guest_mode:
-    icon: mdi:bed-outline
-    name: Guest mode
-
-notify:
-  - name: all_devices
-    platform: group
-    services:
-      # - service: mobile_app_pixel_3a
-      - service: mobile_app_pixel_4
-
 person:

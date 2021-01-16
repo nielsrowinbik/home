@@ -1,5 +1,5 @@
 homeassistant:
-  name: Niels and Laura's Home
+  name: Secondary Home Assistant
   latitude: !secret location_lat
   longitude: !secret location_long
   unit_system: metric

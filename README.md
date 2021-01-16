@@ -1,3 +1,3 @@
 # Niels & Laura's Home
 
-Configuration for our Home Assistant instance.
+Configuration for our secondary Home Assistant instance.
