@@ -264,7 +264,6 @@ light:
     state_topic: "zigbee2mqtt/office_spots"
   - platform: mqtt
     brightness: true
-    color_temp: true
     command_topic: "zigbee2mqtt/office_worktop_light/set"
     name: Office worktop
     schema: json
