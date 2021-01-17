@@ -1,4 +1,60 @@
 automation:
+  - alias: Set climate.living_room
+    description: Sets the thermostat to the correct temperature and turns it off if a door or window is open
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
+      # Trigger immediately when current scene changes
+      - platform: state
+        entity_id: sensor.current_scene
+        to: "*"
+
+      # Trigger after kitchen door has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when kitchen door closes
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "off"
+
+      # Trigger after living room window has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when living room window closes
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "off"
+    action:
+      - service: >-
+          {% set shouldTurnOff = is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') %}
+
+          climate.turn_{{ 'off' if shouldTurnOff else 'on' }}
+        data:
+          entity_id: climate.living_room
+      - service: climate.set_temperature
+        data:
+          entity_id: climate.living_room
+          temperature: >-
+            {% set isAway = is_state('sensor.current_scene', 'Away') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+
+            {{ 16 if isAway or isNight else 19 }}
+
   - alias: Set correct Harmony activity
     description: Sets the correct Harmony Hub activity when one of the media devices turns on on its own
     mode: restart
@@ -156,62 +212,6 @@ automation:
             {{ 350 if isBright else 475 }}
           transition: "{{ 0.5 if is_state('input_boolean.living_room_bright_mode', 'on') else 2 }}"
 
-  - alias: Set living room climate state
-    description: Sets the thermostat to the correct temperature and turns it off if a door or window is open
-    mode: queued
-    trigger:
-      # Trigger immediately when Home Assistant starts
-      - platform: homeassistant
-        event: start
-
-      # Trigger immediately when automations are reloaded
-      - platform: event
-        event_type: automation_reloaded
-
-      # Trigger immediately when current scene changes
-      - platform: state
-        entity_id: sensor.current_scene
-        to: "*"
-
-      # Trigger after kitchen door has been open for 30 seconds
-      - platform: state
-        entity_id: binary_sensor.kitchen_door
-        to: "on"
-        for:
-          seconds: 30
-
-      # Trigger immediately when kitchen door closes
-      - platform: state
-        entity_id: binary_sensor.kitchen_door
-        to: "off"
-
-      # Trigger after living room window has been open for 30 seconds
-      - platform: state
-        entity_id: binary_sensor.living_room_window
-        to: "on"
-        for:
-          seconds: 30
-
-      # Trigger immediately when living room window closes
-      - platform: state
-        entity_id: binary_sensor.living_room_window
-        to: "off"
-    action:
-      - service: >-
-          {% set shouldTurnOff = is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') %}
-
-          climate.turn_{{ 'off' if shouldTurnOff else 'on' }}
-        data:
-          entity_id: climate.living_room
-      - service: climate.set_temperature
-        data:
-          entity_id: climate.living_room
-          temperature: >-
-            {% set isAway = is_state('sensor.current_scene', 'Away') %}
-            {% set isNight = is_state('sensor.current_scene', 'Night') %}
-
-            {{ 16 if isAway or isNight else 19 }}
-
   - alias: Set switch.subwoofer
     mode: queued
     trigger:
@@ -306,3 +306,7 @@ switch:
     name: Subwoofer
     state_topic: zigbee2mqtt/power_outlet_3
     value_template: "{{ value_json.state }}"
+
+tado:
+  - username: !secret tado_username
+    password: !secret tado_password
