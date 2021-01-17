@@ -43,3 +43,18 @@ script:
         data:
           mode: dark
           name: soft-dark
+
+sensor:
+  - platform: average
+    entities:
+      - climate.bathroom
+      - climate.bedroom
+      - climate.office
+    name: Downstairs temperature
+    precision: 1
+  - platform: average
+    entities:
+      - climate.living_room
+      - climate.kitchen
+    name: Upstairs temperature
+    precision: 1
