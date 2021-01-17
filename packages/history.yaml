@@ -3,9 +3,13 @@ history:
     domains:
       - input_datetime
       - input_number
+      - persistent_notification
 
 logbook:
   exclude:
+    domains:
+      - group
+      - persistent_notification
     entities:
       - sensor.date
       - sensor.time
@@ -14,6 +18,8 @@ recorder:
   exclude:
     domains:
       - automation
+      - input_number
+      - persistent_notification
       - script
       - sun
       - weather
