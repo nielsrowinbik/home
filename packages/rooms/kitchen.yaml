@@ -180,13 +180,6 @@ automation:
           - "on"
           - "off"
 
-      # Trigger immediately when the water fountain is toggled (to make sure it stays on/off when it's supposed to)
-      - platform: state
-        entity_id: switch.water_fountain
-        to:
-          - "on"
-          - "off"
-
       # Trigger immediately when the living room door is opened of closed
       - platform: state
         entity_id: binary_sensor.living_room_door
@@ -331,3 +324,10 @@ sensor:
     state_topic: zigbee2mqtt/kitchen_temperature_pressure_and_humidity_sensor
     unit_of_measurement: "°C"
     value_template: "{{ value_json.temperature }}"
+
+switch:
+  - platform: mqtt 
+    command_topic: zigbee2mqtt/power_outlet_4/set
+    name: Water fountain
+    state_topic: zigbee2mqtt/power_outlet_4
+    value_template: "{{ value_json.state }}"
