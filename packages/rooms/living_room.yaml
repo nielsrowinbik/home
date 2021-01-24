@@ -147,7 +147,14 @@ automation:
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 0 if isAway or isDay or isMovie or isNight else 255 }}
+            {% if isAway or isDay or isNight %}
+              0
+            {% elif isMovie %}
+              1
+            {% else %}
+              200
+            {% endif %}
+          transition: 5
 
   - alias: Set light.living_room_spots
     mode: queued
@@ -274,10 +281,11 @@ input_boolean:
 
 light:
   - platform: mqtt
-    command_topic: zigbee2mqtt/power_outlet_2/set
+    brightness: true
+    command_topic: zigbee2mqtt/living_room_pendant_light/set
     name: Living room pendant
     schema: json
-    state_topic: zigbee2mqtt/power_outlet_2
+    state_topic: zigbee2mqtt/living_room_pendant_light
   - platform: mqtt
     brightness: true
     color_temp: true
