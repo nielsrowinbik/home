@@ -327,7 +327,7 @@ sensor:
 
 switch:
   - platform: mqtt 
-    command_topic: zigbee2mqtt/power_outlet_4/set
+    command_topic: zigbee2mqtt/power_outlet_2/set
     name: Water fountain
-    state_topic: zigbee2mqtt/power_outlet_4
+    state_topic: zigbee2mqtt/power_outlet_2
     value_template: "{{ value_json.state }}"
