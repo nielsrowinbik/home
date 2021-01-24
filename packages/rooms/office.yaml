@@ -145,63 +145,32 @@ automation:
           brightness: "{{ 255 if is_state('input_boolean.work_mode', 'on') else 0 }}"
           transition: 0.5
 
-  - alias: Toggle Work mode depending on phone charging type
-    description: Toggle working mode when phone begins or stops charging wirelessly during certain times of day
+  - alias: Toggle Work mode depending on workstation state
+    description: Make sure Work mode is turned on when the work station is in use
     trigger:
-      # Trigger immediately when the phone begins charging wirelessly
-      - platform: state
-        entity_id: sensor.pixel_4_charger_type
-        from: none
-        to: wireless
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
 
-      # Trigger immediately when the phone stops charging wirelessly
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
+      # Trigger immediately when workstation state changes to "NotPresent"
       - platform: state
-        entity_id: sensor.pixel_4_charger_type
-        from: wireless
-        to: none
-    condition:
-      # Only trigger on workdays
-      - condition: state
-        entity_id: binary_sensor.today_is_a_workday
-        state: "on"
+        entity_id: sensor.srv_status
+        to:
+          - "NotPresent"
+
+      # Trigger immediately when workstation state changes from "NotPresent"
+      - platform: state
+        entity_id: sensor.srv_status
+        from:
+          - "NotPresent"
     action:
-      - choose:
-          # IF charging begins during Morning or Day, turn on Work mode
-          - conditions:
-              - condition: template
-                value_template: "{{ trigger.to_state.state == 'wireless' }}"
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Morning
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Day
-            sequence:
-              - service: input_boolean.turn_on
-                data:
-                  entity_id: input_boolean.work_mode
-
-          # IF charging stops during Afternoon, Early evening, or Evening, turn off Work mode
-          - conditions:
-              - condition: template
-                value_template: "{{ trigger.to_state.state == 'none' }}"
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Afternoon
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Early evening
-                  - condition: state
-                    entity_id: sensor.current_scene
-                    state: Evening
-            sequence:
-              - service: input_boolean.turn_off
-                data:
-                  entity_id: input_boolean.work_mode
+      - service: "input_boolean.turn_{{ 'off' if is_state('sensor.srv_status', 'NotPresent') else 'on' }}"
+        data:
+          entity_id: input_boolean.work_mode
 
 binary_sensor:
   - platform: mqtt
@@ -285,6 +254,9 @@ sensor:
     state_topic: zigbee2mqtt/office_temperature_pressure_and_humidity_sensor
     unit_of_measurement: "°C"
     value_template: "{{ value_json.temperature }}"
+  - platform: mqtt
+    name: srv status
+    state_topic: homeassistant/sensor/SRV/state/state
   - platform: mqtt
     name: Staircase illuminance
     state_topic: zigbee2mqtt/staircase_motion_sensor
