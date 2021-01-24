@@ -1,16 +1,6 @@
 cloud:
   google_actions:
     filter:
-      exclude_entities:
-        - light.hallway_spot_1
-        - light.hallway_spot_2
-        - light.kitchen_spot_1
-        - light.kitchen_spot_2
-        - light.living_room_spot_1
-        - light.living_room_spot_2
-        - light.living_room_spot_3
-        - light.living_room_spot_4
-        - light.living_room_spot_5
       include_domains:
         - climate
         - light
