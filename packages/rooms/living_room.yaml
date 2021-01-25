@@ -154,7 +154,7 @@ automation:
             {% else %}
               200
             {% endif %}
-          transition: 5
+          transition: 2
 
   - alias: Set light.living_room_spots
     mode: queued
@@ -217,7 +217,7 @@ automation:
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
 
             {{ 350 if isBright else 475 }}
-          transition: "{{ 0.5 if is_state('input_boolean.living_room_bright_mode', 'on') else 5 }}"
+          transition: "{{ 0.5 if is_state('input_boolean.living_room_bright_mode', 'on') else 2 }}"
 
   - alias: Set switch.subwoofer
     mode: queued

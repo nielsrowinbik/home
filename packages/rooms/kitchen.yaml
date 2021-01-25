@@ -133,7 +133,7 @@ automation:
             {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
 
-            {{ 5 if (isCozy or isMovie) and not (isBright or isCooking) else 0.5 }}
+            {{ 2 if (isCozy or isMovie) and not (isBright or isCooking) else 0.5 }}
 
   - alias: Set light.kitchen_worktop
     mode: queued
