@@ -5,7 +5,7 @@ import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.media_player import (
-    MediaPlayerEntity, PLATFORM_SCHEMA)
+    MediaPlayerEntity, PLATFORM_SCHEMA, DEVICE_CLASS_RECEIVER)
 from homeassistant.components.media_player.const import (
     SUPPORT_VOLUME_SET,
     SUPPORT_VOLUME_MUTE, SUPPORT_TURN_ON, SUPPORT_TURN_OFF,
@@ -52,9 +52,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Setup the NAD platform."""
-    async_add_devices([NADDevice(
+    async_add_entities([NADEntity(
         config.get(CONF_NAME),
         config.get(CONF_HOST),
         config.get(CONF_RECONNECT_INTERVAL),
@@ -66,11 +66,11 @@ async def async_setup_platform(hass, config, async_add_devices, discovery_info=N
     return True
 
 
-class NADDevice(MediaPlayerEntity):
-    """Device handler for the NAD protocol"""
+class NADEntity(MediaPlayerEntity):
+    """Entity handler for the NAD protocol"""
 
     def __init__(self, name, host, reconnect_interval, min_volume, max_volume, volume_step):
-        """Initialize the device properties"""
+        """Initialize the entity properties"""
         self._client = None
         self._name = name
         self._host = host
@@ -109,13 +109,23 @@ class NADDevice(MediaPlayerEntity):
 
     @property
     def name(self):
-        """Return the name of the device."""
+        """Return the name of the entity."""
         return self._name
+    
+    @property
+    def device_class(self):
+        """Return the class of this device."""
+        return DEVICE_CLASS_RECEIVER
 
     @property
     def state(self):
-        """Return the state of the device."""
+        """Return the state of the entity."""
         return self._state
+    
+    @property
+    def icon(self):
+        """Return the icon for the device."""
+        return "mdi:speaker-multiple"
 
     @property
     def source(self):
@@ -126,6 +136,11 @@ class NADDevice(MediaPlayerEntity):
     def source_list(self):
         """List of available input sources."""
         return self._client.available_sources()
+    
+    @property
+    def available(self):
+        """Return if device is available."""
+        return self._state is not STATE_UNKNOWN
 
     @property
     def volume_level(self):
