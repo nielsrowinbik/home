@@ -237,7 +237,7 @@ automation:
           - "on"
           - "off"
     action:
-      - service: "switch.turn_{{ states('media_player.amplifier') }}"
+      - service: "switch.turn_{{ 'on' if is_state('media_player.amplifier', 'on') else 'off' }}"
         data:
           entity_id: switch.subwoofer
 
