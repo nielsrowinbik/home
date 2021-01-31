@@ -1,17 +1,10 @@
 group:
   everyone:
     entities:
-      - person.niels
-      - person.laura
+      - person.laura_arents
+      - person.niels_bik
     icon: mdi:account-group-outline
     name: People
-
-homeassistant:
-  customize:
-    person.laura:
-      entity_picture: /local/images/laura.jpg
-    person.niels:
-      entity_picture: /local/images/niels.jpg
 
 input_boolean:
   guest_mode:
