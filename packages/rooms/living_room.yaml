@@ -137,6 +137,18 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when Living Room TV playback changes to playing
+      - platform: state
+        entity_id: media_player.living_room_android_tv
+        to:
+          - playing
+
+      # Trigger immediately when Living Room TV playback changes from playing
+      - platform: state
+        entity_id: media_player.living_room_android_tv
+        from:
+          - playing
     action:
       - service: light.turn_on
         data:
@@ -144,13 +156,18 @@ automation:
           brightness: >-
             {% set isAway = is_state('sensor.current_scene', 'Away') %}
             {% set isDay = is_state('sensor.current_scene', 'Day') %}
+            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
             {% if isAway or isDay or isNight %}
               0
             {% elif isMovie %}
-              1
+              {% if isMediaPaused %}
+                30
+              {% else %}
+                1
+              {% endif %}
             {% else %}
               200
             {% endif %}
@@ -186,11 +203,16 @@ automation:
           - "on"
           - "off"
 
-      # Trigger immediately when Living Room TV playback changes
+      # Trigger immediately when Living Room TV playback changes to playing
       - platform: state
         entity_id: media_player.living_room_android_tv
         to:
-          - paused
+          - playing
+
+      # Trigger immediately when Living Room TV playback changes from playing
+      - platform: state
+        entity_id: media_player.living_room_android_tv
+        from:
           - playing
     action:
       - service: light.turn_on
@@ -200,7 +222,7 @@ automation:
             {% set isAway = is_state('sensor.current_scene', 'Away') %}
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
             {% set isEvening = is_state('sensor.current_scene', 'Evening') %}
-            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') %}
+            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
 

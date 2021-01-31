@@ -87,11 +87,16 @@ automation:
           - "on"
           - "off"
 
-      # Trigger immediately when Living Room TV playback changes
+      # Trigger immediately when Living Room TV playback changes to playing
       - platform: state
         entity_id: media_player.living_room_android_tv
         to:
-          - paused
+          - playing
+
+      # Trigger immediately when Living Room TV playback changes from playing
+      - platform: state
+        entity_id: media_player.living_room_android_tv
+        from:
           - playing
     action:
       - service: light.turn_on
@@ -102,20 +107,28 @@ automation:
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
             {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isDark = is_state('binary_sensor.kitchen_sufficiently_lit', 'off') %}
-            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') %}
+            {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
             {% set isMotion = is_state('binary_sensor.kitchen_motion', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {% if isBright or isCooking or isMorning or (isDark and isMotion and not isCozy) or (isMotion and isMovie and isMediaPaused) %}
-              255
-            {% elif isCozy or (isMovie and (isMediaPaused or isMotion)) %}
-              125
-            {% elif isMovie and not isMediaPaused %}
-              30
+            {% if isBright or isCooking %}
+              {% if isCozy %}
+                125
+              {% else %}
+                255
+              {% endif %}
+            {% elif isMovie %}
+              {% if isMediaPaused %}
+                125
+              {% else %}
+                30
+              {% endif %}
             {% elif isNight and isMotion %}
               1
+            {% elif isDark and isMotion %}
+              255
             {% else %}
               0
             {% endif %}
