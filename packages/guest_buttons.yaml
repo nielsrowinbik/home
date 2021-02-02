@@ -6,8 +6,10 @@ automation:
     trigger:
       # Trigger immediately when the repurposed toilet switch is pressed once
       - platform: mqtt
-        topic: zigbee2mqtt/toilet_switch/action
-        payload: single
+        topic: zigbee2mqtt/toilet_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.action == 'single' }}"
     action:
       - service: input_boolean.toggle
         data:
@@ -18,8 +20,10 @@ automation:
     trigger:
       # Trigger immediately when the repurposed toilet switch is held
       - platform: mqtt
-        topic: zigbee2mqtt/toilet_switch/action
-        payload: hold
+        topic: zigbee2mqtt/toilet_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.action == 'hold' }}"
     action:
       - service: input_boolean.turn_on
         data:
