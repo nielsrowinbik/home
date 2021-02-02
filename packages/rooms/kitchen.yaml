@@ -127,7 +127,7 @@ automation:
               {% endif %}
             {% elif isNight and isMotion %}
               1
-            {% elif isDark and isMotion %}
+            {% elif (isDark and isMotion) or isMorning %}
               255
             {% else %}
               0
@@ -139,7 +139,7 @@ automation:
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 475 if (isNight or isMovie or isCozy) and not (isBright or isCooking) else 350 }}
+            {{ 475 if (isNight or isMorning or isMovie or isCozy) and not (isBright or isCooking) else 350 }}
           transition: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
