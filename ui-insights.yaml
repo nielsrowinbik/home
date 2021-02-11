@@ -104,10 +104,8 @@ views:
                 }
               type: entities
             conditions:
-              - entity: binary_sensor.bedtime
+              - entity: binary_sensor.suggest_bedtime
                 state: "on"
-              - entity: input_boolean.night_mode
-                state: "off"
             type: conditional
           - card:
               entities:
@@ -125,10 +123,8 @@ views:
                 }
               type: entities
             conditions:
-              - entity: binary_sensor.cooking_time
+              - entity: binary_sensor.suggest_cooking
                 state: "on"
-              - entity: input_boolean.cooking_mode
-                state: "off"
             type: conditional
           - card:
               entities:
@@ -146,38 +142,7 @@ views:
                 }
               type: entities
             conditions:
-              - entity: media_player.living_room_android_tv
-                state_not: "off"
-              - entity: input_boolean.movie_mode
-                state: "off"
-              - entity: sensor.current_scene
-                state_not: Day
-              - entity: sensor.current_scene
-                state_not: Night
-              - entity: sensor.current_scene
-                state_not: Morning
-              - entity: sensor.current_scene
-                state_not: Away
-            type: conditional
-          - card:
-              entities:
-                - entity: input_boolean.movie_mode
-                  name: Finished your movie?
-                  secondary: Tap to undim the lights
-                  state: ""
-                  tap_action:
-                    action: toggle
-                  type: custom:template-entity-row
-              style: |
-                ha-card {
-                  margin-left: 12px;
-                  margin-right: 12px;
-                }
-              type: entities
-            conditions:
-              - entity: media_player.living_room_android_tv
-                state_not: "playing"
-              - entity: input_boolean.movie_mode
+              - entity: binary_sensor.suggest_movie
                 state: "on"
             type: conditional
         type: vertical-stack

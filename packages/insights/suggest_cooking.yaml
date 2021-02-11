@@ -1,0 +1,28 @@
+automation:
+  - alias: Notify to suggesting cooking
+    description: Sends a notification when we think the user will want to make dinner
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.suggest_cooking
+        to: "on"
+    action:
+      # TODO: Add an action (or tap action) that turns on cooking mode
+      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
+      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
+      - service: notify.all_devices
+        data:
+          title: Time for some food?
+          message: Tap to get cooking
+          data:
+            channel: Insights
+
+binary_sensor:
+  - platform: template
+    sensors:
+      suggest_cooking:
+        friendly_name: Suggest cooking
+        value_template: "{{ is_state('input_boolean.cooking_mode', 'off') and is_state('binary_sensor.cooking_time', 'on') }}"
+  - platform: tod
+    name: Cooking time
+    after: "17:30"
+    before: "19:30"

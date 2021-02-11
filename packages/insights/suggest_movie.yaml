@@ -1,0 +1,25 @@
+automation:
+  - alias: Notify to suggesting movie mode
+    description: Sends a notification when we think the user will want to dim the lights to watch a movie
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.suggest_movie
+        to: "on"
+    action:
+      # TODO: Add an action (or tap action) that turns on movie mode
+      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
+      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
+      - service: notify.all_devices
+        data:
+          title: Watching a movie?
+          message: Tap to dim the lights
+          data:
+            channel: Insights
+
+binary_sensor:
+  - platform: template
+    sensors:
+      suggest_movie:
+        friendly_name: Suggest movie
+        # TODO: Improve detecting TV state. We should probably take the current app into account as well
+        value_template: "{{ is_state('input_boolean.movie_mode', 'off') and is_state('media_player.living_room_android_tv', 'idle') }}"

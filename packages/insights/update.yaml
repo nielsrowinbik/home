@@ -1,0 +1,18 @@
+# There is no need for a binary sensor for this insight, since `binary_sensor.updater` exists.
+
+automation:
+  - alias: Notify for update available insight
+    description: Sends a notification when an update is available
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.updater
+        to: "on"
+    action:
+      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
+      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
+      - service: notify.all_devices
+        data:
+          title: "An update is available!"
+          message: "Your Home Assistant instance may be updated"
+          data:
+            channel: Insights

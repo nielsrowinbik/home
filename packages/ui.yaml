@@ -8,17 +8,6 @@ automation:
     action:
       - service: script.set_theme
 
-binary_sensor:
-  - platform: tod
-    name: Cooking time
-    after: "17:30"
-    before: "19:30"
-  - platform: tod
-    name: Bedtime
-    after: "21:30"
-    before: "06:30"
-  # TODO: Add sensor to suggest keeping on the lights in the kitchen (when they're frequently turned on in a period for example)
-
 frontend:
   themes: !include_dir_named ../themes/
 
@@ -74,18 +63,3 @@ script:
         data:
           mode: dark
           name: soft-dark
-
-sensor:
-  - platform: average
-    entities:
-      - climate.bathroom
-      - climate.bedroom
-      - climate.office
-    name: Downstairs temperature
-    precision: 1
-  - platform: average
-    entities:
-      - climate.living_room
-      - climate.kitchen
-    name: Upstairs temperature
-    precision: 1
