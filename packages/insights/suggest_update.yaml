@@ -15,6 +15,7 @@ automation:
           message: "{{ state_attr('binary_sensor.suggest_update', 'message') }}"
           data:
             channel: Insights
+            tag: suggest_update
 
 binary_sensor:
   - platform: template

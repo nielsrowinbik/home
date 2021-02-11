@@ -7,14 +7,14 @@ automation:
         to: "on"
     action:
       # TODO: Add an action (or tap action) that turns on movie mode
-      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
-      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
+      # TODO: Use the identifier to dismiss the notification when it's no longer relevant (see https://companion.home-assistant.io/docs/notifications/notifications-basic#replacing-notifications)
       - service: notify.all_devices
         data:
           title: "{{ state_attr('binary_sensor.suggest_movie', 'title') }}"
           message: "{{ state_attr('binary_sensor.suggest_movie', 'message') }}"
           data:
             channel: Insights
+            tag: suggest_movie
 
 binary_sensor:
   - platform: template
