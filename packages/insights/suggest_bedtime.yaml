@@ -4,14 +4,15 @@ automation:
     trigger:
       - platform: state
         entity_id: binary_sensor.suggest_bedtime
-        to: "on"
+        to:
+          - "off"
+          - "on"
     action:
       # TODO: Add an action (or tap action) that turns on night mode
-      # TODO: Use the identifier to dismiss the notification when it's no longer relevant (see https://companion.home-assistant.io/docs/notifications/notifications-basic#replacing-notifications)
       - service: notify.all_devices
         data:
           title: "{{ state_attr('binary_sensor.suggest_bedtime', 'title') }}"
-          message: "{{ state_attr('binary_sensor.suggest_bedtime', 'message') }}"
+          message: "{{ state_attr('binary_sensor.suggest_bedtime', 'message') if trigger.to_state.state == 'on' else 'clear_notification' }}"
           data:
             channel: Insights
             tag: suggest_bedtime
