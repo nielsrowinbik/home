@@ -1,0 +1,28 @@
+automation:
+  - alias: Notify for update available insight
+    description: Sends a notification when an update is available
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.suggest_update
+        to:
+          - "off"
+          - "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: "{{ state_attr('binary_sensor.suggest_update', 'title') }}"
+          message: "{{ state_attr('binary_sensor.suggest_update', 'message') if trigger.to_state.state == 'on' else 'clear_notification' }}"
+          data:
+            channel: Insights
+            clickAction: https://www.home-assistant.io/latest-release-notes
+            tag: suggest_update
+
+binary_sensor:
+  - platform: template
+    sensors:
+      suggest_update:
+        attribute_templates:
+          title: An update is available!
+          message: Tap to learn more
+        friendly_name: Suggest update
+        value_template: "{{ is_state('binary_sensor.updater', 'on') }}"
