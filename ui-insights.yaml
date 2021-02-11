@@ -85,7 +85,7 @@ views:
                 }
               type: entities
             conditions:
-              - entity: binary_sensor.updater
+              - entity: binary_sensor.suggest_update
                 state: "on"
             type: conditional
           - card:
