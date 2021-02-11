@@ -3,18 +3,18 @@ automation:
     description: Sends a notification when an update is available
     trigger:
       - platform: state
-        entity_id: binary_sensor.updater
-        to: "on"
+        entity_id: binary_sensor.suggest_update
+        to:
+          - "off"
+          - "on"
     action:
-      # TODO: Add an action to the notification that opens the blog post for the latest update
-      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
-      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
       - service: notify.all_devices
         data:
           title: "{{ state_attr('binary_sensor.suggest_update', 'title') }}"
-          message: "{{ state_attr('binary_sensor.suggest_update', 'message') }}"
+          message: "{{ state_attr('binary_sensor.suggest_update', 'message') if trigger.to_state.state == 'on' else 'clear_notification' }}"
           data:
             channel: Insights
+            clickAction: https://www.home-assistant.io/latest-release-notes
             tag: suggest_update
 
 binary_sensor:
