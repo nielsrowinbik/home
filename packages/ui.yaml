@@ -24,16 +24,11 @@ frontend:
 
 lovelace:
   dashboards:
-    ui-hub:
-      filename: ui-hub.yaml
-      icon: mdi:view-dashboard-outline
+    ui-insights:
+      filename: ui-insights.yaml
+      icon: mdi:google-assistant
       mode: yaml
-      title: Hub
-    ui-snapshot:
-      filename: ui-snapshot.yaml
-      icon: mdi:home-variant-outline
-      mode: yaml
-      title: Snapshot
+      title: Insights
     ui-settings:
       filename: ui-settings.yaml
       icon: mdi:cog-outline
@@ -53,8 +48,6 @@ lovelace:
     - url: /local/js/layout-card.js?v=30.6.2020
       type: module
     - url: /local/js/layout-card-griddier.js
-      type: module
-    - url: /local/js/mini-graph-card.js?v=0.10.0
       type: module
     - url: /local/js/mini-media-player.js
       type: module

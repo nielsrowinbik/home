@@ -1,6 +1,5 @@
 title: " "
 views:
-
   - cards:
       - cards:
           - content: >-
@@ -10,7 +9,7 @@ views:
                 </div>
                 <div>
                   <img src="/local/icons/{{ states('weather.home') }}.png" height="30" width="30" />
-                  <h2>{{ state_attr('weather.home', 'temperature') }}°</h2>
+                  <h2>{{ state_attr('weather.home', 'temperature')|round }}°</h2>
                 </div>
               </div>
             style:
@@ -44,12 +43,11 @@ views:
             type: markdown
           - content: >-
               {% set tod = states('sensor.current_scene').split(' ')|last|lower %}
-              {% set greeting = "Good " + tod + "!" %}
-              
-              {% set noMessages = [lightsOnMessage, heatingToMessage]|join == "" %}
-              {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your day!" if noMessages else "" %}
+              {% set greeting = "Good " + tod + "!" if tod != 'day' else "" %}
 
-              # {{ [greeting]|join(' ') }}
+              {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your " + tod + "!" %}
+
+              # {{ [greeting, noMessagesMessage]|join(' ') }}
             style:
               .: |
                 ha-card {
@@ -69,55 +67,6 @@ views:
                     line-height: 2.5rem;
                   }
             type: markdown
-          # - backdrop: true
-          #   entity: weather.home
-          #   name: in Utrecht
-          #   primary_info: false
-          #   secondary_info: false
-          #   style: |
-          #     ha-card {
-          #       margin-left: 12px;
-          #       margin-right: 12px;
-          #     }
-          #   type: custom:simple-weather-card
-          # - card:
-          #     type: vertical-stack
-          #   card_param: cards
-          #   filter:
-          #     include:
-          #       - domain: persistent_notification
-          #         options:
-          #           content: >-
-          #             ## {{ state_attr('this.entity_id', 'title') }}
-                      
-          #             {{ state_attr('this.entity_id', 'message') }}
-          #           style:
-          #             .: |
-          #               ha-card {
-          #                 font-family: 'Product Sans', Roboto, sans-serif;
-          #                 margin-left: 12px;
-          #                 margin-right: 12px;
-          #               }
-          #             ha-markdown:
-          #               $: |
-          #                 h2, p {
-          #                   margin: 0;
-          #                 }
-
-          #                 h2 {
-          #                   font-weight: 500 !important;
-          #                   line-height: 2rem;
-          #                 }
-
-          #                 p {
-          #                   color: var(--secondary-text-color);
-          #                   font-size: 1.2rem;
-          #                   font-weight: 300 !important;
-          #                   line-height: 1.2rem;
-          #                   margin-top: 0.2rem;
-          #                 }
-          #           type: markdown
-          #   type: custom:auto-entities
           - card:
               entities:
                 - entity: binary_sensor.updater
