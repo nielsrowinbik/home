@@ -1,0 +1,32 @@
+blueprint:
+  name: Time of Day activated lights
+  description: Turn on a light when a certain Time of Day is reached
+  domain: automation
+  source_url: https://github.com/nielsrowinbik/home/blob/master/blueprints/nielsrowinbik/tod_light.yaml
+  input:
+    tod_state:
+      name: Time of Day
+      description: When should the specified lights turn on?
+      selector:
+        text:
+    light_target:
+      name: Light(s)
+      description: Select the light(s) to set
+      selector:
+        target:
+          entity:
+            domain: light
+
+mode: queued
+
+trigger:
+  platform: state
+  entity_id: sensor.current_scene
+  to: !input tod_state
+
+action:
+  - service: light.turn_on
+    target: !input light_target
+    data:
+      brightness_pct: "{{ state('sensor.circadian_values')|float }}"
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp')|float }}"
