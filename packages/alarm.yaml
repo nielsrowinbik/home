@@ -139,11 +139,9 @@ input_datetime:
     has_date: false
     has_time: true
     icon: mdi:alarm
-    initial: "08:30"
     name: Off day alarm
   workday_alarm:
     has_date: false
     has_time: true
     icon: mdi:alarm
-    initial: "06:30"
     name: Workday alarm
