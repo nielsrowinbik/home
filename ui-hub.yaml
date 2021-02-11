@@ -1,0 +1,42 @@
+title: " "
+views:
+  - cards:
+      - cards:
+          - backdrop: true
+            gridarea: weather
+            entity: weather.home
+            name: " "
+            type: weather-forecast
+          - entities:
+              - input_boolean.work_mode
+            gridarea: suggestion1
+            type: entities
+          - entities:
+              - input_boolean.cooking_mode
+            gridarea: suggestion2
+            type: entities
+        card_options:
+          style: ":root, ha-card { height: 100%; box-sizing: border-box; }"
+        gridareas: |
+          '. weather suggestion1 .'
+          '. weather suggestion2 .'
+        gridcols: auto repeat(2, minmax(120px, 500px)) auto
+        gridrows: repeat(4, minmax(60px, 250px))
+        gridcols_medium: auto repeat(2, minmax(128px, 500px)) auto
+        gridareas_small: |
+          'weather'
+          'suggestion1'
+          'suggestion2'
+        gridcols_small: 1fr
+        gridgap: 12px
+        layout: grid
+        type: custom:layout-card-griddier
+    panel: true
+    path: your-day
+    title: Your day
+  - cards: []
+    path: home-control
+    title: Home control
+  - cards: []
+    path: media
+    title: Media

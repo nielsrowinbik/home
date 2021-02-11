@@ -1,0 +1,236 @@
+title: " "
+views:
+
+  - cards:
+      - cards:
+          - content: >-
+              <div class="flex">
+                <div>
+                  <h2>{{ states('sensor.time') }}</h2>
+                </div>
+                <div>
+                  <img src="/local/icons/{{ states('weather.home') }}.png" height="30" width="30" />
+                  <h2>{{ state_attr('weather.home', 'temperature') }}°</h2>
+                </div>
+              </div>
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: none;
+                }
+
+                ha-markdown {
+                  padding: 12px 16px !important;
+                  font-family: 'Product Sans', Roboto;
+                }
+              ha-markdown:
+                $: |
+                  ha-markdown-element div {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                  }
+
+                  h2 {
+                    font-weight: 400 !important;
+                  }
+
+                  img {
+                    margin-right: 6px;
+                  }
+            type: markdown
+          - content: >-
+              {% set tod = states('sensor.current_scene').split(' ')|last|lower %}
+              {% set greeting = "Good " + tod + "!" %}
+              
+              {% set noMessages = [lightsOnMessage, heatingToMessage]|join == "" %}
+              {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your day!" if noMessages else "" %}
+
+              # {{ [greeting]|join(' ') }}
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: none;
+                }
+
+                ha-markdown {
+                  padding: 12px 16px 28px 16px !important;
+                }
+              ha-markdown:
+                $: |
+                  h1 {
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 500;
+                    line-height: 2.5rem;
+                  }
+            type: markdown
+          # - backdrop: true
+          #   entity: weather.home
+          #   name: in Utrecht
+          #   primary_info: false
+          #   secondary_info: false
+          #   style: |
+          #     ha-card {
+          #       margin-left: 12px;
+          #       margin-right: 12px;
+          #     }
+          #   type: custom:simple-weather-card
+          # - card:
+          #     type: vertical-stack
+          #   card_param: cards
+          #   filter:
+          #     include:
+          #       - domain: persistent_notification
+          #         options:
+          #           content: >-
+          #             ## {{ state_attr('this.entity_id', 'title') }}
+                      
+          #             {{ state_attr('this.entity_id', 'message') }}
+          #           style:
+          #             .: |
+          #               ha-card {
+          #                 font-family: 'Product Sans', Roboto, sans-serif;
+          #                 margin-left: 12px;
+          #                 margin-right: 12px;
+          #               }
+          #             ha-markdown:
+          #               $: |
+          #                 h2, p {
+          #                   margin: 0;
+          #                 }
+
+          #                 h2 {
+          #                   font-weight: 500 !important;
+          #                   line-height: 2rem;
+          #                 }
+
+          #                 p {
+          #                   color: var(--secondary-text-color);
+          #                   font-size: 1.2rem;
+          #                   font-weight: 300 !important;
+          #                   line-height: 1.2rem;
+          #                   margin-top: 0.2rem;
+          #                 }
+          #           type: markdown
+          #   type: custom:auto-entities
+          - card:
+              entities:
+                - entity: binary_sensor.updater
+                  icon: mdi:update
+                  name: An update is available!
+                  secondary: Tap to learn more
+                  state: ""
+                  tap_action:
+                    action: url
+                    url_path: https://www.home-assistant.io/latest-release-notes/
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.updater
+                state: "on"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.night_mode
+                  name: Ready to go to bed?
+                  secondary: Tap to settle down
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.bedtime
+                state: "on"
+              - entity: input_boolean.night_mode
+                state: "off"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.cooking_mode
+                  name: Time for some food?
+                  secondary: Tap to get cooking
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.cooking_time
+                state: "on"
+              - entity: input_boolean.cooking_mode
+                state: "off"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.movie_mode
+                  name: Watching a movie?
+                  secondary: Tap to dim the lights
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: media_player.living_room_android_tv
+                state_not: "off"
+              - entity: input_boolean.movie_mode
+                state: "off"
+              - entity: sensor.current_scene
+                state_not: Day
+              - entity: sensor.current_scene
+                state_not: Night
+              - entity: sensor.current_scene
+                state_not: Morning
+              - entity: sensor.current_scene
+                state_not: Away
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.movie_mode
+                  name: Finished your movie?
+                  secondary: Tap to undim the lights
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: media_player.living_room_android_tv
+                state_not: "playing"
+              - entity: input_boolean.movie_mode
+                state: "on"
+            type: conditional
+        type: vertical-stack
+    path: index
+    title: Snapshot

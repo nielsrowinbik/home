@@ -8,19 +8,57 @@ automation:
     action:
       - service: script.set_theme
 
+binary_sensor:
+  - platform: tod
+    name: Cooking time
+    after: "17:30"
+    before: "19:30"
+  - platform: tod
+    name: Bedtime
+    after: "21:30"
+    before: "06:30"
+  # TODO: Add sensor to suggest keeping on the lights in the kitchen (when they're frequently turned on in a period for example)
+
 frontend:
   themes: !include_dir_named ../themes/
 
 lovelace:
+  dashboards:
+    ui-hub:
+      filename: ui-hub.yaml
+      icon: mdi:view-dashboard-outline
+      mode: yaml
+      title: Hub
+    ui-snapshot:
+      filename: ui-snapshot.yaml
+      icon: mdi:home-variant-outline
+      mode: yaml
+      title: Snapshot
+    ui-settings:
+      filename: ui-settings.yaml
+      icon: mdi:cog-outline
+      mode: yaml
+      title: Settings
+      require_admin: true
   mode: yaml
   resources:
     - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
       type: css
     - url: /local/js/auto-entities.js?v=21.11.2020
       type: module
+    - url: /local/js/card-mod.js?v=11.10.2020
+      type: module
+    - url: /local/js/fold-entity-row.js?v=4.7.2020
+      type: module
+    - url: /local/js/layout-card.js?v=30.6.2020
+      type: module
+    - url: /local/js/layout-card-griddier.js
+      type: module
+    - url: /local/js/mini-graph-card.js?v=0.10.0
+      type: module
     - url: /local/js/mini-media-player.js
       type: module
-    - url: /local/js/paper-buttons-row.js
+    - url: /local/js/paper-buttons-row.js?v=0.3.0
       type: module
     - url: /local/js/simple-weather-card.js?v=0.8.1
       type: module
