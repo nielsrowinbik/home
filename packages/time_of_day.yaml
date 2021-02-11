@@ -78,10 +78,6 @@ script:
     mode: queued
 
 sensor:
-  - platform: darksky
-    api_key: !secret dark_sky_api_key
-    monitored_conditions:
-      - cloud_cover
   - platform: template
     sensors:
       current_scene:
@@ -100,14 +96,9 @@ sensor:
             {{ states('sensor.time_of_day') }}
           {% endif %}
       sun_elevation:
-        friendly_name: Sun elevation (corrected for cloud coverage)
+        friendly_name: Sun elevation
         icon_template: mdi:white-balance-sunny
-        value_template: >-
-          {% set maxDecrease = states('input_number.max_sun_elevation_decrease')|float / 100 %}
-          {% set coverage = states('sensor.dark_sky_cloud_coverage')|float / 100 %}
-          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
-
-          {{ "%.2f"|format(elevation - ((coverage * maxDecrease) * elevation)|abs) }}
+        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
         unit_of_measurement: "°"
       time_of_day:
         friendly_name: Time of day
