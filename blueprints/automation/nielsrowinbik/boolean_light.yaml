@@ -1,0 +1,40 @@
+blueprint:
+  name: Boolean activated lights
+  description: Match a light's state to a boolean entity's state
+  domain: automation
+  source_url: https://github.com/nielsrowinbik/home/blob/master/blueprints/nielsrowinbik/boolean_light.yaml
+  input:
+    boolean_entity:
+      name: Boolean entity
+      description: Please select an entity which is either "on" or "off"
+      selector:
+        entity:
+    light_target:
+      name: Light(s)
+      selector:
+        target:
+          entity:
+            domain: light
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  platform: state
+  entity_id: !input boolean_entity
+  from: "off"
+  to: "on"
+
+action:
+  - service: light.turn_on
+    target: !input light_target
+    data:
+      brightness_pct: "{{ state('sensor.circadian_values')|float }}"
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp')|float }}"
+  - wait_for_trigger:
+      platform: state
+      entity_id: !input boolean_entity
+      from: "on"
+      to: "off"
+  - service: light.turn_off
+    target: !input light_target
