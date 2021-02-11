@@ -325,18 +325,9 @@ media_player:
     host: !secret nad_amplifier_ip
     volume_step: 2
 
-remote:
-  - platform: harmony
-    name: Living Room Harmony Hub
-    host: !secret living_room_harmony_hub_ip
-
 switch:
-  - platform: mqtt 
+  - platform: mqtt
     command_topic: zigbee2mqtt/power_outlet_3/set
     name: Subwoofer
     state_topic: zigbee2mqtt/power_outlet_3
     value_template: "{{ value_json.state }}"
-
-tado:
-  - username: !secret tado_username
-    password: !secret tado_password
