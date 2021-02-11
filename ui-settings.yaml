@@ -1,0 +1,89 @@
+title: " "
+views:
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entities:
+              - input_boolean.guest_mode
+              - input_boolean.vacation_mode
+              - input_datetime.workday_alarm
+              - input_datetime.off_day_alarm
+              - type: section
+                label: Time of day
+              - entity: sensor.sun_elevation
+                name: Current sun elevation
+              - entity: sensor.time_of_day
+                name: Current time of day
+              - base_config:
+                  tap_action:
+                    action: call-service
+                    service: script.set_threshold
+                buttons:
+                  - name: Set Morning
+                    tap_action:
+                      service_data:
+                        entity: input_number.morning_threshold
+                  - name: Set Day
+                    tap_action:
+                      service_data:
+                        entity: input_number.day_threshold
+                  - name: Set Afternoon
+                    tap_action:
+                      service_data:
+                        entity: input_number.afternoon_threshold
+                  - name: Set Early evening
+                    tap_action:
+                      service_data:
+                        entity: input_number.early_evening_threshold
+                  - name: Set Evening
+                    tap_action:
+                      service_data:
+                        entity: input_number.evening_threshold
+                  - name: Set Night
+                    tap_action:
+                      service_data:
+                        entity: input_number.night_threshold
+                type: custom:paper-buttons-row
+              - input_number.morning_threshold
+              - input_number.day_threshold
+              - input_number.afternoon_threshold
+              - input_number.early_evening_threshold
+              - input_number.evening_threshold
+              - input_number.night_threshold
+              - type: section
+                label: Kitchen illuminance
+              - icon: mdi:brightness-6
+                entity: sensor.kitchen_illuminance
+                name: Current kitchen illuminance
+                secondary: Currently, lights will {{ 'not' if is_state('binary_sensor.kitchen_sufficiently_lit', 'on') else '' }} turn on
+                type: custom:template-entity-row
+              - input_number.kitchen_illuminance_threshold
+            show_header_toggle: false
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: 0;
+                }
+
+                h1 {
+                  padding: 24px 16px;
+                }
+
+                h1 .name {
+                  font-size: 28px;
+                  text-align: center;
+                  width: 100%;
+                }
+              hui-section-row:
+                $: |
+                  .label {
+                    color: var(--primary--text-color) !important;
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 600;
+                  }
+            title: Settings
+            type: entities
+    path: index
+    title: Settings

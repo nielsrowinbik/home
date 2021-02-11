@@ -12,15 +12,35 @@ frontend:
   themes: !include_dir_named ../themes/
 
 lovelace:
+  dashboards:
+    ui-insights:
+      filename: ui-insights.yaml
+      icon: mdi:google-assistant
+      mode: yaml
+      title: Insights
+    ui-settings:
+      filename: ui-settings.yaml
+      icon: mdi:cog-outline
+      mode: yaml
+      title: Settings
+      require_admin: true
   mode: yaml
   resources:
     - url: https://fonts.googleapis.com/css?family=Product+Sans:300,400,500
       type: css
     - url: /local/js/auto-entities.js?v=21.11.2020
       type: module
+    - url: /local/js/card-mod.js?v=11.10.2020
+      type: module
+    - url: /local/js/fold-entity-row.js?v=4.7.2020
+      type: module
+    - url: /local/js/layout-card.js?v=30.6.2020
+      type: module
+    - url: /local/js/layout-card-griddier.js
+      type: module
     - url: /local/js/mini-media-player.js
       type: module
-    - url: /local/js/paper-buttons-row.js
+    - url: /local/js/paper-buttons-row.js?v=0.3.0
       type: module
     - url: /local/js/simple-weather-card.js?v=0.8.1
       type: module
@@ -43,18 +63,3 @@ script:
         data:
           mode: dark
           name: soft-dark
-
-sensor:
-  - platform: average
-    entities:
-      - climate.bathroom
-      - climate.bedroom
-      - climate.office
-    name: Downstairs temperature
-    precision: 1
-  - platform: average
-    entities:
-      - climate.living_room
-      - climate.kitchen
-    name: Upstairs temperature
-    precision: 1

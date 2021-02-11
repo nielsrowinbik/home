@@ -1,0 +1,150 @@
+title: " "
+views:
+  - cards:
+      - cards:
+          - content: >-
+              <div class="flex">
+                <div>
+                  <h2>{{ states('sensor.time') }}</h2>
+                </div>
+                <div>
+                  <img src="/local/icons/{{ states('weather.home') }}.png" height="30" width="30" />
+                  <h2>{{ state_attr('weather.home', 'temperature')|round }}°</h2>
+                </div>
+              </div>
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: none;
+                }
+
+                ha-markdown {
+                  padding: 12px 16px !important;
+                  font-family: 'Product Sans', Roboto;
+                }
+              ha-markdown:
+                $: |
+                  ha-markdown-element div {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                  }
+
+                  h2 {
+                    font-weight: 400 !important;
+                  }
+
+                  img {
+                    margin-right: 6px;
+                  }
+            type: markdown
+          - content: >-
+              {% set tod = states('sensor.current_scene').split(' ')|last|lower %}
+              {% set greeting = "Good " + tod + "!" if tod != 'day' else "" %}
+
+              {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your " + tod + "!" %}
+
+              # {{ [greeting, noMessagesMessage]|join(' ') }}
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: none;
+                }
+
+                ha-markdown {
+                  padding: 12px 16px 28px 16px !important;
+                }
+              ha-markdown:
+                $: |
+                  h1 {
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 500;
+                    line-height: 2.5rem;
+                  }
+            type: markdown
+          - card:
+              entities:
+                - entity: binary_sensor.suggest_update
+                  icon: mdi:update
+                  name: "{{ state_attr('binary_sensor.suggest_update', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_update', 'message') }}"
+                  state: ""
+                  tap_action:
+                    action: url
+                    url_path: https://www.home-assistant.io/latest-release-notes/
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.suggest_update
+                state: "on"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.night_mode
+                  name: "{{ state_attr('binary_sensor.suggest_bedtime', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_bedtime', 'message') }}"
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.suggest_bedtime
+                state: "on"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.cooking_mode
+                  name: "{{ state_attr('binary_sensor.suggest_cooking', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_cooking', 'message') }}"
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.suggest_cooking
+                state: "on"
+            type: conditional
+          - card:
+              entities:
+                - entity: input_boolean.movie_mode
+                  name: "{{ state_attr('binary_sensor.suggest_movie', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_movie', 'message') }}"
+                  state: ""
+                  tap_action:
+                    action: toggle
+                  type: custom:template-entity-row
+              style: |
+                ha-card {
+                  margin-left: 12px;
+                  margin-right: 12px;
+                }
+              type: entities
+            conditions:
+              - entity: binary_sensor.suggest_movie
+                state: "on"
+            type: conditional
+        type: vertical-stack
+    path: index
+    title: Snapshot
