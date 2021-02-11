@@ -69,10 +69,10 @@ views:
             type: markdown
           - card:
               entities:
-                - entity: binary_sensor.updater
+                - entity: binary_sensor.suggest_update
                   icon: mdi:update
-                  name: An update is available!
-                  secondary: Tap to learn more
+                  name: "{{ state_attr('binary_sensor.suggest_update', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_update', 'message') }}"
                   state: ""
                   tap_action:
                     action: url
@@ -91,8 +91,8 @@ views:
           - card:
               entities:
                 - entity: input_boolean.night_mode
-                  name: Ready to go to bed?
-                  secondary: Tap to settle down
+                  name: "{{ state_attr('binary_sensor.suggest_bedtime', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_bedtime', 'message') }}"
                   state: ""
                   tap_action:
                     action: toggle
@@ -110,8 +110,8 @@ views:
           - card:
               entities:
                 - entity: input_boolean.cooking_mode
-                  name: Time for some food?
-                  secondary: Tap to get cooking
+                  name: "{{ state_attr('binary_sensor.suggest_cooking', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_cooking', 'message') }}"
                   state: ""
                   tap_action:
                     action: toggle
@@ -129,8 +129,8 @@ views:
           - card:
               entities:
                 - entity: input_boolean.movie_mode
-                  name: Watching a movie?
-                  secondary: Tap to dim the lights
+                  name: "{{ state_attr('binary_sensor.suggest_movie', 'title') }}"
+                  secondary: "{{ state_attr('binary_sensor.suggest_movie', 'message') }}"
                   state: ""
                   tap_action:
                     action: toggle

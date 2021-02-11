@@ -11,8 +11,8 @@ automation:
       # TODO: Use the identifier to dismiss the notification when it's no longer relevant
       - service: notify.all_devices
         data:
-          title: Watching a movie?
-          message: Tap to dim the lights
+          title: "{{ state_attr('binary_sensor.suggest_movie', 'title') }}"
+          message: "{{ state_attr('binary_sensor.suggest_movie', 'message') }}"
           data:
             channel: Insights
 
@@ -20,6 +20,9 @@ binary_sensor:
   - platform: template
     sensors:
       suggest_movie:
+        attribute_templates:
+          title: Watching a movie?
+          message: Tap to dim the lights
         friendly_name: Suggest movie
         # TODO: Improve detecting TV state. We should probably take the current app into account as well
         value_template: "{{ is_state('input_boolean.movie_mode', 'off') and is_state('media_player.living_room_android_tv', 'idle') }}"

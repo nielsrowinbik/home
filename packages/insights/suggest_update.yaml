@@ -1,0 +1,27 @@
+automation:
+  - alias: Notify for update available insight
+    description: Sends a notification when an update is available
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.updater
+        to: "on"
+    action:
+      # TODO: Add an action to the notification that opens the blog post for the latest update
+      # TODO: Give this notification some sort of identifyer so we don't send it multiple times
+      # TODO: Use the identifier to dismiss the notification when it's no longer relevant
+      - service: notify.all_devices
+        data:
+          title: "{{ state_attr('binary_sensor.suggest_update', 'title') }}"
+          message: "{{ state_attr('binary_sensor.suggest_update', 'message') }}"
+          data:
+            channel: Insights
+
+binary_sensor:
+  - platform: template
+    sensors:
+      suggest_update:
+        attribute_templates:
+          title: An update is available!
+          message: Tap to learn more
+        friendly_name: Suggest update
+        value_template: "{{ is_state('binary_sensor.updater', 'on') }}"
