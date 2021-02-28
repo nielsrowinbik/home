@@ -1,0 +1,77 @@
+automation:
+  - alias: Update lights to new circadian value
+    trigger:
+      - platform: state
+        entity_id: sensor.circadian_values
+        attribute: colortemp
+    condition:
+      # Only continue if the amount of lights that are on and whose current
+      # temperature is set to the old circadian value is greater than 0
+      - condition: template
+        value_template: >-
+          {% set currentMired = (1000000 / trigger.from_state.attributes.colortemp)|int %}
+          {{ expand(states.light)
+            |selectattr('state','eq','on')
+            |selectattr('attributes.color_temp', 'eq', currentMired)
+            |list
+            |length > 0 }}
+    action:
+      - service: light.turn_on
+        data:
+          # Apply to all lights that are on and whose current
+          # temperature is set to the old circadian value
+          entity_id: >-
+            {% set currentMired = (1000000 / trigger.from_state.attributes.colortemp)|int %}
+            {{ expand(states.light)
+              |selectattr('state','eq','on')
+              |selectattr('attributes.color_temp', 'eq', currentMired)
+              |map(attribute='entity_id')
+              |join(',') }}
+          # Set the temperature in kelvin
+          kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') }}"
+          # Use a transition of a minute
+          transition: 60
+
+circadian_lighting:
+  min_colortemp: 2200
+  max_colortemp: 6500
+
+script:
+  circadian_turn_on:
+    alias: Set a light to current circadian value
+    fields:
+      entity:
+        description: For which entity should we update the value?
+        example: light.living_room_spots
+      transition:
+        description: Which transition should we use?
+        example: 60
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: "{{ entity }}"
+          kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') }}"
+          transition: "{{ transition or 0.5 }}"
+    mode: queued
+
+sensor:
+  - platform: template
+    sensors:
+      circadian_time_of_day:
+        friendly_name: Circadian Time of day
+        icon_template: mdi:calendar-clock
+        value_template: >-
+          {% set rising = is_state_attr('sun.sun', 'rising', true) %}
+          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
+
+          {% if elevation < -18 %}
+            Night
+          {% elif -6 < elevation < 6 %}
+            {% if rising %}
+              Morning
+            {% else %}
+              Evening
+            {% endif %}
+          {% else %}
+            Day
+          {% endif %}

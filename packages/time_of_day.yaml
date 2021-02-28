@@ -1,7 +1,3 @@
-circadian_lighting:
-  min_colortemp: 2200
-  max_colortemp: 6500
-
 input_boolean:
   night_mode:
     icon: mdi:weather-night
@@ -89,30 +85,6 @@ sensor:
           {% else %}
             {{ states('sensor.time_of_day') }}
           {% endif %}
-      colortemp: # https://community.home-assistant.io/t/circadian-light-with-philips-hue-independent-from-world-clocks/45435/43
-        friendly_name: Circadian light
-        unit_of_measurement: mireds
-        value_template: >
-          {% set deg = pi / 180.0 %}
-          {% set N = now().strftime("%j")|int %}
-          {% set L = state_attr('zone.home','latitude')|float %}
-          {% set D = (-1 * asin(0.39779 * cos(0.98565 * deg * (N + 10) + 1.914 * deg * sin(0.98565 * deg * (N - 2))))) / deg %}
-          {% set max_elevation = (asin(sin(L * deg) * sin(D * deg) + cos(L * deg) * cos(D * deg)) / deg)|round(2) %}
-
-          {% set mired_min = 1000000 / 6500 %}
-          {% set mired_max = 1000000 / 2200 %}
-          {% set elev_at_mired_max = -6 %}
-          {% set mired_night = mired_max %}
-
-          {% if state_attr('sun.sun', 'elevation') > elev_at_mired_max %}
-            {{ (mired_max - ((state_attr('sun.sun', 'elevation')|float) - elev_at_mired_max) * (mired_max - mired_min) / (max_elevation - elev_at_mired_max))|int }}
-          {% else %}
-            {{ mired_night }}
-          {% endif %}
-      colortemp2: # Converts Kelvin values from sensor.circadian_values to mireds
-        friendly_name: Circadian light 2
-        unit_of_measurement: mireds
-        value_template: "{{ (1000000 / state_attr('sensor.circadian_values', 'colortemp')|float)|round }}"
       sun_elevation:
         friendly_name: Sun elevation
         icon_template: mdi:white-balance-sunny
