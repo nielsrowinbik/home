@@ -10,11 +10,8 @@ views:
               - input_datetime.off_day_alarm
               - type: section
                 label: Lighting
-              - entity: sensor.circadian_values
-                name: Current colour temperature
-                secondary: "Setting equals {{ (1000000 / state_attr('sensor.circadian_values', 'colortemp'))|int }} mireds"
-                state: "{{ state_attr('sensor.circadian_values', 'colortemp')|int }}K"
-                type: custom:template-entity-row
+              - sensor.circadian_temperature
+              - sensor.circadian_brightness
               - entity: automation.update_lights_to_new_circadian_value
                 secondary_info: last-triggered
               - entity: light.living_room_spots
