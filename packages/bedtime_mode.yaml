@@ -1,0 +1,23 @@
+# TODO: Send persistent notification 60 minutes before bedtime, warning the user about bed time (only if the schedule is not set to "Off") (implement dimming lights later)
+# TODO: Allow the user to postpone turning on bedtime mode (implement undimming the lights later)
+# TODO: From the 60 minute window before bedtime, wait for the phone to begin charging, and turn on bedtime mode
+# TODO: Future work: make sure all phones that are at home are charging?
+# TODO: Turn off bedtime mode when on the "charging" schedule and the phone stops charging or when the wake up time + 30min passes
+# TODO: Show persistant notification while bedtime mode is on, with action to turn it off
+
+input_boolean:
+  bedtime_mode:
+    icon: mdi:bed-outline
+    name: Bedtime mode
+
+input_datetime:
+  bedtime:
+    has_date: false
+    has_time: true
+    icon: mdi:bed-outline
+    name: Bedtime
+  wake_up:
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+    name: Wake up
