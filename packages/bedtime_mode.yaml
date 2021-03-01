@@ -1,9 +1,79 @@
-# TODO: Send persistent notification 60 minutes before bedtime, warning the user about bed time (only if the schedule is not set to "Off") (implement dimming lights later)
 # TODO: Allow the user to postpone turning on bedtime mode (implement undimming the lights later)
-# TODO: From the 60 minute window before bedtime, wait for the phone to begin charging, and turn on bedtime mode
 # TODO: Future work: make sure all phones that are at home are charging?
 # TODO: Turn off bedtime mode when on the "charging" schedule and the phone stops charging or when the wake up time + 30min passes
-# TODO: Show persistant notification while bedtime mode is on, with action to turn it off
+
+automation:
+  - alias: Show a persistent notification from 60 minutes before bedtime mode
+    trigger:
+      # Trigger when we should (no longer) notify about the set bedtime being within the next 60 minutes:
+      - platform: state
+        entity_id: binary_sensor.announce_bedtime
+      # Trigger when the bedtime changes (maybe we need to update the notification with the correct value):
+      - platform: state
+        entity_id: input_datetime.bedtime
+    action:
+      - service: notify.all_devices
+        data:
+          title: Your bedtime starts at {{ states('input_datetime.bedtime')[:-3] }}
+          message: >-
+            {% set message = "Get ready for bed soon" %}
+
+            {{ message if is_state('binary_sensor.announce_bedtime', 'on') else 'clear_notification' }}
+          data:
+            channel: Insights
+            persistent: true
+            tag: bedtime_mode
+
+  - alias: Show a persistent notification while bedtime mode is on
+    trigger:
+      - platform: state
+        entity_id: input_boolean.bedtime_mode
+    action:
+      - service: notify.all_devices
+        data:
+          title: Bedtime mode is on
+          message: >-
+            {% set message = "The lights will stay off until " ~ states('input_datetime.wake_up')[:-3] %}
+
+            {{ message if is_state('input_boolean.bedtime_mode', 'on')  else 'clear_notification' }}
+          data:
+            actions:
+              - action: BEDTIME_TURN_OFF
+                title: Turn off
+            channel: Insights
+            persistent: true
+            tag: bedtime_mode
+
+  - alias: Turn off bedtime mode through notification action
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: BEDTIME_TURN_OFF
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.bedtime_mode
+
+  - alias: Turn on bedtime mode when charging begins after announcing
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.announce_bedtime
+        to: "on"
+    action:
+      - wait_for_trigger:
+          - platform: state
+            #TODO: Change to charger type not being 'none' (we need the phone to be connected to a power source, not necessarily actually)
+            entity_id: binary_sensor.pixel_4_is_charging
+            to: "on"
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.bedtime_mode
+
+binary_sensor:
+  - platform: template
+    sensors:
+      announce_bedtime:
+        friendly_name: Announce bedtime
+        value_template: "{{ state_attr('input_datetime.bedtime', 'timestamp') - 3600 < ((now().hour * 60 + now().minute) * 60 + now().second) }}"
 
 input_boolean:
   bedtime_mode:
