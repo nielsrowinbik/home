@@ -1,18 +1,22 @@
 automation:
-  - alias: Update lights to new circadian value
+  - alias: Update lights to new circadian values
     trigger:
       - platform: state
-        entity_id: sensor.circadian_values
-        attribute: colortemp
+        entity_id: sensor.circadian_brightness
+      - platform: state
+        entity_id: sensor.circadian_temperature
     condition:
       # Only continue if the amount of lights that are on and whose current
       # temperature is set to the old circadian value is greater than 0
       - condition: template
         value_template: >-
-          {% set currentMired = (1000000 / trigger.from_state.attributes.colortemp)|int %}
+          {% set brightnessToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_brightness' else states('sensor.circadian_brightness') %}
+          {% set temperatureToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_temperature' else states('sensor.circadian_temperature') %}
+
           {{ expand(states.light)
             |selectattr('state','eq','on')
-            |selectattr('attributes.color_temp', 'eq', currentMired)
+            |selectattr('attributes.brightness', 'eq', brightnessToMatch)
+            |selectattr('attributes.color_temp', 'eq', temperatureToMatch)
             |list
             |length > 0 }}
     action:
@@ -21,14 +25,19 @@ automation:
           # Apply to all lights that are on and whose current
           # temperature is set to the old circadian value
           entity_id: >-
-            {% set currentMired = (1000000 / trigger.from_state.attributes.colortemp)|int %}
+            {% set brightnessToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_brightness' else states('sensor.circadian_brightness') %}
+            {% set temperatureToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_temperature' else states('sensor.circadian_temperature') %}
+
             {{ expand(states.light)
               |selectattr('state','eq','on')
-              |selectattr('attributes.color_temp', 'eq', currentMired)
+              |selectattr('attributes.brightness', 'eq', brightnessToMatch)
+              |selectattr('attributes.color_temp', 'eq', temperatureToMatch)
               |map(attribute='entity_id')
               |join(',') }}
-          # Set the temperature in kelvin
-          kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') }}"
+          # Set the brightness
+          brightness_pct: "{{ states('sensor.circadian_brightness') }}"
+          # Set the temperature
+          color_temp: "{{ states('sensor.circadian_temperature') }}"
           # Use a transition of a minute
           transition: 60
 
@@ -50,28 +59,48 @@ script:
       - service: light.turn_on
         data:
           entity_id: "{{ entity }}"
-          kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') }}"
+          brightness_pct: "{{ states('sensor.circadian_brightness')|int }}"
+          color_temp: "{{ states('sensor.circadian_temperature')|int }}"
           transition: "{{ transition or 0.5 }}"
     mode: queued
 
 sensor:
   - platform: template
     sensors:
-      circadian_time_of_day:
-        friendly_name: Circadian Time of day
-        icon_template: mdi:calendar-clock
+      current_sun_elevation:
+        friendly_name: Current solar elevation angle
+        unit_of_measurement: °
+        value_template: "{{ state_attr('sun.sun', 'elevation')|float }}"
+      maximum_sun_elevation:
+        friendly_name: Maximum solar elevation angle
+        unit_of_measurement: °
         value_template: >-
-          {% set rising = is_state_attr('sun.sun', 'rising', true) %}
-          {% set elevation = state_attr('sun.sun', 'elevation')|float %}
+          {% set N = now().strftime("%j")|int %}
+          {% set L = state_attr('zone.home','latitude')|float %}
+          {% set D = -1 * asin(0.39779 * cos(0.98565 * (N + 10) + 1.914 * sin(0.98565 * (N - 2)))) %}
 
-          {% if elevation < -18 %}
-            Night
-          {% elif -6 < elevation < 6 %}
-            {% if rising %}
-              Morning
-            {% else %}
-              Evening
-            {% endif %}
+          {{ 90 + L - D }}
+      circadian_brightness:
+        friendly_name: Circadian brightness
+        unit_of_measurement: "%"
+        value_template: >-
+          {% set dimmest = 30 %}
+          {% set brightest = 100 %}
+
+          {{ 50 }}
+      circadian_temperature:
+        friendly_name: Circadian temperature
+        unit_of_measurement: mired
+        value_template: >-
+          {% set coolest = 154 %}
+          {% set warmest = 454 %}
+          {% set night_threshold = -6 %}
+
+          {% set current_elevation = states('sensor.current_sun_elevation')|float %}
+          {% set maximum_elevation = states('sensor.maximum_sun_elevation')|float %}
+
+          {% if current_elevation > night_threshold %}
+            {{ (warmest - (current_elevation - night_threshold) * (warmest - coolest) / (maximum_elevation - night_threshold))|int }}
           {% else %}
-            Day
+            {{ warmest }}
           {% endif %}

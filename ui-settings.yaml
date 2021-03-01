@@ -9,6 +9,23 @@ views:
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
               - type: section
+                label: Lighting
+              - sensor.circadian_temperature
+              - sensor.circadian_brightness
+              - entity: automation.update_lights_to_new_circadian_value
+                secondary_info: last-triggered
+              - entity: light.living_room_spots
+                secondary: "Light is set to {{ state_attr('light.living_room_spots', 'color_temp') }} mireds"
+                type: custom:template-entity-row
+              - buttons:
+                  - name: Set on Upstairs spots to circadian value
+                    tap_action:
+                      action: call-service
+                      service: script.circadian_turn_on
+                      service_data:
+                        entity: light.living_room_spots,light.kitchen_spots
+                type: custom:paper-buttons-row
+              - type: section
                 label: Time of day
               - entity: sensor.sun_elevation
                 name: Current sun elevation
