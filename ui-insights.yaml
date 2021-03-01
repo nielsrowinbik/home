@@ -45,9 +45,14 @@ views:
               {% set tod = states('sensor.current_scene').split(' ')|last|lower %}
               {% set greeting = "Good " + tod + "!" if tod != 'day' else "" %}
 
+              {% set messages = [] %}
               {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your " + tod + "!" %}
 
-              # {{ [greeting, noMessagesMessage]|join(' ') }}
+              {% if messages|length == 0 %}
+                # {{ noMessagesMessage }}
+              {% else %}
+                # {{ ([greeting] + messages)|join(' ') }}
+              {% endif %}
             style:
               .: |
                 ha-card {
