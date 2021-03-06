@@ -100,7 +100,44 @@ views:
                     font-family: 'Product Sans', Roboto;
                     font-weight: 600;
                   }
-            title: Settings
+            title: General
             type: entities
     path: index
-    title: Settings
+    title: General
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entities:
+              - type: section
+                label: Schedule
+              - input_datetime.bedtime
+              - input_datetime.wake_up
+            show_header_toggle: false
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: 0;
+                }
+
+                h1 {
+                  padding: 24px 16px;
+                }
+
+                h1 .name {
+                  font-size: 28px;
+                  text-align: center;
+                  width: 100%;
+                }
+              hui-section-row:
+                $: |
+                  .label {
+                    color: var(--primary--text-color) !important;
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 600;
+                  }
+            title: Bedtime
+            type: entities
+    path: bedtime
+    title: Bedtime
