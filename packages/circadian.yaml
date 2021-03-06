@@ -20,7 +20,7 @@ automation:
             |list
             |length > 0 }}
     action:
-      - service: light.turn_on
+      - service: script.circadian_turn_on
         data:
           # Apply to all lights that are on and whose current
           # temperature is set to the old circadian value
@@ -34,22 +34,44 @@ automation:
               |selectattr('attributes.color_temp', 'eq', temperatureToMatch)
               |map(attribute='entity_id')
               |join(',') }}
-          # Set the brightness
-          brightness_pct: "{{ states('sensor.circadian_brightness') }}"
-          # Set the temperature
-          color_temp: "{{ states('sensor.circadian_temperature') }}"
           # Use a transition of a minute
           transition: 60
 
-circadian_lighting:
-  min_colortemp: 2200
-  max_colortemp: 6500
+input_number:
+  setting_max_brightness:
+    max: 254
+    min: 1
+    name: Maximum brightness
+    step: 1
+  setting_min_brightness:
+    max: 254
+    min: 1
+    name: Minimum brightness
+    step: 1
+  setting_coolest_colour_temp:
+    max: 454
+    min: 154
+    name: Coolest colour temperature
+    step: 1
+    unit_of_measurement: K
+  setting_warmest_colour_temp:
+    max: 454
+    min: 154
+    name: Warmest colour temperature
+    step: 1
+    unit_of_measurement: K
+  setting_night_threshold:
+    max: 10
+    min: -10
+    name: Night threshold
+    step: 0.1
+    unit_of_measurement: °
 
 script:
   circadian_turn_on:
     alias: Set a light to current circadian value
     fields:
-      entity:
+      entity_id:
         description: For which entity should we update the value?
         example: light.living_room_spots
       transition:
@@ -58,46 +80,40 @@ script:
     sequence:
       - service: light.turn_on
         data:
-          entity_id: "{{ entity }}"
-          brightness_pct: "{{ states('sensor.circadian_brightness')|int }}"
+          entity_id: "{{ entity_id }}"
+          brightness: "{{ states('sensor.circadian_brightness')|int }}"
           color_temp: "{{ states('sensor.circadian_temperature')|int }}"
           transition: "{{ transition or 0.5 }}"
-    mode: queued
+    mode: restart
 
 sensor:
+  - platform: sun2
+    monitored_conditions:
+      - elevation
+      - max_elevation
   - platform: template
     sensors:
-      current_sun_elevation:
-        friendly_name: Current solar elevation angle
-        unit_of_measurement: °
-        value_template: "{{ state_attr('sun.sun', 'elevation')|float }}"
-      maximum_sun_elevation:
-        friendly_name: Maximum solar elevation angle
-        unit_of_measurement: °
-        value_template: >-
-          {% set N = now().strftime("%j")|int %}
-          {% set L = state_attr('zone.home','latitude')|float %}
-          {% set D = -1 * asin(0.39779 * cos(0.98565 * (N + 10) + 1.914 * sin(0.98565 * (N - 2)))) %}
-
-          {{ 90 + L - D }}
       circadian_brightness:
         friendly_name: Circadian brightness
-        unit_of_measurement: "%"
         value_template: >-
-          {% set dimmest = 30 %}
-          {% set brightest = 100 %}
+          {% set dimmest = states('input_number.setting_min_brightness')|int %}
+          {% set brightest = states('input_number.setting_max_brightness')|int %}
+          {% set night_threshold = states('input_number.night_threshold')|float %}
 
-          {{ 50 }}
+          {% set current_elevation = states('sensor.elevation')|float %}
+          {% set maximum_elevation = states('sensor.max_elevation')|float %}
+
+          {{ (dimmest - (current_elevation - night_threshold) * (dimmest - brightest) / (maximum_elevation - night_threshold))|int }}
       circadian_temperature:
         friendly_name: Circadian temperature
         unit_of_measurement: mired
         value_template: >-
-          {% set coolest = 154 %}
-          {% set warmest = 454 %}
-          {% set night_threshold = -6 %}
+          {% set coolest = states('input_number.setting_coolest_colour_temp')|int %}
+          {% set warmest = states('input_number.setting_warmest_colour_temp')|int %}
+          {% set night_threshold = states('input_number.night_threshold')|float %}
 
-          {% set current_elevation = states('sensor.current_sun_elevation')|float %}
-          {% set maximum_elevation = states('sensor.maximum_sun_elevation')|float %}
+          {% set current_elevation = states('sensor.elevation')|float %}
+          {% set maximum_elevation = states('sensor.max_elevation')|float %}
 
           {% if current_elevation > night_threshold %}
             {{ (warmest - (current_elevation - night_threshold) * (warmest - coolest) / (maximum_elevation - night_threshold))|int }}

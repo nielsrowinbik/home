@@ -9,23 +9,6 @@ views:
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
               - type: section
-                label: Lighting
-              - sensor.circadian_temperature
-              - sensor.circadian_brightness
-              - entity: automation.update_lights_to_new_circadian_value
-                secondary_info: last-triggered
-              - entity: light.living_room_spots
-                secondary: "Light is set to {{ state_attr('light.living_room_spots', 'color_temp') }} mireds"
-                type: custom:template-entity-row
-              - buttons:
-                  - name: Set on Upstairs spots to circadian value
-                    tap_action:
-                      action: call-service
-                      service: script.circadian_turn_on
-                      service_data:
-                        entity: light.living_room_spots,light.kitchen_spots
-                type: custom:paper-buttons-row
-              - type: section
                 label: Time of day
               - entity: sensor.sun_elevation
                 name: Current sun elevation
@@ -104,6 +87,50 @@ views:
             type: entities
     path: index
     title: General
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entities:
+              - entity: automation.update_lights_to_new_circadian_values
+                secondary_info: last-triggered
+              - entity: sensor.circadian_temperature
+                secondary_info: last-updated
+              - input_number.setting_coolest_colour_temp
+              - input_number.setting_warmest_colour_temp
+              - entity: sensor.circadian_brightness
+                secondary_info: last-updated
+              - input_number.setting_min_brightness
+              - input_number.setting_max_brightness
+              - input_number.setting_night_threshold
+            show_header_toggle: false
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: 0;
+                }
+
+                h1 {
+                  padding: 24px 16px;
+                }
+
+                h1 .name {
+                  font-size: 28px;
+                  text-align: center;
+                  width: 100%;
+                }
+              hui-section-row:
+                $: |
+                  .label {
+                    color: var(--primary--text-color) !important;
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 600;
+                  }
+            title: Adaptive lighting
+            type: entities
+    path: adaptive-lighting
+    title: Adaptive lighting
   - cards:
       - type: vertical-stack
         cards:
