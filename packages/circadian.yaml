@@ -2,63 +2,82 @@ automation:
   - alias: Update lights to new circadian values
     trigger:
       - platform: state
-        entity_id: sensor.circadian_brightness
-      - platform: state
-        entity_id: sensor.circadian_temperature
+        entity_id: sensor.circadian_values
     condition:
       # Only continue if the amount of lights that are on and whose current
       # temperature is set to the old circadian value is greater than 0
       - condition: template
         value_template: >-
-          {% set brightnessToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_brightness' else states('sensor.circadian_brightness') %}
-          {% set temperatureToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_temperature' else states('sensor.circadian_temperature') %}
+          {% set brightnessToMatch = trigger.from_state.attributes.brightness|int %}
+          {% set temperatureToMatch = trigger.from_state.attributes.color_temp|int %}
 
-          {{ expand(states.light)
+          {% set matchingBrightnessOnly = expand(states.light)
+            |selectattr('state','eq','on')
+            |selectattr('attributes.brightness', 'eq', brightnessToMatch)
+            |selectattr('attributes.color_temp', 'undefined')
+            |list %}
+
+          {% set matchingBrightnessAndTemp = expand(states.light)
             |selectattr('state','eq','on')
             |selectattr('attributes.brightness', 'eq', brightnessToMatch)
             |selectattr('attributes.color_temp', 'eq', temperatureToMatch)
-            |list
-            |length > 0 }}
+            |list %}
+
+          {{ (matchingBrightnessOnly + matchingBrightnessAndTemp)|length > 0 }}
     action:
       - service: script.circadian_turn_on
         data:
-          # Apply to all lights that are on and whose current
-          # temperature is set to the old circadian value
+          # Apply to all lights that are on and whose current settings match
+          # the old circadian values. Match lights that only allow setting the brightness
+          # separately.
           entity_id: >-
-            {% set brightnessToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_brightness' else states('sensor.circadian_brightness') %}
-            {% set temperatureToMatch = trigger.from_state.state if trigger.entity_id == 'sensor.circadian_temperature' else states('sensor.circadian_temperature') %}
+            {% set brightnessToMatch = trigger.from_state.attributes.brightness|int %}
+            {% set temperatureToMatch = trigger.from_state.attributes.color_temp|int %}
 
-            {{ expand(states.light)
+            {% set matchingBrightnessOnly = expand(states.light)
+              |selectattr('state','eq','on')
+              |selectattr('attributes.brightness', 'eq', brightnessToMatch)
+              |selectattr('attributes.color_temp', 'undefined')
+              |list %}
+
+            {% set matchingBrightnessAndTemp = expand(states.light)
               |selectattr('state','eq','on')
               |selectattr('attributes.brightness', 'eq', brightnessToMatch)
               |selectattr('attributes.color_temp', 'eq', temperatureToMatch)
+              |list %}
+
+            {{ (matchingBrightnessOnly + matchingBrightnessAndTemp)
               |map(attribute='entity_id')
               |join(',') }}
-          # Use a transition of a minute
-          transition: 60
+          # Use a transition based on whether the percentage has changed. If it hasn't, one of
+          # the settings was probably tweaked and we should switch to the new values quickly.
+          # Otherwise, use a slow transition of a minute.
+          transition: "{{ 0.5 if trigger.from_state.state == trigger.to_state.state else 60 }}"
 
 input_number:
   setting_max_brightness:
-    max: 254
+    max: 100
     min: 1
     name: Maximum brightness
     step: 1
+    unit_of_measurement: "%"
   setting_min_brightness:
-    max: 254
+    max: 100
     min: 1
     name: Minimum brightness
     step: 1
+    unit_of_measurement: "%"
   setting_coolest_colour_temp:
-    max: 454
-    min: 154
+    max: 10000
+    min: 1000
     name: Coolest colour temperature
-    step: 1
+    step: 100
     unit_of_measurement: K
   setting_warmest_colour_temp:
-    max: 454
-    min: 154
+    max: 10000
+    min: 1000
     name: Warmest colour temperature
-    step: 1
+    step: 100
     unit_of_measurement: K
   setting_night_threshold:
     max: 10
@@ -81,8 +100,8 @@ script:
       - service: light.turn_on
         data:
           entity_id: "{{ entity_id }}"
-          brightness: "{{ states('sensor.circadian_brightness')|int }}"
-          color_temp: "{{ states('sensor.circadian_temperature')|int }}"
+          brightness: "{{ state_attr('sensor.circadian_values', 'brightness')|int }}"
+          color_temp: "{{ state_attr('sensor.circadian_values', 'color_temp')|int }}"
           transition: "{{ transition or 0.5 }}"
     mode: restart
 
@@ -91,32 +110,46 @@ sensor:
     monitored_conditions:
       - elevation
       - max_elevation
+      - min_elevation
   - platform: template
     sensors:
-      circadian_brightness:
-        friendly_name: Circadian brightness
+      circadian_values:
+        attribute_templates:
+          brightness: >-
+            {% set percent = states('sensor.circadian_values')|float %}
+            {% set dimmest = states('input_number.setting_min_brightness')|int %}
+            {% set brightest = states('input_number.setting_max_brightness')|int %}
+
+            {% set brightness_pct = brightest if percent > 0 else ((brightest - dimmest) * ((100 + percent) / 100)) + dimmest %}
+
+            {{ (brightness_pct / 100 * 254)|int }}
+          color_temp: >-
+            {% set percent = states('sensor.circadian_values')|float %}
+            {% set coolest = states('input_number.setting_coolest_colour_temp')|int %}
+            {% set warmest = states('input_number.setting_warmest_colour_temp')|int %}
+
+            {% set kelvin = warmest if percent <= 0 else ((coolest - warmest) * (percent / 100)) + warmest %}
+
+            {{ (1000000 / kelvin)|int }}
+        friendly_name: Circadian values
+        unit_of_measurement: "%"
         value_template: >-
-          {% set dimmest = states('input_number.setting_min_brightness')|int %}
-          {% set brightest = states('input_number.setting_max_brightness')|int %}
-          {% set night_threshold = states('input_number.night_threshold')|float %}
+          {% set current_elevation = states('sensor.elevation')|float|round(1) %}
+          {% set maximum_elevation = states('sensor.max_elevation')|float|round(1) %}
+          {% set minimum_elevation = states('sensor.min_elevation')|float|round(1) %}
+          {% set night_threshold = states('input_number.night_threshold')|float|round(1) %}
 
-          {% set current_elevation = states('sensor.elevation')|float %}
-          {% set maximum_elevation = states('sensor.max_elevation')|float %}
-
-          {{ (dimmest - (current_elevation - night_threshold) * (dimmest - brightest) / (maximum_elevation - night_threshold))|int }}
-      circadian_temperature:
-        friendly_name: Circadian temperature
-        unit_of_measurement: mired
-        value_template: >-
-          {% set coolest = states('input_number.setting_coolest_colour_temp')|int %}
-          {% set warmest = states('input_number.setting_warmest_colour_temp')|int %}
-          {% set night_threshold = states('input_number.night_threshold')|float %}
-
-          {% set current_elevation = states('sensor.elevation')|float %}
-          {% set maximum_elevation = states('sensor.max_elevation')|float %}
-
-          {% if current_elevation > night_threshold %}
-            {{ (warmest - (current_elevation - night_threshold) * (warmest - coolest) / (maximum_elevation - night_threshold))|int }}
+          {% if current_elevation < 0 %}
+            {{ ((current_elevation / minimum_elevation) * -100)|round(1) }}
+          {% elif current_elevation > 0 %}
+            {{ (current_elevation / maximum_elevation * 100)|round(1) }}
           {% else %}
-            {{ warmest }}
+            {{ 0 }}
           {% endif %}
+      temp_circadian_brightness:
+        friendly_name: Circadian brightness
+        value_template: "{{ state_attr('sensor.circadian_values', 'brightness')|int }}"
+      temp_circadian_color_temp:
+        friendly_name: Circadian colour temperature
+        unit_of_measurement: mireds
+        value_template: "{{ state_attr('sensor.circadian_values', 'color_temp')|int }}"

@@ -93,12 +93,9 @@ views:
           - entities:
               - entity: automation.update_lights_to_new_circadian_values
                 secondary_info: last-triggered
-              - entity: sensor.circadian_temperature
-                secondary_info: last-updated
+              - sensor.circadian_values
               - input_number.setting_coolest_colour_temp
               - input_number.setting_warmest_colour_temp
-              - entity: sensor.circadian_brightness
-                secondary_info: last-updated
               - input_number.setting_min_brightness
               - input_number.setting_max_brightness
               - input_number.setting_night_threshold
