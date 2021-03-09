@@ -165,3 +165,66 @@ views:
             type: entities
     path: bedtime
     title: Bedtime
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entities:
+              - input_boolean.work_mode
+              - conditions:
+                  - entity: input_boolean.work_mode
+                    state: "on"
+                  - entity: timer.work_mode_break
+                    state: idle
+                row:
+                  action_name: Start
+                  entity: timer.work_mode_break
+                  name: Take a break?
+                  tap_action:
+                    action: call-service
+                    service: timer.start
+                    service_data:
+                      entity_id: timer.work_mode_break
+                  type: button
+                type: conditional
+              - type: section
+                label: Schedule
+              - input_datetime.work_start
+              - input_datetime.work_end
+              - type: section
+                label: Notifications
+              - entity: automation.announce_incoming_work_start_through_persistent_notification
+                icon: mdi:bell-ring-outline
+                name: Announce work mode 15 minutes before starting
+                secondary_info: last-triggered
+              - entity: automation.show_a_persistent_notification_while_work_mode_is_on
+                icon: mdi:bell-ring-outline
+                secondary_info: last-triggered
+            show_header_toggle: false
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: 0;
+                }
+
+                h1 {
+                  padding: 24px 16px;
+                }
+
+                h1 .name {
+                  font-size: 28px;
+                  text-align: center;
+                  width: 100%;
+                }
+              hui-section-row:
+                $: |
+                  .label {
+                    color: var(--primary--text-color) !important;
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 600;
+                  }
+            title: Work
+            type: entities
+    path: work-mode
+    title: Work
