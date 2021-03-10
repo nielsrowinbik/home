@@ -192,13 +192,7 @@ views:
               - input_datetime.work_end
               - type: section
                 label: Notifications
-              - entity: automation.announce_incoming_work_start_through_persistent_notification
-                icon: mdi:bell-ring-outline
-                name: Announce work mode 15 minutes before starting
-                secondary_info: last-triggered
-              - entity: automation.show_a_persistent_notification_while_work_mode_is_on
-                icon: mdi:bell-ring-outline
-                secondary_info: last-triggered
+              - input_boolean.setting_work_mode_notifications
             show_header_toggle: false
             style:
               .: |
