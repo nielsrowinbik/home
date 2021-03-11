@@ -134,7 +134,7 @@ automation:
             {% if isNight or isMovie %}
               454
             {% else %}
-              {{ state_attr('sensor.time_of_day', 'brightness')|int }}
+              {{ state_attr('sensor.time_of_day', 'color_temp')|int }}
             {% endif %}
           transition: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
