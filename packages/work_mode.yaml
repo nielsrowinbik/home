@@ -129,7 +129,8 @@ automation:
       - service: notify.all_devices
         data:
           message: clear_notification
-          tag: work_mode
+          data:
+            tag: work_mode
 
   - alias: Start work mode break timer
     trigger:
