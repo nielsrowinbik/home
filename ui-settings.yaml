@@ -9,48 +9,6 @@ views:
               - input_datetime.workday_alarm
               - input_datetime.off_day_alarm
               - type: section
-                label: Time of day
-              - entity: sensor.sun_elevation
-                name: Current sun elevation
-              - entity: sensor.time_of_day
-                name: Current time of day
-              - base_config:
-                  tap_action:
-                    action: call-service
-                    service: script.set_threshold
-                buttons:
-                  - name: Set Morning
-                    tap_action:
-                      service_data:
-                        entity: input_number.morning_threshold
-                  - name: Set Day
-                    tap_action:
-                      service_data:
-                        entity: input_number.day_threshold
-                  - name: Set Afternoon
-                    tap_action:
-                      service_data:
-                        entity: input_number.afternoon_threshold
-                  - name: Set Early evening
-                    tap_action:
-                      service_data:
-                        entity: input_number.early_evening_threshold
-                  - name: Set Evening
-                    tap_action:
-                      service_data:
-                        entity: input_number.evening_threshold
-                  - name: Set Night
-                    tap_action:
-                      service_data:
-                        entity: input_number.night_threshold
-                type: custom:paper-buttons-row
-              - input_number.morning_threshold
-              - input_number.day_threshold
-              - input_number.afternoon_threshold
-              - input_number.early_evening_threshold
-              - input_number.evening_threshold
-              - input_number.night_threshold
-              - type: section
                 label: Kitchen illuminance
               - icon: mdi:brightness-6
                 entity: sensor.kitchen_illuminance
@@ -92,13 +50,25 @@ views:
         cards:
           - entities:
               - entity: automation.update_lights_to_new_circadian_values
+                icon: mdi:lightning-bolt-outline
+                name: Update turned on lights automatically
                 secondary_info: last-triggered
-              - sensor.circadian_values
+              - entity: sensor.time_of_day
+                secondary: Brightness at {{ ((state_attr('sensor.time_of_day', 'brightness')|int / 255) * 100)|round(0) }}%, temperature at {{ state_attr('sensor.time_of_day', 'color_temp') }} mireds
+                type: custom:template-entity-row
+              - type: section
+                label: Thresholds
+              - input_number.setting_day_threshold
+              - input_number.setting_afternoon_threshold
+              - input_number.setting_early_evening_threshold
+              - input_number.setting_evening_threshold
+              - input_number.setting_night_threshold
+              - type: section
+                label: Light settings
               - input_number.setting_coolest_colour_temp
               - input_number.setting_warmest_colour_temp
               - input_number.setting_min_brightness
               - input_number.setting_max_brightness
-              - input_number.setting_night_threshold
             show_header_toggle: false
             style:
               .: |
@@ -132,10 +102,16 @@ views:
       - type: vertical-stack
         cards:
           - entities:
+              - input_boolean.bedtime_mode
               - type: section
                 label: Schedule
               - input_datetime.bedtime
               - input_datetime.wake_up
+              - input_boolean.setting_bedtime_while_charging
+              - type: section
+                label: Notifications
+              - entity: input_boolean.setting_bedtime_notifications
+                name: Get notifications about bedtime mode
             show_header_toggle: false
             style:
               .: |
@@ -163,8 +139,8 @@ views:
                   }
             title: Bedtime
             type: entities
-    path: bedtime
-    title: Bedtime
+    path: bedtime-mode
+    title: Bedtime mode
   - cards:
       - type: vertical-stack
         cards:
@@ -192,7 +168,8 @@ views:
               - input_datetime.work_end
               - type: section
                 label: Notifications
-              - input_boolean.setting_work_mode_notifications
+              - entity: input_boolean.setting_work_mode_notifications
+                name: Get notifications about work mode
             show_header_toggle: false
             style:
               .: |
