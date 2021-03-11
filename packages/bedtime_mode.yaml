@@ -1,0 +1,194 @@
+automation:
+  - alias: Announce incoming bedtime through persistent notification
+    trigger:
+      # Trigger when we should (no longer) notify about the set bedtime being within the next 60 minutes:
+      - platform: state
+        entity_id: binary_sensor.should_announce_bedtime
+        to:
+          - "on"
+      # Trigger when the bedtime changes (maybe we need to update the notification with the correct value):
+      - platform: state
+        entity_id: input_datetime.bedtime
+    condition:
+      # Only continue if notification settings for bedtime are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Your bedtime starts at {{ states('input_datetime.bedtime')[:-3] }}
+          message: Get ready for bed soon
+          data:
+            channel: Insights
+            clickAction: /ui-settings/bedtime
+            persistent: true
+            sticky: true
+            tag: bedtime_mode
+
+  - alias: Show a persistent notification while bedtime mode is on
+    trigger:
+      - platform: state
+        entity_id: input_boolean.bedtime_mode
+        to:
+          - "on"
+    condition:
+      # Only continue if notification settings for bedtime are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Bedtime mode is on
+          message: The lights will stay off until {{ states('input_datetime.wake_up')[:-3] }}
+          data:
+            actions:
+              - action: BEDTIME_TURN_OFF
+                title: Turn off
+            channel: Insights
+            clickAction: /ui-settings/bedtime
+            persistent: true
+            sticky: true
+            tag: bedtime_mode
+
+  - alias: Turn off bedtime mode through notification action
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: BEDTIME_TURN_OFF
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.bedtime_mode
+
+  - alias: Turn off bedtime mode when charging stops
+    trigger:
+    condition:
+      - condition: state
+        entity_id: binary_sensor.is_past_wake_up
+        state: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_while_charging
+        state: "on"
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.bedtime_mode
+  
+  - alias: Turn off bedtime mode at scheduled time
+    trigger:
+      - platform: time
+        at: input_datetime.wake_up
+    condition:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_while_charging
+        state: "off"
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.bedtime_mode
+
+  - alias: Turn on bedtime mode when charging begins
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.pixel_4_is_charging
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_while_charging
+        state: "on"
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.should_announce_bedtime
+            state: "on"
+          - condition: state
+            entity_id: binary_sensor.is_past_bedtime
+            state: "on"
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.bedtime_mode
+  
+  - alias: Turn on bedtime mode at scheduled time
+    trigger:
+      - platform: time
+        at: input_datetime.bedtime
+    condition:
+      - condition: state
+        entity_id: input_boolean.setting_bedtime_while_charging
+        state: "off"
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.bedtime_mode
+
+  - alias: Dismiss bedtime related notifications
+    trigger:
+      # Trigger when bedtime mode is turned off:
+      - platform: state
+        entity_id: input_boolean.bedtime_mode
+        to:
+          - "off"
+      # Trigger when we no longer want bedtime mode notifications:
+      - platform: state
+        entity_id: input_boolean.setting_bedtime_notifications
+        to:
+          - "off"
+    action:
+      - service: notify.all_devices
+        data:
+          message: clear_notification
+          data:
+            tag: bedtime_mode
+
+binary_sensor:
+  - platform: template
+    sensors:
+      should_announce_bedtime:
+        friendly_name: Bedtime should be announced
+        value_template: >-
+          {% set bedtime = state_attr('input_datetime.bedtime', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+          {% set announce_window = 30 %}
+
+          {{ (bedtime - (announce_window * 60)) <= now < bedtime }}
+      is_past_bedtime:
+        friendly_name: It's past the scheduled bedtime
+        value_template: >-
+          {% set bedtime = state_attr('input_datetime.bedtime', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ bedtime <= now }}
+      is_past_wake_up:
+        friendly_name: It's past the scheduled wake up time
+        value_template: >-
+          {% set wake_up = state_attr('input_datetime.wake_up', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ wake_up <= now }}
+
+input_boolean:
+  bedtime_mode:
+    icon: mdi:bed-outline
+    name: Bedtime mode
+  setting_bedtime_notifications:
+    icon: mdi:bell-ring-outline
+    name: Bedtime mode notifications
+  setting_bedtime_while_charging:
+    icon: mdi:power-plug-outline
+    name: Turn on bedtime mode while charging at bedtime
+  # TODO: Remove this in favour of "bedtime mode".
+  night_mode:
+    icon: mdi:weather-night
+    name: Night mode
+
+input_datetime:
+  bedtime:
+    has_date: false
+    has_time: true
+    icon: mdi:bed-outline
+    name: Bedtime
+  wake_up:
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+    name: Wake up

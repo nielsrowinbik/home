@@ -105,7 +105,6 @@ automation:
           brightness: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
-            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isDark = is_state('binary_sensor.kitchen_sufficiently_lit', 'off') %}
             {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
@@ -114,11 +113,7 @@ automation:
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
             {% if isBright or isCooking %}
-              {% if isCozy %}
-                125
-              {% else %}
                 255
-              {% endif %}
             {% elif isMovie %}
               {% if isMediaPaused %}
                 125
@@ -128,25 +123,25 @@ automation:
             {% elif isNight and isMotion %}
               1
             {% elif (isDark and isMotion) or isMorning %}
-              255
+              {{ state_attr('sensor.time_of_day', 'brightness')|int }}
             {% else %}
               0
             {% endif %}
           color_temp: >-
-            {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
-            {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
-            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {{ 475 if (isNight or isMorning or isMovie or isCozy) and not (isBright or isCooking) else 350 }}
+            {% if isNight or isMovie %}
+              454
+            {% else %}
+              {{ state_attr('sensor.time_of_day', 'brightness')|int }}
+            {% endif %}
           transition: >-
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
-            {% set isCozy = is_state('input_boolean.cozy_mode', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
 
-            {{ 2 if (isCozy or isMovie) and not (isBright or isCooking) else 0.5 }}
+            {{ 2 if isMovie and not (isBright or isCooking) else 0.5 }}
 
   - alias: Set light.kitchen_worktop
     mode: queued
@@ -343,7 +338,7 @@ sensor:
     value_template: "{{ value_json.temperature }}"
 
 switch:
-  - platform: mqtt 
+  - platform: mqtt
     command_topic: zigbee2mqtt/power_outlet_2/set
     name: Water fountain
     state_topic: zigbee2mqtt/power_outlet_2
