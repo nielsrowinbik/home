@@ -169,7 +169,7 @@ automation:
                 1
               {% endif %}
             {% else %}
-              200
+              {{ state_attr('sensor.time_of_day', 'brightness')|int }}
             {% endif %}
           transition: 2
 
@@ -228,17 +228,21 @@ automation:
 
             {% if isBright %}
               255
-            {% elif isMovie and not isMediaPaused %}
-              30
-            {% elif isMorning or isEvening or (isMovie and isMediaPaused) %}
-              125
+            {% elif isMovie %}
+              {% if isMediaPaused %}
+                125
+              {% else %}
+                30
+              {% endif %}
+            {% elif isMorning or isEvening %}
+              {{ state_attr('sensor.time_of_day', 'brightness')|int }}
             {% else %}
               0
             {% endif %}
           color_temp: >-
-            {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
+            {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
 
-            {{ 350 if isBright else 475 }}
+            {{ 454 if isMovie else state_attr('sensor.time_of_day', 'color_temp')|int }}
           transition: "{{ 0.5 if is_state('input_boolean.living_room_bright_mode', 'on') else 2 }}"
 
   - alias: Set switch.subwoofer
