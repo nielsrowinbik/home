@@ -1,0 +1,224 @@
+automation:
+  - alias: Announce incoming work start through persistent notification
+    trigger:
+      # Trigger when we should notify about the set worktime being within the next 15 minutes:
+      - platform: state
+        entity_id: binary_sensor.should_announce_work_start
+        to:
+          - "on"
+      # Trigger when the scheduled work start changes (maybe we need to update the notification with the correct value):
+      - platform: state
+        entity_id: input_datetime.work_start
+    condition:
+      # Only continue if notification settings for work mode are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_work_mode_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Your work starts at {{ states('input_datetime.work_start')[:-3] }}
+          message: Ready to get to work?
+          data:
+            channel: Insights
+            clickAction: /ui-settings/work-mode
+            persistent: true
+            sticky: true
+            tag: work_mode
+
+  - alias: Announce incoming work end through persistent notification
+    trigger:
+      # Trigger when we should (no longer) notify about the set worktime being within the next 10 minutes:
+      - platform: state
+        entity_id: binary_sensor.should_announce_work_end
+        to:
+          - "on"
+      # Trigger when the scheduled work end changes (maybe we need to update the notification with the correct value):
+      - platform: state
+        entity_id: input_datetime.work_end
+    action:
+      - service: notify.all_devices
+        data:
+          title: Your workday is about to end
+          message: Ready to wind down?
+          data:
+            channel: Insights
+            clickAction: /ui-settings/work-mode
+            persistent: true
+            sticky: true
+            tag: work_mode
+
+  - alias: Show a persistent notification while work mode is on
+    trigger:
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to:
+          - "on"
+      # Trigger when the scheduled work end changes (maybe we need to update the notification with the correct value):
+      - platform: state
+        entity_id: input_datetime.work_end
+      # Trigger when the break timer changes to idle (meaning we're no longer on a break)
+      - platform: state
+        entity_id: timer.work_mode_break
+        to:
+          - idle
+    condition:
+      # Only continue if we're not on a break (timer isn't running or paused)
+      - condition: state
+        entity_id: timer.work_mode_break
+        state: idle
+      # Only continue if notification settings for work mode are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_work_mode_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Work mode is on
+          message: Turns off at {{ states('input_datetime.work_end')[:-3] }}
+          data:
+            actions:
+              - action: WORK_MODE_BREAK_START
+                title: Take a break
+              - action: WORK_MODE_TURN_OFF
+                title: Turn off for now
+            channel: Insights
+            clickAction: /ui-settings/work-mode
+            persistent: true
+            sticky: true
+            tag: work_mode
+
+  - alias: Update persistent notification while on a break
+    trigger:
+      - platform: state
+        entity_id: timer.work_mode_break
+        to: active
+    condition:
+      # Only continue if notification settings for work mode are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_work_mode_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: You're on a break
+          message: Work mode will resume at {{ as_timestamp(state_attr('timer.work_mode_break', 'finishes_at'))|timestamp_custom('%H:%M') }}
+          data:
+            actions:
+              - action: WORK_MODE_BREAK_END
+                title: Resume now
+            channel: Insights
+            clickAction: /ui-settings/work-mode
+            persistent: true
+            sticky: true
+            tag: work_mode
+
+  - alias: Dismiss work mode related notifications
+    trigger:
+      # Trigger when work mode is turned off:
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to:
+          - "off"
+      # Trigger when we no longer want work mode notifications:
+      - platform: state
+        entity_id: input_boolean.setting_work_mode_notifications
+        to:
+          - "off"
+    action:
+      - service: notify.all_devices
+        data:
+          message: clear_notification
+          data:
+            tag: work_mode
+
+  - alias: Start work mode break timer
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: WORK_MODE_BREAK_START
+    action:
+      - service: timer.start
+        entity_id: timer.work_mode_break
+
+  - alias: Stop work mode break timer
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: WORK_MODE_BREAK_END
+      - platform: state
+        entity_id: input_boolean.work_mode
+        to: "off"
+    action:
+      - service: timer.finish
+        entity_id: timer.work_mode_break
+
+  - alias: Turn off work mode
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: WORK_MODE_TURN_OFF
+      - platform: time
+        at: input_datetime.work_end
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.work_mode
+
+  - alias: Turn on work mode
+    trigger:
+      - platform: time
+        at: input_datetime.work_start
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.work_mode
+
+binary_sensor:
+  - platform: template
+    sensors:
+      should_announce_work_end:
+        friendly_name: Work end should be announced
+        value_template: >-
+          {% set is_workday = is_state('binary_sensor.today_is_a_workday', 'on') %}
+          {% set work_end = state_attr('input_datetime.work_end', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+          {% set announce_window = 10 %}
+
+          {{ is_workday and ((work_end - (announce_window * 60)) <= now < work_end) }}
+      should_announce_work_start:
+        friendly_name: Work start should be announced
+        value_template: >-
+          {% set is_workday = is_state('binary_sensor.today_is_a_workday', 'on') %}
+          {% set work_start = state_attr('input_datetime.work_start', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+          {% set announce_window = 15 %}
+
+          {{ is_workday and ((work_start - (announce_window * 60)) <= now < work_start) }}
+
+input_boolean:
+  setting_work_mode_notifications:
+    icon: mdi:bell-ring-outline
+    name: Work mode notifications
+  work_mode:
+    icon: mdi:briefcase-outline
+    name: Work mode
+
+input_datetime:
+  work_start:
+    has_date: false
+    has_time: true
+    icon: mdi:clock-start
+    name: Workday start
+  work_end:
+    has_date: false
+    has_time: true
+    icon: mdi:clock-end
+    name: Workday end
+
+timer:
+  work_mode_break:
+    duration: "01:00:00"
+    icon: mdi:food-fork-drink
+    name: Work mode break

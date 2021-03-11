@@ -42,16 +42,24 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when the work break timer changes
+      - platform: state
+        entity_id: timer.work_mode_break
+        to:
+          - active
+          - idle
     action:
       - service: light.turn_on
         data:
           entity_id: light.office_desk
           brightness: >-
+            {% set isBreak = is_state('timer.work_mode_break', 'active') %}
             {% set isMotion = is_state('binary_sensor.office_motion', 'on') or is_state('binary_sensor.staircase_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
             {% set isWork = is_state('input_boolean.work_mode', 'on') %}
 
-            {% if isWork %}
+            {% if (isWork and not isBreak) %}
               255
             {% elif isNight and isMotion %}
               1
@@ -103,16 +111,24 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when the work break timer changes
+      - platform: state
+        entity_id: timer.work_mode_break
+        to:
+          - active
+          - idle
     action:
       - service: light.turn_on
         data:
           entity_id: light.office_spots
           brightness: >-
+            {% set isBreak = is_state('timer.work_mode_break', 'active') %}
             {% set isMotion = is_state('binary_sensor.office_motion', 'on') or is_state('binary_sensor.staircase_motion', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
             {% set isWork = is_state('input_boolean.work_mode', 'on') %}
 
-            {% if isWork or (not isNight and isMotion) %}
+            {% if (isWork and not isBreak) or (not isNight and isMotion) %}
               255
             {% elif isNight and isMotion %}
               1
@@ -138,39 +154,23 @@ automation:
         to:
           - "on"
           - "off"
+
+      # Trigger immediately when the work break timer changes
+      - platform: state
+        entity_id: timer.work_mode_break
+        to:
+          - active
+          - idle
     action:
       - service: light.turn_on
         data:
           entity_id: light.office_worktop
-          brightness: "{{ 255 if is_state('input_boolean.work_mode', 'on') else 0 }}"
+          brightness: >-
+            {% set isWork = is_state('input_boolean.work_mode', 'on') %}
+            {% set isBreak = is_state('timer.work_mode_break', 'active') %}
+
+            {{ 255 if isWork and not isBreak else 0 }}
           transition: 0.5
-
-  - alias: Toggle Work mode depending on workstation state
-    description: Make sure Work mode is turned on when the work station is in use
-    trigger:
-      # Trigger immediately when Home Assistant starts
-      - platform: homeassistant
-        event: start
-
-      # Trigger immediately when automations are reloaded
-      - platform: event
-        event_type: automation_reloaded
-
-      # Trigger immediately when workstation state changes to "NotPresent"
-      - platform: state
-        entity_id: sensor.srv_status
-        to:
-          - "NotPresent"
-
-      # Trigger immediately when workstation state changes from "NotPresent"
-      - platform: state
-        entity_id: sensor.srv_status
-        from:
-          - "NotPresent"
-    action:
-      - service: "input_boolean.turn_{{ 'off' if is_state('sensor.srv_status', 'NotPresent') else 'on' }}"
-        data:
-          entity_id: input_boolean.work_mode
 
 binary_sensor:
   - platform: mqtt
@@ -212,11 +212,6 @@ group:
       - light.office_desk
       - light.office_spots
       - light.office_worktop
-
-input_boolean:
-  work_mode:
-    icon: mdi:briefcase-outline
-    name: Work mode
 
 light:
   - platform: mqtt
