@@ -171,6 +171,10 @@ automation:
     trigger:
       - platform: time
         at: input_datetime.work_start
+    condition:
+      - condition: state
+        entity_id: binary_sensor.today_is_a_workday
+        state: "on"
     action:
       - service: input_boolean.turn_on
         entity_id: input_boolean.work_mode
@@ -182,20 +186,22 @@ binary_sensor:
         friendly_name: Work end should be announced
         value_template: >-
           {% set is_workday = is_state('binary_sensor.today_is_a_workday', 'on') %}
+          {% set is_work_mode_on = is_state('input_boolean.work_mode', 'on') %}
           {% set work_end = state_attr('input_datetime.work_end', 'timestamp')|int %}
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
           {% set announce_window = 10 %}
 
-          {{ is_workday and ((work_end - (announce_window * 60)) <= now < work_end) }}
+          {{ is_workday and is_work_mode_on and ((work_end - (announce_window * 60)) <= now < work_end) }}
       should_announce_work_start:
         friendly_name: Work start should be announced
         value_template: >-
           {% set is_workday = is_state('binary_sensor.today_is_a_workday', 'on') %}
+          {% set is_work_mode_off = is_state('input_boolean.work_mode', 'off') %}
           {% set work_start = state_attr('input_datetime.work_start', 'timestamp')|int %}
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
           {% set announce_window = 15 %}
 
-          {{ is_workday and ((work_start - (announce_window * 60)) <= now < work_start) }}
+          {{ is_workday and is_work_mode_off and ((work_start - (announce_window * 60)) <= now < work_start) }}
 
 input_boolean:
   setting_work_mode_notifications:
