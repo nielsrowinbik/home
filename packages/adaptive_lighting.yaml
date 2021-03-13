@@ -122,33 +122,45 @@ input_number:
     name: Warmest colour temperature
     step: 100
     unit_of_measurement: K
+  setting_early_morning_threshold:
+    max: 10
+    min: -10
+    name: Early morning threshold
+    step: 0.1
+    unit_of_measurement: °
+  setting_morning_threshold:
+    max: 10
+    min: -10
+    name: Morning threshold
+    step: 0.1
+    unit_of_measurement: °
   setting_day_threshold:
-    max: 6
-    min: -6
+    max: 10
+    min: -10
     name: Day threshold
     step: 0.1
     unit_of_measurement: °
   setting_afternoon_threshold:
-    max: 6
-    min: -6
+    max: 10
+    min: -10
     name: Afternoon threshold
     step: 0.1
     unit_of_measurement: °
   setting_early_evening_threshold:
-    max: 6
-    min: -6
+    max: 10
+    min: -10
     name: Early evening threshold
     step: 0.1
     unit_of_measurement: °
   setting_evening_threshold:
-    max: 6
-    min: -6
+    max: 10
+    min: -10
     name: Evening threshold
     step: 0.1
     unit_of_measurement: °
   setting_night_threshold:
-    max: 6
-    min: -6
+    max: 10
+    min: -10
     name: Night threshold
     step: 0.1
     unit_of_measurement: °

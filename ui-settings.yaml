@@ -58,6 +58,9 @@ views:
                 type: custom:template-entity-row
               - type: section
                 label: Thresholds
+              - sensor.elevation
+              - input_number.setting_early_morning_threshold
+              - input_number.setting_morning_threshold
               - input_number.setting_day_threshold
               - input_number.setting_afternoon_threshold
               - input_number.setting_early_evening_threshold
