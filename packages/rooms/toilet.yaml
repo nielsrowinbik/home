@@ -48,12 +48,13 @@ automation:
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
             {% if (isDoorOpen or isMotion) and not isNight %}
-              255
+              {{ state_attr('sensor.time_of_day', 'brightness') }}
             {% elif (isDoorOpen or isMotion) and isNight %}
               1
             {% else %}
               0
             {% endif %}
+          color_temp: "{{ state_attr('sensor.time_of_day', 'color_temp') }}"
           transition: 0.5
 
 binary_sensor:

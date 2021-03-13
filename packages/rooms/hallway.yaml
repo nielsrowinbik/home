@@ -43,7 +43,7 @@ automation:
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
             {% if isDoorOpen or (isMotion and not isNight) %}
-              255
+              {{ state_attr('sensor.time_of_day', 'brightness') }}
             {% else %}
               0
             {% endif %}
