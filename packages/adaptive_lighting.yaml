@@ -171,18 +171,6 @@ script:
           color_temp: "{{ state_attr('sensor.time_of_day', 'color_temp')|int }}"
           transition: "{{ transition or 0.5 }}"
     mode: restart
-  set_threshold:
-    alias: Set a time of day threshold
-    fields:
-      entity_id:
-        description: For which entity should we update the value?
-        example: input_number.day_threshold
-    sequence:
-      - service: input_number.set_value
-        data:
-          entity_id: "{{ entity_id }}"
-          value: "{{ states('sensor.sun_elevation')|round(1) }}"
-    mode: parallel
 
 sensor:
   - platform: sun2
