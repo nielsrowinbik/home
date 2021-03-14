@@ -56,9 +56,11 @@ views:
                 type: custom:template-entity-row
               - type: section
                 label: Thresholds
-              - sensor.elevation
-              - input_number.setting_early_morning_threshold
-              - input_number.setting_morning_threshold
+              - entity: sensor.elevation
+                name: Current elevation
+                secondary: "Max today is {{ states('sensor.max_elevation')|round(1) }} °"
+                state: "{{ states('sensor.elevation') }} °"
+                type: custom:template-entity-row
               - input_number.setting_day_threshold
               - input_number.setting_afternoon_threshold
               - input_number.setting_early_evening_threshold

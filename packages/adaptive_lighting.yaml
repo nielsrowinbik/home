@@ -123,34 +123,34 @@ input_number:
     step: 1
     unit_of_measurement: mireds
   setting_day_threshold:
-    max: 10
-    min: -10
+    max: 15
+    min: -15
     name: Day threshold
-    step: 0.1
+    step: 0.5
     unit_of_measurement: °
   setting_afternoon_threshold:
-    max: 10
-    min: -10
+    max: 15
+    min: -15
     name: Afternoon threshold
-    step: 0.1
+    step: 0.5
     unit_of_measurement: °
   setting_early_evening_threshold:
-    max: 10
-    min: -10
+    max: 15
+    min: -15
     name: Early evening threshold
-    step: 0.1
+    step: 0.5
     unit_of_measurement: °
   setting_evening_threshold:
-    max: 10
-    min: -10
+    max: 15
+    min: -15
     name: Evening threshold
-    step: 0.1
+    step: 0.5
     unit_of_measurement: °
   setting_night_threshold:
-    max: 10
-    min: -10
+    max: 15
+    min: -15
     name: Night threshold
-    step: 0.1
+    step: 0.5
     unit_of_measurement: °
 
 script:
