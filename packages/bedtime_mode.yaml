@@ -249,10 +249,6 @@ input_boolean:
   setting_bedtime_while_charging:
     icon: mdi:power-plug-outline
     name: Turn on bedtime mode while charging at bedtime
-  # TODO: Remove this in favour of "bedtime mode".
-  night_mode:
-    icon: mdi:weather-night
-    name: Night mode
   vacation_mode:
     icon: mdi:palm-tree
     name: Vacation mode

@@ -197,7 +197,7 @@ sensor:
         value_template: >-
           {% if is_state('group.everyone', 'not_home') and not is_state('input_boolean.guest_mode', 'on') %}
             Away
-          {% elif is_state('input_boolean.night_mode', 'on') %}
+          {% elif is_state('input_boolean.bedtime_mode', 'on') %}
             Night
           {% elif is_state('sensor.time_of_day', 'Night') and is_state_attr('sun.sun', 'rising', true) %}
             Morning

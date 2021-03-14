@@ -95,7 +95,7 @@ views:
             type: conditional
           - card:
               entities:
-                - entity: input_boolean.night_mode
+                - entity: input_boolean.bedtime_mode
                   name: "{{ state_attr('binary_sensor.suggest_bedtime', 'title') }}"
                   secondary: "{{ state_attr('binary_sensor.suggest_bedtime', 'message') }}"
                   state: ""

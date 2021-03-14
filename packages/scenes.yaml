@@ -18,10 +18,10 @@ scene:
       input_boolean.living_room_bright_mode: off
   - name: Morning
     entities:
-      input_boolean.night_mode: off
+      input_boolean.bedtime_mode: off
   - name: Night
     entities:
-      input_boolean.night_mode: on
+      input_boolean.bedtime_mode: on
   - name: Work
     entities:
       input_boolean.work_mode: on

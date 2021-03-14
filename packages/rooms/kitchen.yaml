@@ -181,9 +181,9 @@ automation:
       - platform: event
         event_type: automation_reloaded
 
-      # Trigger immediately when night mode is toggled
+      # Trigger immediately when bedtime mode is toggled
       - platform: state
-        entity_id: input_boolean.night_mode
+        entity_id: input_boolean.bedtime_mode
         to:
           - "on"
           - "off"
