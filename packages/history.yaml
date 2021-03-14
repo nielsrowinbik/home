@@ -10,9 +10,7 @@ logbook:
     domains:
       - group
       - persistent_notification
-    entities:
-      - sensor.date
-      - sensor.time
+    entities: []
 
 recorder:
   exclude:
@@ -28,5 +26,3 @@ recorder:
       - binary_sensor.today_is_a_workday
       - binary_sensor.tomorrow_is_a_national_workday
       - binary_sensor.tomorrow_is_a_workday
-      - sensor.date
-      - sensor.time

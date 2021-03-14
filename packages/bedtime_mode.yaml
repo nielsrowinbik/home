@@ -8,7 +8,7 @@ automation:
           - "on"
       # Trigger when the bedtime changes (maybe we need to update the notification with the correct value):
       - platform: state
-        entity_id: input_datetime.bedtime
+        entity_id: input_datetime.todays_bedtime
     condition:
       # Only continue if notification settings for bedtime are turned on:
       - condition: state
@@ -17,7 +17,7 @@ automation:
     action:
       - service: notify.all_devices
         data:
-          title: Your bedtime starts at {{ states('input_datetime.bedtime')[:-3] }}
+          title: Your bedtime starts at {{ states('input_datetime.todays_bedtime')[:-3] }}
           message: Get ready for bed soon
           data:
             channel: Insights
@@ -41,7 +41,7 @@ automation:
       - service: notify.all_devices
         data:
           title: Bedtime mode is on
-          message: The lights will stay off until {{ states('input_datetime.wake_up')[:-3] }}
+          message: The lights will stay off until {{ states('input_datetime.todays_alarm')[:-3] }}
           data:
             actions:
               - action: BEDTIME_TURN_OFF
@@ -79,7 +79,7 @@ automation:
   - alias: Turn off bedtime mode at scheduled time
     trigger:
       - platform: time
-        at: input_datetime.wake_up
+        at: input_datetime.todays_alarm
     condition:
       - condition: state
         entity_id: input_boolean.setting_bedtime_while_charging
@@ -112,7 +112,7 @@ automation:
   - alias: Turn on bedtime mode at scheduled time
     trigger:
       - platform: time
-        at: input_datetime.bedtime
+        at: input_datetime.todays_bedtime
     condition:
       - condition: state
         entity_id: input_boolean.setting_bedtime_while_charging
@@ -140,31 +140,104 @@ automation:
           data:
             tag: bedtime_mode
 
+  - alias: Set today's alarm
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.today_is_a_workday
+        to:
+          - "on"
+          - "off"
+      - platform: state
+        entity_id: input_datetime.workday_alarm
+      - platform: state
+        entity_id: input_datetime.off_day_alarm
+    action:
+      - service: input_datetime.set_datetime
+        data:
+          entity_id: input_datetime.todays_alarm
+          time: >-
+            {% set entity = 'workday_alarm' if is_state('binary_sensor.today_is_a_workday', 'on') else 'off_day_alarm' %}
+
+            {{ states('input_datetime.' ~ entity) }}
+
+  - alias: Set tomorrow's alarm
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.tomorrow_is_a_workday
+        to:
+          - "on"
+          - "off"
+      - platform: state
+        entity_id: input_datetime.workday_alarm
+      - platform: state
+        entity_id: input_datetime.off_day_alarm
+    action:
+      - service: input_datetime.set_datetime
+        data:
+          entity_id: input_datetime.tomorrows_alarm
+          time: >-
+            {% set entity = 'workday_alarm' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'off_day_alarm' %}
+
+            {{ states('input_datetime.' ~ entity) }}
+
+  - alias: Set today's bedtime
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.tomorrow_is_a_workday
+        to:
+          - "on"
+          - "off"
+      - platform: state
+        entity_id: input_datetime.workday_bedtime
+      - platform: state
+        entity_id: input_datetime.off_day_bedtime
+    action:
+      - service: input_datetime.set_datetime
+        data:
+          entity_id: input_datetime.todays_bedtime
+          time: >-
+            {% set entity = 'workday_bedtime' if is_state('binary_sensor.tomorrow_is_a_workday', 'on') else 'off_day_bedtime' %}
+
+            {{ states('input_datetime.' ~ entity) }}
+
 binary_sensor:
   - platform: template
     sensors:
-      should_announce_bedtime:
-        friendly_name: Bedtime should be announced
-        value_template: >-
-          {% set bedtime = state_attr('input_datetime.bedtime', 'timestamp')|int %}
-          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
-          {% set announce_window = 30 %}
-
-          {{ (bedtime - (announce_window * 60)) <= now < bedtime }}
       is_past_bedtime:
-        friendly_name: It's past the scheduled bedtime
+        friendly_name: It's past today's scheduled bedtime
         value_template: >-
-          {% set bedtime = state_attr('input_datetime.bedtime', 'timestamp')|int %}
+          {% set bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp')|int %}
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
 
           {{ bedtime <= now }}
       is_past_wake_up:
-        friendly_name: It's past the scheduled wake up time
+        friendly_name: It's past today's scheduled wake up time
         value_template: >-
-          {% set wake_up = state_attr('input_datetime.wake_up', 'timestamp')|int %}
+          {% set wake_up = state_attr('input_datetime.todays_alarm', 'timestamp')|int %}
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
 
           {{ wake_up <= now }}
+      should_announce_bedtime:
+        friendly_name: Bedtime should be announced
+        value_template: >-
+          {% set bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+          {% set announce_window = 60 %}
+
+          {{ (bedtime - (announce_window * 60)) <= now < bedtime }}
+      today_is_a_workday:
+        friendly_name: Today is a workday
+        value_template: "{{ is_state('binary_sensor.today_is_a_national_workday', 'on') if is_state('input_boolean.vacation_mode', 'off') else false }}"
+      tomorrow_is_a_workday:
+        friendly_name: Tomorrow is a workday
+        value_template: "{{ is_state('binary_sensor.tomorrow_is_a_national_workday', 'on') if is_state('input_boolean.vacation_mode', 'off') else false }}"
+  - platform: workday
+    country: NL
+    name: Today is a national workday
+  - platform: workday
+    country: NL
+    days_offset: 1
+    name: Tomorrow is a national workday
 
 input_boolean:
   bedtime_mode:
@@ -180,15 +253,43 @@ input_boolean:
   night_mode:
     icon: mdi:weather-night
     name: Night mode
+  vacation_mode:
+    icon: mdi:palm-tree
+    name: Vacation mode
 
 input_datetime:
-  bedtime:
+  todays_bedtime:
     has_date: false
     has_time: true
     icon: mdi:bed-outline
-    name: Bedtime
-  wake_up:
+    name: Today's bedtime
+  todays_alarm:
     has_date: false
     has_time: true
     icon: mdi:alarm
-    name: Wake up
+    name: Today's alarm
+  tomorrows_alarm:
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+    name: Tomorrow's alarm
+  off_day_bedtime:
+    has_date: false
+    has_time: true
+    icon: mdi:bed-outline
+    name: Day off bedtime
+  off_day_alarm:
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+    name: Day off alarm
+  workday_bedtime:
+    has_date: false
+    has_time: true
+    icon: mdi:bed-outline
+    name: Workday bedtime
+  workday_alarm:
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+    name: Workday alarm
