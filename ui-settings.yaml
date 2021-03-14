@@ -6,8 +6,6 @@ views:
           - entities:
               - input_boolean.guest_mode
               - input_boolean.vacation_mode
-              - input_datetime.workday_alarm
-              - input_datetime.off_day_alarm
               - type: section
                 label: Kitchen illuminance
               - icon: mdi:brightness-6
@@ -108,8 +106,10 @@ views:
               - input_boolean.bedtime_mode
               - type: section
                 label: Schedule
-              - input_datetime.bedtime
-              - input_datetime.wake_up
+              - input_datetime.workday_bedtime
+              - input_datetime.off_day_bedtime
+              - input_datetime.workday_alarm
+              - input_datetime.off_day_alarm
               - input_boolean.setting_bedtime_while_charging
               - type: section
                 label: Notifications
@@ -142,8 +142,8 @@ views:
                   }
             title: Bedtime
             type: entities
-    path: bedtime-mode
-    title: Bedtime mode
+    path: bedtime
+    title: Bedtime
   - cards:
       - type: vertical-stack
         cards:
@@ -198,7 +198,7 @@ views:
                     font-family: 'Product Sans', Roboto;
                     font-weight: 600;
                   }
-            title: Work
+            title: Work mode
             type: entities
     path: work-mode
-    title: Work
+    title: Work mode
