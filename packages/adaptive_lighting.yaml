@@ -111,29 +111,17 @@ input_number:
     step: 1
     unit_of_measurement: "%"
   setting_coolest_colour_temp:
-    max: 10000
-    min: 1000
+    max: 454
+    min: 154
     name: Coolest colour temperature
-    step: 100
-    unit_of_measurement: K
+    step: 1
+    unit_of_measurement: mireds
   setting_warmest_colour_temp:
-    max: 10000
-    min: 1000
+    max: 454
+    min: 154
     name: Warmest colour temperature
-    step: 100
-    unit_of_measurement: K
-  setting_early_morning_threshold:
-    max: 10
-    min: -10
-    name: Early morning threshold
-    step: 0.1
-    unit_of_measurement: °
-  setting_morning_threshold:
-    max: 10
-    min: -10
-    name: Morning threshold
-    step: 0.1
-    unit_of_measurement: °
+    step: 1
+    unit_of_measurement: mireds
   setting_day_threshold:
     max: 10
     min: -10
@@ -246,8 +234,8 @@ sensor:
             {% set cur_elevation = states('sensor.elevation')|float %}
             {% set max_elevation = states('sensor.max_elevation')|float %}
 
-            {% set coolest = (1000000 / states('input_number.setting_coolest_colour_temp')|int)|int %}
-            {% set warmest = (1000000 / states('input_number.setting_warmest_colour_temp')|int)|int %}
+            {% set coolest = states('input_number.setting_coolest_colour_temp')|int %}
+            {% set warmest = states('input_number.setting_warmest_colour_temp')|int %}
             {% set night_threshold = states('input_number.setting_night_threshold')|float %}
 
             {% if cur_elevation > night_threshold %}
