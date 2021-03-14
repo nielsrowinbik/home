@@ -66,7 +66,7 @@ automation:
     trigger:
     condition:
       - condition: state
-        entity_id: binary_sensor.is_past_wake_up
+        entity_id: binary_sensor.is_past_alarm
         state: "on"
     condition:
       - condition: state
@@ -203,6 +203,27 @@ automation:
 binary_sensor:
   - platform: template
     sensors:
+      is_before_alarm:
+        friendly_name: It's before today's scheduled alarm
+        value_template: >-
+          {% set alarm = state_attr('input_datetime.todays_alarm', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ alarm > now }}
+      is_before_bedtime:
+        friendly_name: It's before today's scheduled bedtime
+        value_template: >-
+          {% set bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ bedtime > now }}
+      is_past_alarm:
+        friendly_name: It's past today's scheduled alarm
+        value_template: >-
+          {% set wake_up = state_attr('input_datetime.todays_alarm', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ wake_up <= now }}
       is_past_bedtime:
         friendly_name: It's past today's scheduled bedtime
         value_template: >-
@@ -210,13 +231,6 @@ binary_sensor:
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
 
           {{ bedtime <= now }}
-      is_past_wake_up:
-        friendly_name: It's past today's scheduled wake up time
-        value_template: >-
-          {% set wake_up = state_attr('input_datetime.todays_alarm', 'timestamp')|int %}
-          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
-
-          {{ wake_up <= now }}
       should_announce_bedtime:
         friendly_name: Bedtime should be announced
         value_template: >-
