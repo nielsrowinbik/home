@@ -103,16 +103,19 @@ automation:
         data:
           entity_id: light.kitchen_spots
           brightness: >-
+            {% set isAfternoon = is_state('sensor.current_scene', 'Afternoon') %}
             {% set isBright = is_state('input_boolean.kitchen_bright_mode', 'on') %}
             {% set isCooking = is_state('input_boolean.cooking_mode', 'on') %}
             {% set isDark = is_state('binary_sensor.kitchen_sufficiently_lit', 'off') %}
+            {% set isEarlyEvening = is_state('sensor.current_scene', 'Early evening') %}
+            {% set isEvening = is_state('sensor.current_scene', 'Evening') %}
             {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
             {% set isMotion = is_state('binary_sensor.kitchen_motion', 'on') %}
             {% set isMovie = is_state('input_boolean.movie_mode', 'on') %}
             {% set isNight = is_state('sensor.current_scene', 'Night') %}
 
-            {% if isBright or isCooking %}
+            {% if isBright or isCooking or (isDark and isMotion) %}
                 255
             {% elif isMovie %}
               {% if isMediaPaused %}
@@ -122,7 +125,7 @@ automation:
               {% endif %}
             {% elif isNight and isMotion %}
               1
-            {% elif (isDark and isMotion) or isMorning %}
+            {% elif isMorning or isAfternoon or isEarlyEvening or isEvening %}
               {{ state_attr('sensor.time_of_day', 'brightness')|int }}
             {% else %}
               0

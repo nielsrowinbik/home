@@ -219,8 +219,10 @@ automation:
         data:
           entity_id: light.living_room_spots
           brightness: >-
+            {% set isAfternoon = is_state('sensor.current_scene', 'Afternoon') %}
             {% set isAway = is_state('sensor.current_scene', 'Away') %}
             {% set isBright = is_state('input_boolean.living_room_bright_mode', 'on') %}
+            {% set isEarlyEvening = is_state('sensor.current_scene', 'Early evening') %}
             {% set isEvening = is_state('sensor.current_scene', 'Evening') %}
             {% set isMediaPaused = is_state('media_player.living_room_android_tv', 'paused') or is_state('media_player.living_room_android_tv', 'idle') %}
             {% set isMorning = is_state('sensor.current_scene', 'Morning') %}
@@ -234,7 +236,7 @@ automation:
               {% else %}
                 30
               {% endif %}
-            {% elif isMorning or isEvening %}
+            {% elif isMorning or isAfternoon or isEarlyEvening or isEvening %}
               {{ state_attr('sensor.time_of_day', 'brightness')|int }}
             {% else %}
               0
