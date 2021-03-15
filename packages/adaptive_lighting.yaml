@@ -197,24 +197,35 @@ sensor:
       time_of_day:
         attribute_templates:
           brightness: >-
-            {% set rising = is_state_attr('sun.sun', 'rising', true) %}
-            {% set cur_elevation = states('sensor.elevation')|float %}
-            {% set max_elevation = states('input_number.setting_day_threshold')|float if rising else states('input_number.setting_afternoon_threshold')|float  %}
-            {% set min_elevation = states('input_number.setting_night_threshold')|float %}
+            {% set todays_alarm = state_attr('input_datetime.todays_alarm', 'timestamp') %}
+            {% set todays_bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp') %}
+            {% set is_past_todays_alarm = is_state('binary_sensor.is_past_alarm', 'on') %}
+            {% set is_past_todays_bedtime = is_state('binary_sensor.is_past_bedtime', 'on') %}
+            {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+            {% set window_size = 60 * 60 %}
+
+            {% set dimming_window_start = todays_bedtime - window_size %}
+            {% set dimming_window_end = todays_bedtime %}
+            {% set is_within_dimming_window = dimming_window_start <= now < dimming_window_end %}
+            {% set brightening_window_start = todays_alarm %}
+            {% set brightening_window_end = todays_alarm + window_size %}
+            {% set is_within_brightening_window = brightening_window_start <= now < brightening_window_end %}
 
             {% set brightest = states('input_number.setting_max_brightness')|int %}
             {% set dimmest = states('input_number.setting_min_brightness')|int %}
+            {% set diff_brightness = brightest - dimmest %}
 
-            {% if cur_elevation > max_elevation %}
+            {% if is_within_brightening_window %}
+              {% set prog_time = ((now - brightening_window_start) / window_size)|abs %}
+              {% set brightness_pct = prog_time * diff_brightness + dimmest %}
+            {% elif is_within_dimming_window %}
+              {% set prog_time = ((now - dimming_window_start) / window_size)|abs %}
+              {% set brightness_pct = (1 - prog_time) * diff_brightness + dimmest %}
+            {% elif is_past_todays_alarm and not is_past_todays_bedtime %}
               {% set brightness_pct = brightest %}
-            {% elif cur_elevation < min_elevation %}
-              {% set brightness_pct = dimmest %}
             {% else %}
-              {% set diff_elevation = min_elevation - max_elevation %}
-              {% set prog_elevation = ((cur_elevation - max_elevation) / diff_elevation)|abs %}
-              {% set diff_brightness = brightest - dimmest %}
-
-              {% set brightness_pct = (1 - prog_elevation) * diff_brightness + dimmest %}
+              {% set brightness_pct = dimmest %}
             {% endif %}
 
             {{ (brightness_pct / 100 * 255)|int }}
