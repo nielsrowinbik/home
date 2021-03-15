@@ -5,6 +5,7 @@ views:
         cards:
           - entities:
               - input_boolean.guest_mode
+              - input_boolean.movie_mode
               - input_boolean.vacation_mode
               - type: section
                 label: Kitchen illuminance
