@@ -75,7 +75,12 @@ automation:
       - service: notify.all_devices
         data:
           title: Work mode is on
-          message: Turns off at {{ states('input_datetime.work_end')[:-3] }}
+          message: >-
+            {% if is_state('binary_sensor.is_within_work_time', 'on') %}
+              Turns off at {{ states('input_datetime.work_end')[:-3] }}
+            {% else %}
+              On until you turn it off
+            {% endif %}
           data:
             actions:
               - action: WORK_MODE_BREAK_START
@@ -182,6 +187,15 @@ automation:
 binary_sensor:
   - platform: template
     sensors:
+      is_within_work_time:
+        friendly_name: It's within the scheduled work time
+        value_template: >-
+          {% set is_workday = is_state('binary_sensor.today_is_a_workday', 'on') %}
+          {% set work_end = state_attr('input_datetime.work_end', 'timestamp')|int %}
+          {% set work_start = state_attr('input_datetime.work_start', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ is_workday and (work_start <= now < work_end) }}
       should_announce_work_end:
         friendly_name: Work end should be announced
         value_template: >-
