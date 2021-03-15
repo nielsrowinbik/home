@@ -41,7 +41,7 @@ automation:
       - service: notify.all_devices
         data:
           title: Bedtime mode is on
-          message: The lights will stay off until {{ states('input_datetime.todays_alarm')[:-3] }}
+          message: The lights will stay off until {{ (states('input_datetime.tomorrows_alarm') if is_state('binary_sensor.is_past_alarm', 'on') else states('input_datetime.todays_alarm'))[:-3] }}
           data:
             actions:
               - action: BEDTIME_TURN_OFF
