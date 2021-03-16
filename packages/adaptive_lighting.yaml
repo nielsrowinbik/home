@@ -110,6 +110,12 @@ input_number:
     name: Minimum brightness
     step: 1
     unit_of_measurement: "%"
+  setting_bedtime_brightness:
+    max: 100
+    min: 1
+    name: Bedtime brightness
+    step: 1
+    unit_of_measurement: "%"
   setting_coolest_colour_temp:
     max: 454
     min: 154
@@ -197,14 +203,15 @@ sensor:
       time_of_day:
         attribute_templates:
           brightness: >-
+            {# Get a reference to today's alarm and bedtime and whether those have passed: #}
             {% set todays_alarm = state_attr('input_datetime.todays_alarm', 'timestamp') %}
             {% set todays_bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp') %}
             {% set is_past_todays_alarm = is_state('binary_sensor.is_past_alarm', 'on') %}
             {% set is_past_todays_bedtime = is_state('binary_sensor.is_past_bedtime', 'on') %}
             {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
 
+            {# Determine the size, start, and end of the brightening and dimming windows: #}
             {% set window_size = 60 * 60 %}
-
             {% set dimming_window_start = todays_bedtime - window_size %}
             {% set dimming_window_end = todays_bedtime %}
             {% set is_within_dimming_window = dimming_window_start <= now < dimming_window_end %}
@@ -212,20 +219,39 @@ sensor:
             {% set brightening_window_end = todays_alarm + window_size %}
             {% set is_within_brightening_window = brightening_window_start <= now < brightening_window_end %}
 
-            {% set brightest = states('input_number.setting_max_brightness')|int %}
-            {% set dimmest = states('input_number.setting_min_brightness')|int %}
-            {% set diff_brightness = brightest - dimmest %}
+            {# Get a reference to the brightness settings that we'll use: #}
+            {% set max_brightness_pct = states('input_number.setting_max_brightness')|int %}
+            {% set min_brightness_pct = states('input_number.setting_min_brightness')|int %}
+            {% set bedtime_brightness_pct = states('input_number.setting_bedtime_brightness')|int %}
 
+            {# Get a reference to the sun's elevation and such to determine the adaptive brightness: #}
+            {% set rising = is_state_attr('sun.sun', 'rising', true) %}
+            {% set cur_elevation = states('sensor.elevation')|float %}
+            {% set max_elevation = states('input_number.setting_day_threshold')|float if rising else states('input_number.setting_afternoon_threshold')|float  %}
+            {% set min_elevation = states('input_number.setting_night_threshold')|float %}
+
+            {# Compute the adaptive brightness: #}
+            {% if cur_elevation > max_elevation %}
+              {% set adaptive_brightness_pct = max_brightness_pct %}
+            {% elif cur_elevation < min_elevation %}
+              {% set adaptive_brightness_pct = min_brightness_pct %}
+            {% else %}
+              {% set prog_elevation = ((cur_elevation - max_elevation) / (min_elevation - max_elevation))|abs %}
+              {% set adaptive_brightness_pct = (1 - prog_elevation) * (min_brightness_pct - max_brightness_pct) + min_brightness_pct %}
+            {% endif %}
+
+            {# Compute the correct brightness to return keeping in mind that, during the windows, we need to 
+              transition to the adaptive brightness from the night brightness or the other way around: #}
             {% if is_within_brightening_window %}
               {% set prog_time = ((now - brightening_window_start) / window_size)|abs %}
-              {% set brightness_pct = prog_time * diff_brightness + dimmest %}
+              {% set brightness_pct = prog_time * (bedtime_brightness_pct - adaptive_brightness_pct) + bedtime_brightness_pct %}
             {% elif is_within_dimming_window %}
               {% set prog_time = ((now - dimming_window_start) / window_size)|abs %}
-              {% set brightness_pct = (1 - prog_time) * diff_brightness + dimmest %}
+              {% set brightness_pct = (1 - prog_time) * (adaptive_brightness_pct - bedtime_brightness_pct) + bedtime_brightness_pct %}
             {% elif is_past_todays_alarm and not is_past_todays_bedtime %}
-              {% set brightness_pct = brightest %}
+              {% set brightness_pct = adaptive_brightness_pct %}
             {% else %}
-              {% set brightness_pct = dimmest %}
+              {% set brightness_pct = bedtime_brightness_pct %}
             {% endif %}
 
             {{ (brightness_pct / 100 * 255)|int }}

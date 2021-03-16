@@ -73,6 +73,7 @@ views:
               - input_number.setting_warmest_colour_temp
               - input_number.setting_min_brightness
               - input_number.setting_max_brightness
+              - input_number.setting_bedtime_brightness
             show_header_toggle: false
             style:
               .: |
