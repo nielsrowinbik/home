@@ -39,8 +39,8 @@ automation:
     action:
       - service: notify.all_devices
         data:
-          title: Your workday is about to end
-          message: Ready to wind down?
+          title: Ready to switch off?
+          message: Work mode will turn off at {{ states('input_datetime.work_end')[:-3] }}
           data:
             channel: Insights
             clickAction: /ui-settings/work-mode
