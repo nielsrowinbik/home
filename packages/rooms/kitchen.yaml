@@ -173,40 +173,6 @@ automation:
             {{ 255 if isCooking else 0 }}
           transition: 0.5
 
-  - alias: Set switch.water_fountain
-    mode: queued
-    trigger:
-      # Trigger immediately when Home Assistant starts
-      - platform: homeassistant
-        event: start
-
-      # Trigger immediately when automations are reloaded
-      - platform: event
-        event_type: automation_reloaded
-
-      # Trigger immediately when bedtime mode is toggled
-      - platform: state
-        entity_id: input_boolean.bedtime_mode
-        to:
-          - "on"
-          - "off"
-
-      # Trigger immediately when the living room door is opened of closed
-      - platform: state
-        entity_id: binary_sensor.living_room_door
-        to:
-          - "on"
-          - "off"
-    action:
-      - service: >-
-          {% set isAway = is_state('sensor.current_scene', 'Away') %}
-          {% set isDoorOpen = is_state('binary_sensor.living_room_door', 'on') %}
-          {% set isNight = is_state('sensor.current_scene', 'Night') %}
-
-          switch.turn_{{ 'on' if isDoorOpen or (not isAway and not isNight) else 'off' }}
-        data:
-          entity_id: switch.water_fountain
-
   - alias: Toggle cooking mode
     trigger:
       # Trigger immediately when the kitchen wall switch's right button is pressed
@@ -339,10 +305,3 @@ sensor:
     state_topic: zigbee2mqtt/kitchen_temperature_pressure_and_humidity_sensor
     unit_of_measurement: "°C"
     value_template: "{{ value_json.temperature }}"
-
-switch:
-  - platform: mqtt
-    command_topic: zigbee2mqtt/power_outlet_2/set
-    name: Water fountain
-    state_topic: zigbee2mqtt/power_outlet_2
-    value_template: "{{ value_json.state }}"
