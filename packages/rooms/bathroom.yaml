@@ -56,6 +56,12 @@ binary_sensor:
     payload_on: true
     state_topic: zigbee2mqtt/bathroom_motion_sensor
     value_template: "{{ value_json.occupancy }}"
+  - platform: mqtt
+    name: Shower in use
+    payload_off: false
+    payload_on: true
+    state_topic: zigbee2mqtt/bathroom_water_sensor
+    value_template: "{{ value_json.water_leak }}"
   - platform: template
     sensors:
       bathroom_occupied:
@@ -85,7 +91,7 @@ group:
     name: Bathroom occupied
     entities:
       - binary_sensor.bathroom_motion
-      # - binary_sensor.shower_in_use
+      - binary_sensor.shower_in_use
 
 light:
   - platform: mqtt
