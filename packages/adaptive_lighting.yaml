@@ -179,6 +179,11 @@ script:
     mode: restart
 
 sensor:
+  - platform: mqtt
+    name: Upstairs illuminance
+    state_topic: zigbee2mqtt/upstairs_illuminance_sensor
+    unit_of_measurement: lux
+    value_template: "{{ value_json.illuminance_lux }}"
   - platform: sun2
     monitored_conditions:
       - elevation
@@ -237,14 +242,14 @@ sensor:
               {% set adaptive_brightness_pct = min_brightness_pct %}
             {% else %}
               {% set prog_elevation = ((cur_elevation - max_elevation) / (min_elevation - max_elevation))|abs %}
-              {% set adaptive_brightness_pct = (1 - prog_elevation) * (min_brightness_pct - max_brightness_pct) + min_brightness_pct %}
+              {% set adaptive_brightness_pct = (1 - prog_elevation) * (max_brightness_pct - min_brightness_pct) + min_brightness_pct %}
             {% endif %}
 
             {# Compute the correct brightness to return keeping in mind that, during the windows, we need to 
               transition to the adaptive brightness from the night brightness or the other way around: #}
             {% if is_within_brightening_window %}
               {% set prog_time = ((now - brightening_window_start) / window_size)|abs %}
-              {% set brightness_pct = prog_time * (bedtime_brightness_pct - adaptive_brightness_pct) + bedtime_brightness_pct %}
+              {% set brightness_pct = prog_time * (adaptive_brightness_pct - bedtime_brightness_pct) + bedtime_brightness_pct %}
             {% elif is_within_dimming_window %}
               {% set prog_time = ((now - dimming_window_start) / window_size)|abs %}
               {% set brightness_pct = (1 - prog_time) * (adaptive_brightness_pct - bedtime_brightness_pct) + bedtime_brightness_pct %}
