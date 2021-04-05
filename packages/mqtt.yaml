@@ -2,6 +2,6 @@ mqtt:
   broker: !secret mqtt_server
   certificate: auto
   discovery: false
-  # password: !secret mqtt_password
+  password: !secret mqtt_password
   port: 8883
-  # username: !secret mqtt_username
+  username: !secret mqtt_username
