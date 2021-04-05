@@ -5,7 +5,7 @@ views:
           - content: >-
               <div class="flex">
                 <div>
-                  <h2>{{ now().hour ~ ':' ~ now().minute }}</h2>
+                  <h2>{{ now().strftime('%H:%M') }}</h2>
                 </div>
                 <div>
                   <img src="/local/icons/{{ states('weather.home') }}.png" height="30" width="30" />
