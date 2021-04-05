@@ -64,18 +64,20 @@ automation:
 
   - alias: Turn off bedtime mode when charging stops
     trigger:
+      - platform: state
+        entity_id: binary_sensor.pixel_4_is_charging
+        to: "off"
     condition:
-      - condition: state
-        entity_id: binary_sensor.is_past_alarm
-        state: "on"
-    condition:
+      # - condition: state
+      #   entity_id: binary_sensor.is_past_alarm
+      #   state: "on"
       - condition: state
         entity_id: input_boolean.setting_bedtime_while_charging
         state: "on"
     action:
       - service: input_boolean.turn_off
         entity_id: input_boolean.bedtime_mode
-  
+
   - alias: Turn off bedtime mode at scheduled time
     trigger:
       - platform: time
@@ -108,7 +110,7 @@ automation:
     action:
       - service: input_boolean.turn_on
         entity_id: input_boolean.bedtime_mode
-  
+
   - alias: Turn on bedtime mode at scheduled time
     trigger:
       - platform: time
@@ -203,20 +205,6 @@ automation:
 binary_sensor:
   - platform: template
     sensors:
-      is_before_alarm:
-        friendly_name: It's before today's scheduled alarm
-        value_template: >-
-          {% set alarm = state_attr('input_datetime.todays_alarm', 'timestamp')|int %}
-          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
-
-          {{ alarm > now }}
-      is_before_bedtime:
-        friendly_name: It's before today's scheduled bedtime
-        value_template: >-
-          {% set bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp')|int %}
-          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
-
-          {{ bedtime > now }}
       is_past_alarm:
         friendly_name: It's past today's scheduled alarm
         value_template: >-
