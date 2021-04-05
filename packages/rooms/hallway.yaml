@@ -77,5 +77,5 @@ sensor:
   - platform: mqtt
     name: Hallway illuminance
     state_topic: zigbee2mqtt/hallway_motion_sensor
-    unit_of_measurement: lm
-    value_template: "{{ value_json.illuminance }}"
+    unit_of_measurement: lux
+    value_template: "{{ value_json.illuminance_lux }}"

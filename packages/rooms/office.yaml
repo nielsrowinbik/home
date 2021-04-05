@@ -242,8 +242,8 @@ sensor:
   - platform: mqtt
     name: Office illuminance
     state_topic: zigbee2mqtt/office_motion_sensor
-    unit_of_measurement: lm
-    value_template: "{{ value_json.illuminance }}"
+    unit_of_measurement: lux
+    value_template: "{{ value_json.illuminance_lux }}"
   - platform: mqtt
     name: Office temperature
     state_topic: zigbee2mqtt/office_temperature_pressure_and_humidity_sensor
@@ -255,5 +255,5 @@ sensor:
   - platform: mqtt
     name: Staircase illuminance
     state_topic: zigbee2mqtt/staircase_motion_sensor
-    unit_of_measurement: lm
-    value_template: "{{ value_json.illuminance }}"
+    unit_of_measurement: lux
+    value_template: "{{ value_json.illuminance_lux }}"

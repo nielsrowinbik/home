@@ -298,8 +298,8 @@ sensor:
   - platform: mqtt
     name: Kitchen illuminance
     state_topic: zigbee2mqtt/kitchen_motion_sensor
-    unit_of_measurement: lm
-    value_template: "{{ value_json.illuminance }}"
+    unit_of_measurement: lux
+    value_template: "{{ value_json.illuminance_lux }}"
   - platform: mqtt
     name: Kitchen temperature
     state_topic: zigbee2mqtt/kitchen_temperature_pressure_and_humidity_sensor
