@@ -68,9 +68,9 @@ automation:
         entity_id: binary_sensor.pixel_4_is_charging
         to: "off"
     condition:
-      # - condition: state
-      #   entity_id: binary_sensor.is_past_alarm
-      #   state: "on"
+      - condition: state
+        entity_id: binary_sensor.is_past_alarm
+        state: "on"
       - condition: state
         entity_id: input_boolean.setting_bedtime_while_charging
         state: "on"
