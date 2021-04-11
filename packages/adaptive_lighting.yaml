@@ -179,6 +179,12 @@ script:
     mode: restart
 
 sensor:
+  - platform: filter
+    name: Filtered upstairs illuminance
+    entity_id: sensor.upstairs_illuminance
+    filters:
+      - filter: range
+        upper_bound: 1500
   - platform: mqtt
     name: Upstairs illuminance
     state_topic: zigbee2mqtt/upstairs_illuminance_sensor
