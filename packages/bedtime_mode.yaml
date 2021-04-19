@@ -68,9 +68,14 @@ automation:
         entity_id: binary_sensor.pixel_4_is_charging
         to: "off"
     condition:
+      # Only continue if the phone stops charging past today's alarm but before today's bedtime (which is during the night):
       - condition: state
         entity_id: binary_sensor.is_past_alarm
         state: "on"
+      - condition: state
+        entity_id: binary_sensor.is_before_bedtime
+        state: "on"
+      # Only continue of we want to respond to charging state changes:
       - condition: state
         entity_id: input_boolean.setting_bedtime_while_charging
         state: "on"
@@ -205,6 +210,13 @@ automation:
 binary_sensor:
   - platform: template
     sensors:
+      is_before_bedtime:
+        friendly_name: It's before today's scheduled bedtime
+        value_template: >-
+          {% set bedtime = state_attr('input_datetime.todays_bedtime', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ bedtime > now }}
       is_past_alarm:
         friendly_name: It's past today's scheduled alarm
         value_template: >-
