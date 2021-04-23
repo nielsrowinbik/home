@@ -173,20 +173,6 @@ automation:
             {{ 255 if isCooking else 0 }}
           transition: 0.5
 
-  - alias: Toggle cooking mode
-    trigger:
-      # Trigger immediately when the kitchen wall switch's right button is pressed
-      - platform: mqtt
-        topic: zigbee2mqtt/kitchen_switch
-    condition:
-      - condition: template
-        value_template: "{{ trigger.payload_json.action == 'single_right' }}"
-    action:
-      - service: input_boolean.toggle
-        entity_id: input_boolean.cooking_mode
-      - service: input_boolean.turn_off
-        entity_id: input_boolean.kitchen_bright_mode
-
   - alias: Toggle kitchen bright mode
     trigger:
       # Trigger immediately when the kitchen wall switch's left button is pressed
@@ -253,9 +239,6 @@ input_boolean:
   cozy_mode:
     icon: mdi:candle
     name: Cozy mode
-  cooking_mode:
-    icon: mdi:chef-hat
-    name: Cooking mode
   kitchen_bright_mode:
     icon: mdi:brightness-7
     name: Bright mode (Kitchen)

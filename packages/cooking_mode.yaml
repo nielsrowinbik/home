@@ -1,0 +1,169 @@
+automation:
+  - alias: Dismiss persistent cooking mode notification
+    trigger:
+      # Trigger when cooking mode is turned off:
+      - platform: state
+        entity_id: input_boolean.cooking_mode
+        to:
+          - "off"
+      # Trigger when we no longer want cooking mode notifications:
+      - platform: state
+        entity_id: input_boolean.setting_cooking_mode_notifications
+        to:
+          - "off"
+    action:
+      - service: notify.all_devices
+        data:
+          message: clear_notification
+          data:
+            tag: cooking_mode
+
+  - alias: Dismiss cooking mode suggestion
+    trigger:
+      # Trigger when we should no longer suggest cooking mode:
+      - platform: state
+        entity_id: binary_sensor.should_suggest_cooking_mode
+        to:
+          - "off"
+    condition:
+      # Only continue if cooking mode isn't on at the moment
+      # (if it is, there will be a persistent notification that
+      # we do not want to dismiss yet, it will be dismissed when
+      # cooking mode turns off)
+      - condition: state
+        entity_id: input_boolean.cooking_mode
+        state: "off"
+    action:
+      - service: notify.all_devices
+        data:
+          message: clear_notification
+          data:
+            tag: cooking_mode
+
+  - alias: Show a persistent notification while cooking mode is on
+    trigger:
+      - platform: state
+        entity_id: input_boolean.cooking_mode
+        to:
+          - "on"
+    condition:
+      # Only continue if notification settings for work mode are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_cooking_mode_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Cooking mode is on
+          message: On until you turn it off
+          data:
+            actions:
+              - action: COOKING_MODE_TURN_OFF
+                title: Turn off for now
+            channel: Insights
+            clickAction: /ui-settings/cooking-mode
+            persistent: true
+            sticky: true
+            tag: cooking_mode
+
+  - alias: Suggest cooking mode through notification
+    trigger:
+      # Trigger when the suggestion window starts:
+      - platform: state
+        entity_id: binary_sensor.should_announce_work_start
+        to:
+          - "on"
+    condition:
+      # Only continue if notification settings for cooking are turned on:
+      - condition: state
+        entity_id: input_boolean.setting_cooking_mode_notifications
+        state: "on"
+    action:
+      - service: notify.all_devices
+        data:
+          title: Ready for some food?
+          message: It's time to cook dinner
+          data:
+            actions:
+              - action: COOKING_MODE_TURN_ON
+                title: Turn on
+            channel: Insights
+            clickAction: /ui-settings/cooking-mode
+            tag: cooking_mode
+
+  - alias: Toggle cooking mode through button
+    trigger:
+      # Trigger immediately when the kitchen wall switch's right button is pressed
+      - platform: mqtt
+        topic: zigbee2mqtt/kitchen_switch
+    condition:
+      - condition: template
+        value_template: "{{ trigger.payload_json.action == 'single_right' }}"
+    action:
+      - service: input_boolean.toggle
+        entity_id: input_boolean.cooking_mode
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.kitchen_bright_mode
+
+  - alias: Turn off cooking mode
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: COOKING_MODE_TURN_OFF
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.cooking_mode
+
+  - alias: Turn on cooking mode
+    trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: COOKING_MODE_TURN_ON
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.cooking_mode
+
+binary_sensor:
+  - platform: template
+    sensors:
+      should_suggest_cooking_mode:
+        friendly_name: Cooking mode should be suggested
+        value_template: >-
+          {% set is_cooking = is_state('input_boolean.cooking_mode', 'on') %}
+          {% set was_cooking = states('sensor.cooking_mode_on_in_window')|int > 0 %}
+          {% set window_start = state_attr('input_datetime.cooking_start', 'timestamp')|int %}
+          {% set window_end = state_attr('input_datetime.cooking_end', 'timestamp')|int %}
+          {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
+
+          {{ window_start <= now < window_end and not is_cooking and not was_cooking }}
+
+input_boolean:
+  cooking_mode:
+    icon: mdi:chef-hat
+    name: Cooking mode
+  setting_cooking_mode_notifications:
+    icon: mdi:bell-ring-outline
+    name: Cooking mode notifications
+
+input_datetime:
+  cooking_start:
+    has_date: false
+    has_time: true
+    icon: mdi:clock-start
+    name: Cooking start
+  cooking_end:
+    has_date: false
+    has_time: true
+    icon: mdi:clock-end
+    name: Cooking end
+
+sensor:
+  - platform: history_stats
+    name: Cooking mode on in window
+    entity_id: input_boolean.cooking_mode
+    state: "on"
+    type: count
+    start: "{{ now().replace(hour=0, minute=0, second=0).timestamp() + state_attr('input_datetime.cooking_start', 'timestamp') }}"
+    end: "{{ now().replace(hour=0, minute=0, second=0).timestamp() + state_attr('input_datetime.cooking_end', 'timestamp') }}"
