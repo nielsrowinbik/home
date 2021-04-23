@@ -70,7 +70,7 @@ automation:
     trigger:
       # Trigger when the suggestion window starts:
       - platform: state
-        entity_id: binary_sensor.should_announce_work_start
+        entity_id: binary_sensor.should_suggest_cooking_mode
         to:
           - "on"
     condition:
@@ -132,7 +132,7 @@ binary_sensor:
         friendly_name: Cooking mode should be suggested
         value_template: >-
           {% set is_cooking = is_state('input_boolean.cooking_mode', 'on') %}
-          {% set was_cooking = states('sensor.cooking_mode_on_in_window')|int > 0 %}
+          {% set was_cooking = states('sensor.cooking_mode_on_in_window')|float > 0 %}
           {% set window_start = state_attr('input_datetime.cooking_start', 'timestamp')|int %}
           {% set window_end = state_attr('input_datetime.cooking_end', 'timestamp')|int %}
           {% set now = (now().hour * 60 + now().minute) * 60 + now().second %}
@@ -164,6 +164,6 @@ sensor:
     name: Cooking mode on in window
     entity_id: input_boolean.cooking_mode
     state: "on"
-    type: count
+    type: time
     start: "{{ now().replace(hour=0, minute=0, second=0).timestamp() + state_attr('input_datetime.cooking_start', 'timestamp') }}"
     end: "{{ now().replace(hour=0, minute=0, second=0).timestamp() + state_attr('input_datetime.cooking_end', 'timestamp') }}"

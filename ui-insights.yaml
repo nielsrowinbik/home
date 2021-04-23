@@ -115,8 +115,8 @@ views:
           - card:
               entities:
                 - entity: input_boolean.cooking_mode
-                  name: "{{ state_attr('binary_sensor.suggest_cooking', 'title') }}"
-                  secondary: "{{ state_attr('binary_sensor.suggest_cooking', 'message') }}"
+                  name: Ready for some food?
+                  secondary: Tap to get started
                   state: ""
                   tap_action:
                     action: toggle
@@ -128,7 +128,7 @@ views:
                 }
               type: entities
             conditions:
-              - entity: binary_sensor.suggest_cooking
+              - entity: binary_sensor.should_suggest_cooking_mode
                 state: "on"
             type: conditional
           - card:
