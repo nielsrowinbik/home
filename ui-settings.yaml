@@ -187,7 +187,7 @@ views:
                   }
             title: Bedtime
             type: entities
-    path: bedtime
+    path: bedtime-mode
     title: Bedtime
   - cards:
       - type: vertical-stack
@@ -246,4 +246,4 @@ views:
             title: Work mode
             type: entities
     path: work-mode
-    title: Work mode
+    title: Work
