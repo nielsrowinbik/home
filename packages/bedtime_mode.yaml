@@ -14,6 +14,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_bedtime_notifications
         state: "on"
+      # Only continue if bedtime mode is off:
+      - condition: state
+        entity_id: input_boolean.bedtime_mode
+        state: "off"
     action:
       - service: notify.all_devices
         data:
