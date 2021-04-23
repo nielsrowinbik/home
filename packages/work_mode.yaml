@@ -130,6 +130,15 @@ automation:
         entity_id: input_boolean.setting_work_mode_notifications
         to:
           - "off"
+      # Trigger when work mode should no longer be announced:
+      - platform: state
+        entity_id: binary_sensor.should_announce_work_start
+        to:
+          - "off"
+      - platform: state
+        entity_id: binary_sensor.should_announce_work_end
+        to:
+          - "off"
     action:
       - service: notify.all_devices
         data:
