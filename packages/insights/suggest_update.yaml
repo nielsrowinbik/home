@@ -25,4 +25,11 @@ binary_sensor:
           title: An update is available!
           message: Tap to learn more
         friendly_name: Suggest update
-        value_template: "{{ is_state('binary_sensor.updater', 'on') }}"
+        value_template: >-
+          {% set current_minor = states('sensor.current_version').split('.')[1] %}
+          {% set next_minor = (state_attr('binary_sensor.updater', 'newest_version')|string).split('.')[1] %}
+
+          {{ current_minor != next_minor }}
+
+sensor:
+  - platform: version
