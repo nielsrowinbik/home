@@ -1,0 +1,21 @@
+# TODO: Write new automations that apply settings below
+# TODO: Move automations that turn on/off the heating when a window/door opens here
+# TODO: Add a timer for 30 minutes which can be started and stopped
+# TODO: Add automation which ups the target temperature while the timer is running
+# TODO: Send a notification when the timer is running (and the temperature is being boosted)
+# TODO: Add an action to the notification to stop boosting
+# TODO: Revoke the notification when timer ends
+
+input_number:
+  setting_heating_away_temperature:
+    max: 25
+    min: 5
+    name: Target temperature when at home
+    step: 0.5
+    unit_of_measurement: "°C"
+  setting_heating_home_temperature:
+    max: 25
+    min: 5
+    name: Target temperature when away
+    step: 0.5
+    unit_of_measurement: "°C"

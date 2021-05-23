@@ -52,21 +52,9 @@ views:
                 icon: mdi:lightning-bolt-outline
                 name: Update turned on lights automatically
                 secondary_info: last-triggered
-              - entity: sensor.time_of_day
-                secondary: Brightness at {{ ((state_attr('sensor.time_of_day', 'brightness')|int / 255) * 100)|round(0) }}%, temperature at {{ state_attr('sensor.time_of_day', 'color_temp') }} mireds
-                type: custom:template-entity-row
               - type: section
                 label: Thresholds
-              - entity: sensor.elevation
-                name: Current elevation
-                secondary: "Max today is {{ states('sensor.max_elevation')|round(1) }} °"
-                state: "{{ states('sensor.elevation') }} °"
-                type: custom:template-entity-row
-              - input_number.setting_day_threshold
-              - input_number.setting_afternoon_threshold
-              - input_number.setting_early_evening_threshold
-              - input_number.setting_evening_threshold
-              - input_number.setting_night_threshold
+              - sensor.filtered_upstairs_illuminance
               - type: section
                 label: Light settings
               - input_number.setting_coolest_colour_temp
@@ -103,6 +91,41 @@ views:
             type: entities
     path: adaptive-lighting
     title: Adaptive lighting
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entities:
+              - input_number.setting_heating_home_temperature
+              - input_number.setting_heating_away_temperature
+            show_header_toggle: false
+            style:
+              .: |
+                ha-card {
+                  background: transparent;
+                  box-shadow: none;
+                  transition: 0;
+                }
+
+                h1 {
+                  padding: 24px 16px;
+                }
+
+                h1 .name {
+                  font-size: 28px;
+                  text-align: center;
+                  width: 100%;
+                }
+              hui-section-row:
+                $: |
+                  .label {
+                    color: var(--primary--text-color) !important;
+                    font-family: 'Product Sans', Roboto;
+                    font-weight: 600;
+                  }
+            title: Heating
+            type: entities
+    path: heating
+    title: Heating
   - cards:
       - type: vertical-stack
         cards:
