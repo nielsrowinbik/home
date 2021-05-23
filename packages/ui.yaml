@@ -32,7 +32,7 @@ lovelace:
       type: module
     - url: /local/js/card-mod.js?v=11.10.2020
       type: module
-    - url: /local/js/fold-entity-row.js?v=4.7.2020
+    - url: /local/js/fold-entity-row.js?v=17.3.2021
       type: module
     - url: /local/js/layout-card.js?v=30.6.2020
       type: module
@@ -41,6 +41,8 @@ lovelace:
     - url: /local/js/mini-media-player.js
       type: module
     - url: /local/js/paper-buttons-row.js?v=0.3.0
+      type: module
+    - url: /local/js/select-list-card.js?v=1.2.0
       type: module
     - url: /local/js/simple-weather-card.js?v=0.8.1
       type: module

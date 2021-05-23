@@ -81,8 +81,8 @@ automation:
         state: "on"
       # Only continue of we want to respond to charging state changes:
       - condition: state
-        entity_id: input_boolean.setting_bedtime_while_charging
-        state: "on"
+        entity_id: input_select.setting_bedtime_mode_schedule
+        state: While charging at bedtime
     action:
       - service: input_boolean.turn_off
         entity_id: input_boolean.bedtime_mode
@@ -93,8 +93,8 @@ automation:
         at: input_datetime.todays_alarm
     condition:
       - condition: state
-        entity_id: input_boolean.setting_bedtime_while_charging
-        state: "off"
+        entity_id: input_select.setting_bedtime_mode_schedule
+        state: Based on schedule
     action:
       - service: input_boolean.turn_off
         entity_id: input_boolean.bedtime_mode
@@ -106,8 +106,8 @@ automation:
         to: "on"
     condition:
       - condition: state
-        entity_id: input_boolean.setting_bedtime_while_charging
-        state: "on"
+        entity_id: input_select.setting_bedtime_mode_schedule
+        state: While charging at bedtime
       - condition: or
         conditions:
           - condition: state
@@ -126,8 +126,8 @@ automation:
         at: input_datetime.todays_bedtime
     condition:
       - condition: state
-        entity_id: input_boolean.setting_bedtime_while_charging
-        state: "off"
+        entity_id: input_select.setting_bedtime_mode_schedule
+        state: Based on schedule
     action:
       - service: input_boolean.turn_on
         entity_id: input_boolean.bedtime_mode
@@ -264,6 +264,9 @@ input_boolean:
   setting_bedtime_notifications:
     icon: mdi:bell-ring-outline
     name: Bedtime mode notifications
+  setting_bedtime_time_schedule:
+    icon: mdi:clock-check-outline
+    name: Turn on bedtime mode automatically
   setting_bedtime_while_charging:
     icon: mdi:power-plug-outline
     name: Turn on bedtime mode while charging at bedtime
@@ -307,3 +310,12 @@ input_datetime:
     has_time: true
     icon: mdi:alarm
     name: Workday alarm
+
+input_select:
+  setting_bedtime_mode_schedule:
+    name: Bedtime mode schedule
+    options:
+      - "Off"
+      - Based on schedule
+      - While charging at bedtime
+    icon: mdi:bed-outline

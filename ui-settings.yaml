@@ -148,14 +148,46 @@ views:
       - type: vertical-stack
         cards:
           - entities:
-              - input_boolean.bedtime_mode
               - type: section
-                label: Schedule
-              - input_boolean.setting_bedtime_while_charging
-              - input_datetime.workday_bedtime
-              - input_datetime.workday_alarm
-              - input_datetime.off_day_bedtime
-              - input_datetime.off_day_alarm
+                label: Settings
+              - type: custom:fold-entity-row
+                clickable: true
+                head:
+                  icon: mdi:bed-outline
+                  name: Bedtime
+                  state: " "
+                  type: custom:template-entity-row
+                entities:
+                  - entity: input_datetime.workday_bedtime
+                    name: Workday
+                  - entity: input_datetime.off_day_bedtime
+                    name: Off day
+              - type: custom:fold-entity-row
+                clickable: true
+                head:
+                  icon: mdi:alarm
+                  name: Wake up
+                  state: " "
+                  type: custom:template-entity-row
+                entities:
+                  - entity: input_datetime.workday_alarm
+                    name: Workday
+                  - entity: input_datetime.off_day_alarm
+                    name: Off day
+              - type: section
+                label: Automatically turn on or off
+              - type: custom:select-list-card
+                entity: input_select.setting_bedtime_mode_schedule
+                style: |
+                  ha-card {
+                    background: transparent;
+                    box-shadow: none;
+                    transition: 0;
+                  }
+
+                  paper-item {
+                    font-size: var(--paper-font-body1_-_font-size);
+                  }
               - type: section
                 label: Notifications
               - entity: input_boolean.setting_bedtime_notifications
