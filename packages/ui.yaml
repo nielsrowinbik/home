@@ -30,7 +30,7 @@ lovelace:
       type: css
     - url: /local/js/auto-entities.js?v=21.11.2020
       type: module
-    - url: /local/js/card-mod.js?v=11.10.2020
+    - url: /local/js/card-mod.js?v=3.0.12
       type: module
     - url: /local/js/fold-entity-row.js?v=17.3.2021
       type: module
