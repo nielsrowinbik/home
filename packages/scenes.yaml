@@ -22,5 +22,15 @@ scene:
   - name: Night
     entities:
       input_boolean.should_turn_on_bedtime_mode: on
+  - name: Work start
     entities:
       input_boolean.work_mode: on
+      timer.work_mode_break: idle
+  - name: Work break
+    entities:
+      input_boolean.work_mode: on
+      timer.work_mode_break: active
+  - name: Work end
+    entities:
+      input_boolean.work_mode: off
+      timer.work_mode_break: idle
