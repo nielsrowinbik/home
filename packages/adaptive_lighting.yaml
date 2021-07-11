@@ -98,6 +98,18 @@ automation:
           transition: "{{ 0.5 if trigger is undefined else 30 }}"
 
 input_number:
+  setting_adaptive_lighting_min_illuminance:
+    min: 1
+    max: 300
+    name: Minimum illuminance
+    step: 1
+    unit_of_measurement: lux
+  setting_adaptive_lighting_max_illuminance:
+    min: 1
+    max: 300
+    name: Maximum illuminance
+    step: 1
+    unit_of_measurement: lux
   setting_max_brightness:
     max: 100
     min: 1
@@ -184,7 +196,7 @@ sensor:
     entity_id: sensor.upstairs_illuminance
     filters:
       - filter: range
-        upper_bound: 1500
+        upper_bound: 300
   - platform: mqtt
     name: Upstairs illuminance
     state_topic: zigbee2mqtt/upstairs_illuminance_sensor
@@ -266,6 +278,28 @@ sensor:
             {% endif %}
 
             {{ (brightness_pct / 100 * 255)|int }}
+          new_brightness: >-
+            {# Get a reference to the brightness settings that we'll use: #}
+            {% set max_brightness_pct = states('input_number.setting_max_brightness')|int %}
+            {% set min_brightness_pct = states('input_number.setting_min_brightness')|int %}
+            {% set bedtime_brightness_pct = states('input_number.setting_bedtime_brightness')|int %}
+
+            {# Get a reference to current illuminance and our thresholds: #}
+            {% set cur_illuminance = states('sensor.filtered_upstairs_illuminance')|int %}
+            {% set max_illuminance = states('input_number.setting_adaptive_lighting_max_illuminance')|int %}
+            {% set min_illuminance = states('input_number.setting_adaptive_lighting_min_illuminance')|int %}
+
+            {# Compute the adaptive brightness: #}
+            {% if cur_illuminance > max_illuminance %}
+              {% set adaptive_brightness_pct = max_brightness_pct %}
+            {% elif cur_illuminance < min_illuminance %}
+              {% set adaptive_brightness_pct = min_brightness_pct %}
+            {% else %}
+              {% set prog_illuminance = ((cur_illuminance - max_illuminance) / (min_illuminance - max_illuminance))|abs %}
+              {% set adaptive_brightness_pct = (1 - prog_illuminance) * (max_brightness_pct - min_brightness_pct) + min_brightness_pct %}
+            {% endif %}
+
+            {{ (adaptive_brightness_pct / 100 * 255)|int }}
           color_temp: >-
             {% set cur_elevation = states('sensor.elevation')|float %}
             {% set max_elevation = states('sensor.max_elevation')|float %}

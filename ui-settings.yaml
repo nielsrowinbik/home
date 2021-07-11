@@ -55,6 +55,8 @@ views:
               - type: section
                 label: Thresholds
               - sensor.filtered_upstairs_illuminance
+              - input_number.setting_adaptive_lighting_max_illuminance
+              - input_number.setting_adaptive_lighting_min_illuminance
               - type: section
                 label: Light settings
               - input_number.setting_coolest_colour_temp
