@@ -1,21 +1,100 @@
-# TODO: Write new automations that apply settings below
-# TODO: Move automations that turn on/off the heating when a window/door opens here
-# TODO: Add a timer for 30 minutes which can be started and stopped
-# TODO: Add automation which ups the target temperature while the timer is running
 # TODO: Send a notification when the timer is running (and the temperature is being boosted)
 # TODO: Add an action to the notification to stop boosting
 # TODO: Revoke the notification when timer ends
+
+automation:
+  - alias: Set climate.living_room
+    description: Sets the thermostat to the correct temperature and turns it off if a door or window is open
+    mode: queued
+    trigger:
+      # Trigger immediately when Home Assistant starts
+      - platform: homeassistant
+        event: start
+
+      # Trigger immediately when automations are reloaded
+      - platform: event
+        event_type: automation_reloaded
+
+      # Trigger immediately when current scene changes to "Away"
+      - platform: state
+        entity_id: sensor.current_scene
+        to:
+          - Away
+          - Night
+
+      # Trigger immediately when current scene changes from "Away"
+      - platform: state
+        entity_id: sensor.current_scene
+        from:
+          - Away
+          - Night
+
+      # Trigger after kitchen door has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when kitchen door closes
+      - platform: state
+        entity_id: binary_sensor.kitchen_door
+        to: "off"
+
+      # Trigger after living room window has been open for 30 seconds
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "on"
+        for:
+          seconds: 30
+
+      # Trigger immediately when living room window closes
+      - platform: state
+        entity_id: binary_sensor.living_room_window
+        to: "off"
+
+      # Trigger immediately when the boost timer changes:
+      - platform: state
+        entity_id: timer.heating_boost
+        to: "*"
+    action:
+      # Set the correct target temperature (this turns on heating):
+      - service: climate.set_temperature
+        data:
+          entity_id: climate.living_room
+          temperature: >-
+            {% set isAway = is_state('sensor.current_scene', 'Away') %}
+            {% set isBoosting = not is_state('timer.heating_boost', 'idle') %}
+            {% set isNight = is_state('sensor.current_scene', 'Night') %}
+            {% set tempWhenAway = states('input_number.setting_heating_away_temperature')|float %}
+            {% set tempWhenHome = states('input_number.setting_heating_home_temperature')|float %}
+            {% set tempOffset = 2 if isBoosting else 0 %}
+
+            {{ (tempWhenAway if isAway or isNight else tempWhenHome) + tempOffset }}
+      # Turn the thermostat on or off:
+      - service: >-
+          {% set shouldTurnOff = is_state('binary_sensor.kitchen_door', 'on') or is_state('binary_sensor.living_room_window', 'on') %}
+
+          climate.turn_{{ 'off' if shouldTurnOff else 'on' }}
+        data:
+          entity_id: climate.living_room
 
 input_number:
   setting_heating_away_temperature:
     max: 25
     min: 5
-    name: Target temperature when at home
+    name: Target temperature when away
     step: 0.5
     unit_of_measurement: "°C"
   setting_heating_home_temperature:
     max: 25
     min: 5
-    name: Target temperature when away
+    name: Target temperature when at home
     step: 0.5
     unit_of_measurement: "°C"
+
+timer:
+  heating_boost:
+    duration: "00:30:00"
+    icon: mdi:fire
+    name: Heat boost timer
