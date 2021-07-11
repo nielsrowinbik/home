@@ -42,10 +42,10 @@ views:
                   }
             type: markdown
           - content: >-
-              {% set tod = states('sensor.current_scene').split(' ')|last|lower %}
+              {% set tod = states('sensor.time_of_day').split(' ')|last|lower %}
               {% set greeting = "Good " + tod + "!" if tod != 'day' else "" %}
 
-              {% set messages = [] %}
+              {% set messages = []|reject("eq", "")|list %}
               {% set noMessagesMessage = "Looks like there's nothing new right now. Enjoy your " + tod + "!" %}
 
               {% if messages|length == 0 %}
