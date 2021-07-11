@@ -95,6 +95,17 @@ views:
       - type: vertical-stack
         cards:
           - entities:
+              - action_name: Start
+                entity: timer.heating_boost
+                name: Temporarily boost the heating?
+                tap_action:
+                  action: call-service
+                  service: timer.start
+                  service_data:
+                    entity_id: timer.work_mode_break
+                type: button
+              - type: section
+                label: Settings
               - input_number.setting_heating_home_temperature
               - input_number.setting_heating_away_temperature
             show_header_toggle: false
