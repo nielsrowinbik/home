@@ -151,6 +151,36 @@ automation:
           data:
             tag: bedtime_mode
 
+  - alias: Turn on bedtime mode when intent is expressed
+    trigger:
+      # Trigger when the intent to turn on bedtime mode is expressed:
+      - platform: state
+        entity_id: input_boolean.should_turn_on_bedtime_mode
+        to:
+          - "on"
+    action:
+      # If set up, wait a maximum of 15 minutes for all motion to stop:
+      - wait_template: >-
+          {% set shouldWait = is_state('input_select.setting_bedtime_mode_schedule', 'Manual') and is_state('input_boolean.setting_bedtime_await_motionless', 'on') %}
+          {% set motionSensorsOn = expand(states.binary_sensor)
+            |selectattr('attributes.device_class', 'eq', 'motion')
+            |selectattr('state','eq','on')
+            |list %}
+
+          {% if shouldWait %}
+            {{ motionSensorsOn|length == 0 }}
+          {% else %}
+            true
+          {% endif %}
+        timeout:
+          minutes: 15
+      # Turn on bedtime mode:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.bedtime_mode
+      # Reset intent helper:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.should_turn_on_bedtime_mode
+
   - alias: Set today's alarm
     trigger:
       - platform: state
@@ -264,12 +294,12 @@ input_boolean:
   setting_bedtime_notifications:
     icon: mdi:bell-ring-outline
     name: Bedtime mode notifications
-  setting_bedtime_time_schedule:
-    icon: mdi:clock-check-outline
-    name: Turn on bedtime mode automatically
-  setting_bedtime_while_charging:
-    icon: mdi:power-plug-outline
-    name: Turn on bedtime mode while charging at bedtime
+  setting_bedtime_await_motionless:
+    icon: mdi:motion-sensor-off
+    name: Wait for all motion to stop
+  should_turn_on_bedtime_mode:
+    icon: mdi:bed-outline
+    name: Should turn on Bedtime mode
   vacation_mode:
     icon: mdi:palm-tree
     name: Vacation mode
@@ -315,7 +345,7 @@ input_select:
   setting_bedtime_mode_schedule:
     name: Bedtime mode schedule
     options:
-      - "Off"
+      - Manual
       - Based on schedule
       - While charging at bedtime
     icon: mdi:bed-outline

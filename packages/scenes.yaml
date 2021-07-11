@@ -21,7 +21,6 @@ scene:
       input_boolean.bedtime_mode: off
   - name: Night
     entities:
-      input_boolean.bedtime_mode: on
-  - name: Work
+      input_boolean.should_turn_on_bedtime_mode: on
     entities:
       input_boolean.work_mode: on

@@ -198,7 +198,7 @@ views:
                   - entity: input_datetime.off_day_alarm
                     name: Off day
               - type: section
-                label: Automatically turn on or off
+                label: Schedule
               - type: custom:select-list-card
                 entity: input_select.setting_bedtime_mode_schedule
                 style: |
@@ -211,6 +211,12 @@ views:
                   paper-item {
                     font-size: var(--paper-font-body1_-_font-size);
                   }
+              - condition: "{{ is_state('input_select.setting_bedtime_mode_schedule', 'Manual') }}"
+                entity: input_boolean.setting_bedtime_await_motionless
+                name: Wait for motion to stop
+                secondary: Wait for the house to be motionless before turning on
+                toggle: true
+                type: custom:template-entity-row
               - type: section
                 label: Notifications
               - entity: input_boolean.setting_bedtime_notifications
