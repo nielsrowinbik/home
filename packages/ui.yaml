@@ -46,7 +46,7 @@ lovelace:
       type: module
     - url: /local/js/simple-weather-card.js?v=0.8.1
       type: module
-    - url: /local/js/template-entity-row.js
+    - url: /local/js/template-entity-row.js?v=1.3.0
       type: module
 
 script:
