@@ -9,8 +9,6 @@
 !custom_components/**
 !packages/*
 !automation/*
-!*.yaml
-!*.yml
 !.gitignore
 !*.md
 !.HA_VERSION
