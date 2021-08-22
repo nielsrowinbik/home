@@ -7,8 +7,8 @@ surface-04dp: "#ffffff"
 surface-06dp: "#ffffff"
 surface-08dp: "#ffffff"
 surface-12dp: "#ffffff"
-surface-16dp: "#ffffff"
-surface-24dp: "#ffffff"
+surface-16dp: "#efefef"
+surface-24dp: "#fafafa"
 
 # THEME COLORS
 primary-color: "#1a73e8"
