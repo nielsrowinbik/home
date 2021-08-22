@@ -28,6 +28,9 @@ automation:
           title: Your bedtime starts at {{ states('input_datetime.todays_bedtime')[:-3] }}
           message: Get ready for bed soon
           data:
+            actions:
+              - action: BEDTIME_TURN_ON
+                title: Turn on now
             channel: Insights
             clickAction: /ui-settings/bedtime
             persistent: true
@@ -171,6 +174,11 @@ automation:
         entity_id: input_boolean.should_turn_on_bedtime_mode
         to:
           - "on"
+      # Trigger when we express intent through a notification action:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: BEDTIME_TURN_ON
     action:
       # If set up, wait a maximum of 15 minutes for all motion to stop:
       - wait_template: >-
