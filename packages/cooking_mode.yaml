@@ -11,6 +11,11 @@ automation:
         entity_id: input_boolean.setting_cooking_mode_notifications
         to:
           - "off"
+      # Trigger when everyone has left the home:
+      - platform: state
+        entity_id: group.everyone
+        to:
+          - not_home
     action:
       - service: notify.all_devices
         data:
@@ -25,6 +30,11 @@ automation:
         entity_id: binary_sensor.should_suggest_cooking_mode
         to:
           - "off"
+      # Trigger when everyone has left the home:
+      - platform: state
+        entity_id: group.everyone
+        to:
+          - not_home
     condition:
       # Only continue if cooking mode isn't on at the moment
       # (if it is, there will be a persistent notification that
@@ -51,6 +61,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_cooking_mode_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -78,6 +92,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_cooking_mode_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:

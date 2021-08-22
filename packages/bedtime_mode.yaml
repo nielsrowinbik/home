@@ -18,6 +18,10 @@ automation:
       - condition: state
         entity_id: input_boolean.bedtime_mode
         state: "off"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -41,6 +45,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_bedtime_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -144,6 +152,11 @@ automation:
         entity_id: input_boolean.setting_bedtime_notifications
         to:
           - "off"
+      # Trigger when everyone has left the home:
+      - platform: state
+        entity_id: group.everyone
+        to:
+          - not_home
     action:
       - service: notify.all_devices
         data:

@@ -14,6 +14,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_work_mode_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -36,6 +40,11 @@ automation:
       # Trigger when the scheduled work end changes (maybe we need to update the notification with the correct value):
       - platform: state
         entity_id: input_datetime.work_end
+    condition:
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -71,6 +80,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_work_mode_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -103,6 +116,10 @@ automation:
       - condition: state
         entity_id: input_boolean.setting_work_mode_notifications
         state: "on"
+      # Only continue if someone is home:
+      - condition: state
+        entity_id: group.everyone
+        state: home
     action:
       - service: notify.all_devices
         data:
@@ -139,6 +156,11 @@ automation:
         entity_id: binary_sensor.should_announce_work_end
         to:
           - "off"
+      # Trigger when everyone has left the home:
+      - platform: state
+        entity_id: group.everyone
+        to:
+          - not_home
     action:
       - service: notify.all_devices
         data:
