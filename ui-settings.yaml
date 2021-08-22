@@ -184,6 +184,10 @@ views:
       - type: vertical-stack
         cards:
           - entities:
+              - entity: "input_boolean.{{ 'should_turn_on_bedtime_mode' if is_state('input_boolean.bedtime_mode', 'off') else  'bedtime_mode'}}"
+                name: Bedtime mode
+                toggle: true
+                type: custom:template-entity-row
               - type: section
                 label: Settings
               - type: custom:fold-entity-row
