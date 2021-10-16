@@ -77,70 +77,27 @@ automation:
       - service: input_boolean.turn_off
         entity_id: input_boolean.bedtime_mode
 
-  - alias: Turn off bedtime mode when charging stops
+  - alias: Turn off bedtime mode when the Living Room door opens
     trigger:
       - platform: state
-        entity_id: binary_sensor.pixel_4_is_charging
-        to: "off"
+        entity_id: binary_sensor.living_room_door
+        to:
+          - "on"
     condition:
-      # Only continue if the phone stops charging past today's alarm but before today's bedtime (which is during the night):
+      # Only continue if bedtime mode is on:
+      - condition: state
+        entity_id: input_boolean.bedtime_mode
+        state: "on"
+      # Only continue if it's past today's alarm:
       - condition: state
         entity_id: binary_sensor.is_past_alarm
         state: "on"
-      - condition: state
-        entity_id: binary_sensor.is_before_bedtime
-        state: "on"
-      # Only continue of we want to respond to charging state changes:
-      - condition: state
-        entity_id: input_select.setting_bedtime_mode_schedule
-        state: While charging at bedtime
     action:
+      # Wait 5 seconds...
+      - delay:
+          seconds: 5
+      # ...then turn off bedtime mode:
       - service: input_boolean.turn_off
-        entity_id: input_boolean.bedtime_mode
-
-  - alias: Turn off bedtime mode at scheduled time
-    trigger:
-      - platform: time
-        at: input_datetime.todays_alarm
-    condition:
-      - condition: state
-        entity_id: input_select.setting_bedtime_mode_schedule
-        state: Based on schedule
-    action:
-      - service: input_boolean.turn_off
-        entity_id: input_boolean.bedtime_mode
-
-  - alias: Turn on bedtime mode when charging begins
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.pixel_4_is_charging
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: input_select.setting_bedtime_mode_schedule
-        state: While charging at bedtime
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: binary_sensor.should_announce_bedtime
-            state: "on"
-          - condition: state
-            entity_id: binary_sensor.is_past_bedtime
-            state: "on"
-    action:
-      - service: input_boolean.turn_on
-        entity_id: input_boolean.bedtime_mode
-
-  - alias: Turn on bedtime mode at scheduled time
-    trigger:
-      - platform: time
-        at: input_datetime.todays_bedtime
-    condition:
-      - condition: state
-        entity_id: input_select.setting_bedtime_mode_schedule
-        state: Based on schedule
-    action:
-      - service: input_boolean.turn_on
         entity_id: input_boolean.bedtime_mode
 
   - alias: Dismiss bedtime related notifications
@@ -182,17 +139,12 @@ automation:
     action:
       # If set up, wait a maximum of 15 minutes for all motion to stop:
       - wait_template: >-
-          {% set shouldWait = is_state('input_select.setting_bedtime_mode_schedule', 'Manual') and is_state('input_boolean.setting_bedtime_await_motionless', 'on') %}
           {% set motionSensorsOn = expand(states.binary_sensor)
             |selectattr('attributes.device_class', 'eq', 'motion')
             |selectattr('state','eq','on')
             |list %}
 
-          {% if shouldWait %}
-            {{ motionSensorsOn|length == 0 }}
-          {% else %}
-            true
-          {% endif %}
+          {{ motionSensorsOn|length == 0 }}
         timeout:
           minutes: 15
       # Turn on bedtime mode:
@@ -315,9 +267,6 @@ input_boolean:
   setting_bedtime_notifications:
     icon: mdi:bell-ring-outline
     name: Bedtime mode notifications
-  setting_bedtime_await_motionless:
-    icon: mdi:motion-sensor-off
-    name: Wait for all motion to stop
   should_turn_on_bedtime_mode:
     icon: mdi:bed-outline
     name: Should turn on Bedtime mode
@@ -361,12 +310,3 @@ input_datetime:
     has_time: true
     icon: mdi:alarm
     name: Workday alarm
-
-input_select:
-  setting_bedtime_mode_schedule:
-    name: Bedtime mode schedule
-    options:
-      - Manual
-      - Based on schedule
-      - While charging at bedtime
-    icon: mdi:bed-outline
