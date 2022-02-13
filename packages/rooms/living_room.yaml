@@ -24,7 +24,7 @@ automation:
 
             {% if currentSource == 'Wireless' %}
               Listen to Music
-            {% elif currentSource == 'Phono' %}
+            {% elif currentSource == 'TV' %}
               Listen to Vinyl
             {% elif currentSource == 'Opt2' and xBoxIsOn %}
               Play a Game
@@ -54,7 +54,7 @@ automation:
               "Play a Game": "Opt2",
               "Watch TV": "Opt2",
               "Listen to Music": "Wireless",
-              "Listen to Vinyl": "Phono"
+              "Listen to Vinyl": "TV"
             } %}
 
             {{ activitySourceMap[currentActivity] }}
