@@ -9,11 +9,14 @@ button_card_templates:
       card:
         - width: 96px
         - height: 96px
+        - box-sizing: content-box
+        - padding: 20px
         - font-size: 0.9rem
         - font-weight: semibold
         - box-shadow: none
+        - border-radius: 100%
         - justify-content: center
-        - margin: 0 -4px
+        - margin: -20px
       grid:
         - display: flex
         - flex-direction: column
@@ -183,10 +186,15 @@ views:
                 template: round_button
                 icon: '[[[ if (entity.state === "on") return "mdi:briefcase-outline"; else return "mdi:briefcase-off-outline" ]]]'
                 entity: input_boolean.work_mode
-              - type: custom:button-card
-                template: round_button
-                icon: '[[[ if (entity.state === "on") return "mdi:food"; else return "mdi:food-off" ]]]'
-                entity: input_boolean.cooking_mode
+              - card:
+                  type: custom:button-card
+                  template: round_button
+                  icon: '[[[ if (entity.state === "on") return "mdi:food"; else return "mdi:food-off" ]]]'
+                  entity: input_boolean.cooking_mode
+                conditions: # TODO: Only show when cooking mode is on or announced
+                  - entity: binary_sensor.should_suggest_cooking_mode
+                    state: "on"
+                type: conditional
               - type: custom:button-card # TODO: Only show when bedtime mode is announced or on
                 template: round_button
                 icon: '[[[ if (entity.state === "on") return "mdi:sleep"; else return "mdi:sleep-off" ]]]'
@@ -195,6 +203,12 @@ views:
                 template: round_button
                 icon: '[[[ if (entity.state === "heat") return "mdi:thermometer"; else return "mdi:thermometer-off" ]]]'
                 entity: climate.living_room
+                action: more-info
+              - type: custom:button-card
+                template: round_button
+                icon: '[[[ if (entity.state === "on") return "mdi:remote"; else return "mdi:remote-off" ]]]'
+                entity: remote.living_room_harmony_hub
+                name: Media
             type: horizontal-stack
         type: vertical-stack
     path: index
