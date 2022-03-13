@@ -1,46 +1,147 @@
 automation:
-  - alias: Toggle work mode
+  - alias: Toggle work mode based on Niels' MacBook Pro
     trigger:
-      # Niels' MacBook Pro
-      - platform: state
-        entity_id: device_tracker.niels_macbook_pro
+      # Trigger when Niels' MacBook Pro changes to active
       - platform: state
         entity_id: binary_sensor.niels_macbook_pro_active
+        id: macbook_to_active
+        to: "on"
+      # Trigger when Niels' MacBook Pro changes from active
+      - platform: state
+        entity_id: binary_sensor.niels_macbook_pro_active
+        id: macbook_to_inactive
+        to: "off"
+      # Trigger when Niels' MacBook Pro connects to LG display
       - platform: state
         entity_id: sensor.niels_macbook_pro_primary_display_name
-      # Laura's Lenovo IdeaPad
-      # TODO
+        id: macbook_lg_display_connected
+        to: LG HDR 4K
+      # Trigger when Niels' MacBook Pro disconnects from display
+      - platform: state
+        entity_id: sensor.niels_macbook_pro_primary_display_name
+        id: macbook_lg_display_disconnected
+        from: LG HDR 4K
+    condition:
+      # Only continue if Niels' MacBook Pro is at home
+      - condition: state
+        entity_id: device_tracker.niels_macbook_pro
+        state: home
     action:
-      - alias: Turn on Work mode if conditions are met, else turn it off
-        choose:
-          # IF Niels' MacBook Pro is connected
-          - alias: Niels' MacBook Pro is connected
+      - choose:
+          - alias: If Niels' MacBook Pro was plugged in and is active, turn on Work mode
             conditions:
-              - condition: state
-                entity_id: device_tracker.niels_macbook_pro
-                state: home
+              - condition: trigger
+                id: macbook_lg_display_connected
               - condition: state
                 entity_id: binary_sensor.niels_macbook_pro_active
                 state: "on"
+            sequence:
+              - service: input_boolean.turn_on
+                entity_id: input_boolean.work_mode
+          - alias: If Niels' MacBook Pro was unplugged, turn off Work mode
+            conditions:
+              - condition: trigger
+                id: macbook_lg_display_disconnected
+            sequence:
+              - service: input_boolean.turn_off
+                entity_id: input_boolean.work_mode
+          - alias: If Niels' MacBook Pro becomes active and is plugged in, turn on Work mode
+            conditions:
+              - condition: trigger
+                id: macbook_to_active
               - condition: state
                 entity_id: sensor.niels_macbook_pro_primary_display_name
                 state: LG HDR 4K
             sequence:
               - service: input_boolean.turn_on
                 entity_id: input_boolean.work_mode
-          # ELSE IF Laura's IdeaPad is connected
-          # - alias: Laura's IdeaPad is connected
-          #   conditions:
-          #     -
-          #   sequence:
-          #     - service: input_boolean.turn_on
-          #       entity_id: input_boolean.work_mode
-        default:
-          # ELSE
-          - service: input_boolean.turn_off
-            entity_id: input_boolean.work_mode
+          - alias: If Niels' MacBook Pro becomes inactive and is plugged in, turn off Work mode
+            conditions:
+              - condition: trigger
+                id: macbook_to_inactive
+              - condition: state
+                entity_id: sensor.niels_macbook_pro_primary_display_name
+                state: LG HDR 4K
+            sequence:
+              - service: input_boolean.turn_off
+                entity_id: input_boolean.work_mode
+
+  - alias: Toggle work mode based on Laura's Lenovo IdeaPad
+    trigger:
+      # Trigger when Laura's Lenovo IdeaPad changes to active
+      - platform: state
+        entity_id: sensor.laura_lenovo_ideapad_state
+        id: ideapad_to_active
+        to: "InUse"
+      # Trigger when Laura's Lenovo IdeaPad changes from active
+      - platform: state
+        entity_id: sensor.laura_lenovo_ideapad_state
+        id: ideapad_from_active
+        from: "InUse"
+      # Trigger when Laura's Lenovo IdeaPad connects to LG display
+      - platform: state
+        entity_id: sensor.laura_lenovo_ideapad_primary_display_name
+        id: ideapad_lg_display_connected
+        to: DISPLAY\GSM7707\5&2e914c4&0&UID257_0
+      # Trigger when Laura's Lenovo IdeaPad disconnects from display
+      - platform: state
+        entity_id: sensor.laura_lenovo_ideapad_primary_display_name
+        id: ideapad_lg_display_disconnected
+        from: DISPLAY\GSM7707\5&2e914c4&0&UID257_0
+    condition:
+      # Only continue if Laura's Lenovo IdeaPad is at home
+      - condition: state
+        entity_id: device_tracker.niels_macbook_pro
+        state: home
+    action:
+      - choose:
+          - alias: If Laura's Lenovo IdeaPad was plugged in and is active, turn on Work mode
+            conditions:
+              - condition: trigger
+                id: ideapad_lg_display_connected
+              - condition: state
+                entity_id: sensor.laura_lenovo_ideapad_state
+                state: "InUse"
+            sequence:
+              - service: input_boolean.turn_on
+                entity_id: input_boolean.work_mode
+          - alias: If Laura's Lenovo IdeaPad was unplugged, turn off Work mode
+            conditions:
+              - condition: trigger
+                id: ideapad_lg_display_disconnected
+            sequence:
+              - service: input_boolean.turn_off
+                entity_id: input_boolean.work_mode
+          - alias: If Laura's Lenovo IdeaPad becomes active and is plugged in, turn on Work mode
+            conditions:
+              - condition: trigger
+                id: ideapad_to_active
+              - condition: state
+                entity_id: sensor.laura_lenovo_ideapad_primary_display_name
+                state: DISPLAY\GSM7707\5&2e914c4&0&UID257_0
+            sequence:
+              - service: input_boolean.turn_on
+                entity_id: input_boolean.work_mode
+          - alias: If Laura's Lenovo IdeaPad becomes inactive and is plugged in, turn off Work mode
+            conditions:
+              - condition: trigger
+                id: ideapad_to_inactive
+              - condition: state
+                entity_id: sensor.laura_lenovo_ideapad_primary_display_name
+                state: DISPLAY\GSM7707\5&2e914c4&0&UID257_0
+            sequence:
+              - service: input_boolean.turn_off
+                entity_id: input_boolean.work_mode
 
 input_boolean:
   work_mode:
     icon: mdi:briefcase-outline
     name: Work mode
+
+sensor:
+  - platform: mqtt
+    name: laura lenovo ideapad state
+    state_topic: homeassistant/sensor/LAPTOPVANLAURA/laura_lenovo_ideapad_state/state
+  - platform: mqtt
+    name: laura lenovo ideapad primary display name
+    state_topic: homeassistant/sensor/LAPTOPVANLAURA/laura_lenovo_ideapad_primary_display_name/state
