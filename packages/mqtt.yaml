@@ -1,7 +1,4 @@
 mqtt:
-  broker: !secret mqtt_server
-  certificate: auto
+  broker: mosquitto
   discovery: false
-  password: !secret mqtt_password
-  port: 8883
-  username: !secret mqtt_username
+  port: 1883
