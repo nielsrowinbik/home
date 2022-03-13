@@ -1,5 +1,6 @@
+# BEGIN ANSIBLE MANAGED BLOCK
 http:
   trusted_proxies:
-    - 172.16.0.0/12
-    - 10.0.0.0/8
+    - 10.0.1.0/24
   use_x_forwarded_for: true
+# END ANSIBLE MANAGED BLOCK
