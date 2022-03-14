@@ -269,10 +269,10 @@ light:
 media_player:
   - platform: androidtv
     name: Living Room Android TV
-    host: !secret living_room_tv_ip
+    host: 192.168.1.21
   - platform: nadtcp2
     name: Amplifier
-    host: !secret nad_amplifier_ip
+    host: 192.168.1.20
     volume_step: 2
 
 switch:
