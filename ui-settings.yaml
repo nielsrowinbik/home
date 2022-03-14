@@ -53,7 +53,16 @@ views:
                 name: Update turned on lights automatically
                 secondary_info: last-triggered
               - type: section
-                label: Thresholds
+                label: Current thresholds
+              - sensor.time_of_day
+              - sensor.elevation
+              - input_number.setting_day_threshold
+              - input_number.setting_afternoon_threshold
+              - input_number.setting_early_evening_threshold
+              - input_number.setting_evening_threshold
+              - input_number.setting_night_threshold
+              - type: section
+                label: New thresholds
               - sensor.filtered_upstairs_illuminance
               - input_number.setting_adaptive_lighting_max_illuminance
               - input_number.setting_adaptive_lighting_min_illuminance
