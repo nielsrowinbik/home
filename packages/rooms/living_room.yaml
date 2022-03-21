@@ -214,20 +214,20 @@ automation:
           entity_id: switch.subwoofer
 
 binary_sensor:
-  - platform: mqtt
-    device_class: door
-    name: Living Room door
-    payload_off: true
-    payload_on: false
-    state_topic: zigbee2mqtt/living_room_door_sensor
-    value_template: "{{ value_json.contact }}"
-  - platform: mqtt
-    device_class: window
-    name: Living Room window
-    payload_off: true
-    payload_on: false
-    state_topic: zigbee2mqtt/living_room_window_sensor
-    value_template: "{{ value_json.contact }}"
+  # - platform: mqtt
+  #   device_class: door
+  #   name: Living Room door
+  #   payload_off: true
+  #   payload_on: false
+  #   state_topic: zigbee2mqtt/living_room_door_sensor
+  #   value_template: "{{ value_json.contact }}"
+  # - platform: mqtt
+  #   device_class: window
+  #   name: Living Room window
+  #   payload_off: true
+  #   payload_on: false
+  #   state_topic: zigbee2mqtt/living_room_window_sensor
+  #   value_template: "{{ value_json.contact }}"
   - platform: template
     sensors:
       amplifier_ready:
@@ -254,12 +254,6 @@ input_boolean:
 light:
   - platform: mqtt
     brightness: true
-    command_topic: zigbee2mqtt/living_room_pendant_light/set
-    name: Living room pendant
-    schema: json
-    state_topic: zigbee2mqtt/living_room_pendant_light
-  - platform: mqtt
-    brightness: true
     color_temp: true
     command_topic: zigbee2mqtt/living_room_spots/set
     name: Living room spots
@@ -274,10 +268,3 @@ media_player:
     name: Amplifier
     host: 192.168.1.20
     volume_step: 2
-
-switch:
-  - platform: mqtt
-    command_topic: zigbee2mqtt/power_outlet_3/set
-    name: Subwoofer
-    state_topic: zigbee2mqtt/power_outlet_3
-    value_template: "{{ value_json.state }}"

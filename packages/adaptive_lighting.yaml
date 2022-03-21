@@ -197,11 +197,6 @@ sensor:
     filters:
       - filter: range
         upper_bound: 300
-  - platform: mqtt
-    name: Upstairs illuminance
-    state_topic: zigbee2mqtt/upstairs_illuminance_sensor
-    unit_of_measurement: lux
-    value_template: "{{ value_json.illuminance_lux }}"
   - platform: sun2
     monitored_conditions:
       - elevation

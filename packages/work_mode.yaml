@@ -137,11 +137,3 @@ input_boolean:
   work_mode:
     icon: mdi:briefcase-outline
     name: Work mode
-
-sensor:
-  - platform: mqtt
-    name: laura lenovo ideapad state
-    state_topic: homeassistant/sensor/LAPTOPVANLAURA/laura_lenovo_ideapad_state/state
-  - platform: mqtt
-    name: laura lenovo ideapad primary display name
-    state_topic: homeassistant/sensor/LAPTOPVANLAURA/laura_lenovo_ideapad_primary_display_name/state

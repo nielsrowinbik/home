@@ -56,28 +56,3 @@ automation:
             {% endif %}
           color_temp: "{{ state_attr('sensor.time_of_day', 'color_temp') }}"
           transition: 0.5
-
-binary_sensor:
-  - platform: mqtt
-    device_class: door
-    name: Toilet door
-    payload_off: true
-    payload_on: false
-    state_topic: zigbee2mqtt/toilet_door_sensor
-    value_template: "{{ value_json.contact }}"
-  - platform: mqtt
-    device_class: motion
-    name: Toilet motion
-    payload_off: false
-    payload_on: true
-    state_topic: zigbee2mqtt/toilet_motion_sensor
-    value_template: "{{ value_json.occupancy }}"
-
-light:
-  - platform: mqtt
-    brightness: true
-    color_temp: true
-    command_topic: "zigbee2mqtt/toilet_spot/set"
-    name: Toilet spot
-    schema: json
-    state_topic: "zigbee2mqtt/toilet_spot"

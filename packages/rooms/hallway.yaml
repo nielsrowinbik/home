@@ -49,22 +49,6 @@ automation:
             {% endif %}
           transition: 0.5
 
-binary_sensor:
-  - platform: mqtt
-    device_class: door
-    name: Hallway door
-    payload_off: true
-    payload_on: false
-    state_topic: zigbee2mqtt/hallway_door_sensor
-    value_template: "{{ value_json.contact }}"
-  - platform: mqtt
-    device_class: motion
-    name: Hallway motion
-    payload_off: false
-    payload_on: true
-    state_topic: zigbee2mqtt/hallway_motion_sensor
-    value_template: "{{ value_json.occupancy }}"
-
 light:
   - platform: mqtt
     brightness: true
@@ -72,10 +56,3 @@ light:
     name: Hallway spots
     schema: json
     state_topic: zigbee2mqtt/hallway_spots
-
-sensor:
-  - platform: mqtt
-    name: Hallway illuminance
-    state_topic: zigbee2mqtt/hallway_motion_sensor
-    unit_of_measurement: lux
-    value_template: "{{ value_json.illuminance_lux }}"
