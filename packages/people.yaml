@@ -1,8 +1,8 @@
 group:
   everyone:
     entities:
-      - person.laura_arents
-      - person.niels_bik
+      - person.laura
+      - person.niels
     icon: mdi:account-group-outline
     name: People
 
