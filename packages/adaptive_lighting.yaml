@@ -171,6 +171,13 @@ input_number:
     step: 0.5
     unit_of_measurement: °
 
+mqtt:
+  sensor:
+    - name: Upstairs illuminance
+      state_topic: zigbee2mqtt/upstairs_illuminance_sensor
+      unit_of_measurement: lux
+      value_template: "{{ value_json.illuminance_lux }}"
+
 script:
   circadian_turn_on:
     alias: Set a light to current circadian value
@@ -197,11 +204,6 @@ sensor:
     filters:
       - filter: range
         upper_bound: 300
-  - platform: mqtt
-    name: Upstairs illuminance
-    state_topic: zigbee2mqtt/upstairs_illuminance_sensor
-    unit_of_measurement: lux
-    value_template: "{{ value_json.illuminance_lux }}"
   - platform: sun2
     monitored_conditions:
       - elevation
